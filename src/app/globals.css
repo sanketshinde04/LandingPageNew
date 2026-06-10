@@ -180,6 +180,12 @@ body {
   );
 }
 
+/* ---------- custom cursor ---------- */
+html.custom-cursor,
+html.custom-cursor * {
+  cursor: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
