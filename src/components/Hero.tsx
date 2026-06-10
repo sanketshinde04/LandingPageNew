@@ -23,9 +23,10 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_15%,#18261e_0%,#0b120d_55%,#050505_100%)]" />
       <LiquidLens src={images.hero} className="absolute inset-0" />
 
-      {/* cinematic overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-base/70 via-base/20 to-base" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_80%_at_50%_30%,transparent_45%,rgba(5,5,5,0.55)_100%)]" />
+      {/* cinematic overlay — tuned for text contrast over the launch footage */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-base/80 via-base/30 to-base" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_80%_at_50%_30%,transparent_40%,rgba(5,5,5,0.6)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_48%,rgba(5,5,5,0.5),transparent_72%)]" />
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-12 pt-32 text-center">
         <motion.div {...fadeUp(0.1)}>

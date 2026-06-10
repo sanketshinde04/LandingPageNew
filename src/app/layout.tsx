@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Cormorant_Garamond, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import ScrollProvider from "@/components/ScrollProvider";
+import Cursor from "@/components/Cursor";
 import { site } from "@/lib/content";
 
 const inter = Inter({
@@ -39,6 +40,7 @@ export default function RootLayout({
     >
       <body className="grain vignette min-h-full bg-base text-white">
         <ScrollProvider>{children}</ScrollProvider>
+        <Cursor />
       </body>
     </html>
   );

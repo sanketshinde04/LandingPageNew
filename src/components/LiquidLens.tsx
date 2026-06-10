@@ -6,6 +6,9 @@ import * as THREE from "three";
 import vertexShader from "@/shaders/lens.vert";
 import fragmentShader from "@/shaders/lens.frag";
 
+// must match RIPPLE_COUNT in lens.frag
+const RIPPLE_COUNT = 16;
+
 interface LensPlaneProps {
   src: string;
   radius: number;
@@ -20,6 +23,8 @@ function LensPlane({ src, radius }: LensPlaneProps) {
   const vel = useRef(new THREE.Vector2(0, 0));
   const intensityTarget = useRef(0);
   const smoothedSpeed = useRef(0);
+  const rippleIndex = useRef(0);
+  const lastRipplePos = useRef(new THREE.Vector2(-1, -1));
 
   const uniforms = useMemo(
     () => ({
@@ -31,10 +36,23 @@ function LensPlane({ src, radius }: LensPlaneProps) {
       uVelocity: { value: 0 },
       uIntensity: { value: 0 },
       uTime: { value: 0 },
+      uRipples: {
+        value: Array.from(
+          { length: RIPPLE_COUNT },
+          () => new THREE.Vector4(-10, -10, -100, 0)
+        ),
+      },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  const spawnRipple = (x: number, y: number, strength: number) => {
+    const ripples = uniforms.uRipples.value;
+    ripples[rippleIndex.current].set(x, y, uniforms.uTime.value, strength);
+    rippleIndex.current = (rippleIndex.current + 1) % RIPPLE_COUNT;
+    lastRipplePos.current.set(x, y);
+  };
 
   useEffect(() => {
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -53,17 +71,34 @@ function LensPlane({ src, radius }: LensPlaneProps) {
       const inside =
         x > -margin && x < 1 + margin && y > -margin && y < 1 + margin;
       intensityTarget.current = inside ? 1 : 0;
-      if (inside) target.current.set(x, y);
+      if (inside) {
+        target.current.set(x, y);
+        // drop a water ring every few steps along the cursor's path
+        const dx = x - lastRipplePos.current.x;
+        const dy = y - lastRipplePos.current.y;
+        if (dx * dx + dy * dy > 0.0035) {
+          spawnRipple(x, y, 0.7);
+        }
+      }
+    };
+    const onDown = (e: PointerEvent) => {
+      const rect = gl.domElement.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = 1 - (e.clientY - rect.top) / rect.height;
+      if (x >= 0 && x <= 1 && y >= 0 && y <= 1) spawnRipple(x, y, 1.4);
     };
     const onLeave = () => {
       intensityTarget.current = 0;
     };
     window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onDown, { passive: true });
     document.documentElement.addEventListener("pointerleave", onLeave);
     return () => {
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
       document.documentElement.removeEventListener("pointerleave", onLeave);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl]);
 
   useFrame((_, delta) => {
