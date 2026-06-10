@@ -1,6 +1,6 @@
 precision highp float;
 
-#define RIPPLE_COUNT 16
+#define RIPPLE_COUNT 24
 
 varying vec2 vUv;
 
@@ -38,17 +38,17 @@ vec2 rippleDisplace(vec2 uv, float aspect, out float glint) {
   for (int i = 0; i < RIPPLE_COUNT; i++) {
     vec4 rp = uRipples[i];
     float age = uTime - rp.z;
-    if (age <= 0.0 || age >= 2.4 || rp.w <= 0.001) continue;
+    if (age <= 0.0 || age >= 2.6 || rp.w <= 0.001) continue;
     vec2 d = uv - rp.xy;
     d.x *= aspect;
     float dist = length(d);
-    float radius = 0.02 + age * 0.16;             // ring grows outward
+    float radius = 0.015 + age * 0.22;            // ring grows outward
     float band = dist - radius;
-    float wave = sin(band * 60.0) * exp(-band * band * 700.0);
-    float atten = exp(-age * 2.0) * (1.0 - age / 2.4) * rp.w;
+    float wave = sin(band * 38.0) * exp(-band * band * 160.0);
+    float atten = exp(-age * 1.3) * (1.0 - age / 2.6) * rp.w;
     vec2 dir = dist > 0.0001 ? d / dist : vec2(0.0);
     dir.x /= aspect;
-    total += dir * wave * atten * 0.014;
+    total += dir * wave * atten * 0.05;
     glint += wave * atten;
   }
   return total;
@@ -65,7 +65,11 @@ void main() {
   toMouse.x *= aspect;
   float dist = length(toMouse);
 
-  vec3 color = sampleCover(uv + rippleOffset);
+  // base footage warped by the water, with chromatic split on the crests
+  vec3 color;
+  color.r = sampleCover(uv + rippleOffset * 1.3).r;
+  color.g = sampleCover(uv + rippleOffset).g;
+  color.b = sampleCover(uv + rippleOffset * 0.7).b;
 
   float mask = (1.0 - smoothstep(uRadius * 0.96, uRadius, dist)) * uIntensity;
 
@@ -105,8 +109,8 @@ void main() {
     color = mix(color, refracted, mask);
   }
 
-  // light catching the ripple crests
-  color += glint * 0.06 * uIntensity;
+  // light catching the ripple crests / shadow in the troughs — water shading
+  color += glint * 0.16 * uIntensity;
 
   // subtle halo glow just outside the lens
   float halo =
