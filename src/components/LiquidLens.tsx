@@ -7,7 +7,7 @@ import vertexShader from "@/shaders/lens.vert";
 import fragmentShader from "@/shaders/lens.frag";
 
 // must match RIPPLE_COUNT in lens.frag
-const RIPPLE_COUNT = 16;
+const RIPPLE_COUNT = 24;
 
 interface LensPlaneProps {
   src: string;
@@ -76,8 +76,8 @@ function LensPlane({ src, radius }: LensPlaneProps) {
         // drop a water ring every few steps along the cursor's path
         const dx = x - lastRipplePos.current.x;
         const dy = y - lastRipplePos.current.y;
-        if (dx * dx + dy * dy > 0.0035) {
-          spawnRipple(x, y, 0.7);
+        if (dx * dx + dy * dy > 0.0012) {
+          spawnRipple(x, y, 1.0);
         }
       }
     };
@@ -85,7 +85,7 @@ function LensPlane({ src, radius }: LensPlaneProps) {
       const rect = gl.domElement.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1 - (e.clientY - rect.top) / rect.height;
-      if (x >= 0 && x <= 1 && y >= 0 && y <= 1) spawnRipple(x, y, 1.4);
+      if (x >= 0 && x <= 1 && y >= 0 && y <= 1) spawnRipple(x, y, 1.8);
     };
     const onLeave = () => {
       intensityTarget.current = 0;
@@ -122,9 +122,22 @@ function LensPlane({ src, radius }: LensPlaneProps) {
     uniforms.uMouse.value.copy(pos.current);
     uniforms.uVelocity.value = smoothedSpeed.current;
     uniforms.uIntensity.value +=
-      (intensityTarget.current - uniforms.uIntensity.value) * Math.min(1, dt * 5);
+      (intensityTarget.current - uniforms.uIntensity.value) * Math.min(1, dt * 8);
     uniforms.uTime.value += dt;
     uniforms.uResolution.value.set(size.width, size.height);
+    if (process.env.NODE_ENV !== "production") {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).__lensDebug = {
+        pos: [pos.current.x, pos.current.y],
+        target: [target.current.x, target.current.y],
+        intensity: uniforms.uIntensity.value,
+        time: uniforms.uTime.value,
+        res: [size.width, size.height],
+        imageRes: uniforms.uImageRes.value.toArray(),
+        ripple0: uniforms.uRipples.value[0].toArray(),
+        rippleIdx: rippleIndex.current,
+      };
+    }
   });
 
   return (
