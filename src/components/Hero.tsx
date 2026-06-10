@@ -21,7 +21,7 @@ export default function Hero() {
     >
       {/* atmospheric fallback while the footage loads */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_15%,#18261e_0%,#0b120d_55%,#050505_100%)]" />
-      <LiquidLens src={images.hero} className="absolute inset-0" />
+      <LiquidLens src={images.hero} className="absolute inset-0 z-0" />
 
       {/* cinematic overlay — tuned for text contrast over the launch footage */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-base/80 via-base/20 to-base" />

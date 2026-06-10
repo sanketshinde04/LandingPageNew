@@ -7,11 +7,9 @@ export const site = {
 };
 
 export const images = {
-  hero: "https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=2400&auto=format&fit=crop",
-  metrics:
-    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2400&auto=format&fit=crop",
-  finalCta:
-    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=2400&auto=format&fit=crop",
+  hero: "/images/hero.jpg",
+  metrics: "/images/metrics.jpg",
+  finalCta: "/images/finalCta.jpg",
 };
 
 export const nav = {

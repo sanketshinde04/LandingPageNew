@@ -15,8 +15,11 @@ interface LensPlaneProps {
 }
 
 function LensPlane({ src, radius }: LensPlaneProps) {
+  console.log("[LensPlane] Mounting and loading texture for:", src);
   const texture = useLoader(THREE.TextureLoader, src);
+  console.log("[LensPlane] Texture loaded successfully:", texture.uuid);
   const { size, gl } = useThree();
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
 
   const target = useRef(new THREE.Vector2(0.5, 0.55));
   const pos = useRef(new THREE.Vector2(0.5, 0.55));
@@ -48,8 +51,10 @@ function LensPlane({ src, radius }: LensPlaneProps) {
   );
 
   const spawnRipple = (x: number, y: number, strength: number) => {
-    const ripples = uniforms.uRipples.value;
-    ripples[rippleIndex.current].set(x, y, uniforms.uTime.value, strength);
+    const activeUniforms = materialRef.current?.uniforms || uniforms;
+    const ripples = activeUniforms.uRipples.value;
+    const timeVal = activeUniforms.uTime.value;
+    ripples[rippleIndex.current].set(x, y, timeVal, strength);
     rippleIndex.current = (rippleIndex.current + 1) % RIPPLE_COUNT;
     lastRipplePos.current.set(x, y);
   };
@@ -57,9 +62,14 @@ function LensPlane({ src, radius }: LensPlaneProps) {
   useEffect(() => {
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
-    uniforms.uTexture.value = texture;
+    
+    const activeUniforms = materialRef.current?.uniforms || uniforms;
+    activeUniforms.uTexture.value = texture;
+    
     const img = texture.image as HTMLImageElement | undefined;
-    if (img?.width) uniforms.uImageRes.value.set(img.width, img.height);
+    if (img?.width) {
+      activeUniforms.uImageRes.value.set(img.width, img.height);
+    }
   }, [texture, uniforms]);
 
   useEffect(() => {
@@ -101,8 +111,18 @@ function LensPlane({ src, radius }: LensPlaneProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl]);
 
+  const frameCount = useRef(0);
+
   useFrame((_, delta) => {
     const dt = Math.min(delta, 1 / 30);
+    frameCount.current++;
+    if (frameCount.current % 120 === 0) {
+      console.log("[LensPlane] useFrame active:", {
+        intensity: uniforms.uIntensity.value,
+        velocity: uniforms.uVelocity.value,
+        mouse: [uniforms.uMouse.value.x, uniforms.uMouse.value.y]
+      });
+    }
 
     // spring physics towards the cursor
     const stiffness = 110;
@@ -119,31 +139,35 @@ function LensPlane({ src, radius }: LensPlaneProps) {
     const speed = Math.min(vel.current.length() * 0.6, 1);
     smoothedSpeed.current += (speed - smoothedSpeed.current) * Math.min(1, dt * 5);
 
-    uniforms.uMouse.value.copy(pos.current);
-    uniforms.uVelocity.value = smoothedSpeed.current;
-    uniforms.uIntensity.value +=
-      (intensityTarget.current - uniforms.uIntensity.value) * Math.min(1, dt * 8);
-    uniforms.uTime.value += dt;
-    uniforms.uResolution.value.set(size.width, size.height);
+    const activeUniforms = materialRef.current?.uniforms || uniforms;
+
+    activeUniforms.uMouse.value.copy(pos.current);
+    activeUniforms.uVelocity.value = smoothedSpeed.current;
+    activeUniforms.uIntensity.value +=
+      (intensityTarget.current - activeUniforms.uIntensity.value) * Math.min(1, dt * 8);
+    activeUniforms.uTime.value += dt;
+    activeUniforms.uResolution.value.set(size.width, size.height);
+    
     if (process.env.NODE_ENV !== "production") {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (globalThis as any).__lensDebug = {
         pos: [pos.current.x, pos.current.y],
         target: [target.current.x, target.current.y],
-        intensity: uniforms.uIntensity.value,
-        time: uniforms.uTime.value,
+        intensity: activeUniforms.uIntensity.value,
+        time: activeUniforms.uTime.value,
         res: [size.width, size.height],
-        imageRes: uniforms.uImageRes.value.toArray(),
-        ripple0: uniforms.uRipples.value[0].toArray(),
+        imageRes: activeUniforms.uImageRes.value.toArray(),
+        ripple0: activeUniforms.uRipples.value[0].toArray(),
         rippleIdx: rippleIndex.current,
       };
     }
   });
 
   return (
-    <mesh>
+    <mesh frustumCulled={false}>
       <planeGeometry args={[2, 2]} />
       <shaderMaterial
+        ref={materialRef}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
         uniforms={uniforms}
@@ -186,29 +210,42 @@ export default function LiquidLens({
     }
     if (!finePointer || !webgl || reduced) return;
 
+    console.log("[LiquidLens] Checking pointer & WebGL:", { finePointer, webgl, reduced });
+
     // only mount the WebGL layer once the texture is known to load —
     // if the image fails, the plain <img> fallback stays in place
     const probe = new Image();
     probe.crossOrigin = "anonymous";
-    probe.onload = () => setEnabled(true);
+    probe.onload = () => {
+      console.log("[LiquidLens] Image loaded successfully, enabling Canvas.");
+      setEnabled(true);
+    };
+    probe.onerror = (err) => {
+      console.error("[LiquidLens] Failed to load image via CORS probe:", err);
+    };
     probe.src = src;
     return () => {
       probe.onload = null;
+      probe.onerror = null;
     };
   }, [src]);
 
   return (
     <div className={className} aria-hidden>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover"
-        draggable={false}
-      />
+      {!enabled && (
+        <img
+          src={src}
+          alt=""
+          crossOrigin="anonymous"
+          className="absolute inset-0 h-full w-full object-cover z-0"
+          draggable={false}
+        />
+      )}
       {enabled && (
         <Canvas
-          className="absolute inset-0"
+          className="absolute inset-0 z-10"
+          style={{ pointerEvents: "none" }}
           dpr={[1, 1.6]}
           gl={{ antialias: false, powerPreference: "high-performance" }}
           frameloop="always"
