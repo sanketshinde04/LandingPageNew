@@ -10,8 +10,8 @@ const LINE_COUNT = 14;
 const SAMPLES = 320;
 const VIEW_W = 460;
 const VIEW_H = 300;
-/** must match the rail's `top-28` sticky offset (7rem) */
-const STICKY_TOP = 112;
+/** the rail never parks closer to the top of the window than this */
+const MIN_STICKY_TOP = 96;
 
 /**
  * The rail on the left draws itself as the steps scroll past on the right.
@@ -20,6 +20,7 @@ const STICKY_TOP = 112;
  */
 export default function Sprint() {
   const bodyRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const dotRef = useRef<HTMLSpanElement>(null);
@@ -58,12 +59,24 @@ export default function Sprint() {
     let viewportH = 1;
     let distance = 1;
     let stepOffsets: number[] = [];
+    let stickyTop = MIN_STICKY_TOP;
+    let railH = 0;
 
     const measure = () => {
       const box = svg.getBoundingClientRect();
       scaleX = box.width / VIEW_W;
       scaleY = box.height / VIEW_H;
       viewportH = window.innerHeight;
+
+      /* park the rail in the middle of the window rather than near the top, so
+         it holds still while the steps move past it. Setting `top` instead of
+         translating keeps it in the right place before it starts sticking. */
+      const rail = railRef.current;
+      if (rail) {
+        railH = rail.offsetHeight;
+        stickyTop = Math.max(MIN_STICKY_TOP, (viewportH - railH) / 2);
+        rail.style.top = `${stickyTop}px`;
+      }
       // each step's offset inside the scrolled block, so activation can follow
       // where a step actually sits on screen instead of a flat quarter-split
       const bodyTop = body.getBoundingClientRect().top;
@@ -100,7 +113,7 @@ export default function Sprint() {
       }
 
       // where the block sits right now, derived from progress rather than read
-      const bodyTopNow = STICKY_TOP - p * distance;
+      const bodyTopNow = stickyTop - p * distance;
       const activationLine = viewportH * 0.62;
       let step = 0;
       for (let n = 0; n < stepOffsets.length; n++) {
@@ -127,17 +140,16 @@ export default function Sprint() {
 
     const trigger = ScrollTrigger.create({
       trigger: body,
-      // 0% is the moment the rail settles into its sticky slot, not the moment
-      // the section first pokes into the viewport — otherwise a third of the
-      // range is spent before the rail is even on screen
-      start: `top top+=${STICKY_TOP}`,
-      // 100% is when the last step's bottom reaches the bottom of the viewport,
-      // with the rail still stuck and visible
-      end: "bottom bottom",
+      // 0% is the moment the rail settles into the middle of the window, and
+      // 100% is the last moment before it has to start moving again — so the
+      // whole count happens while the rail is holding still
+      start: () => `top top+=${stickyTop}`,
+      end: () => `bottom top+=${stickyTop + railH}`,
       scrub: 1,
       invalidateOnRefresh: true,
+      // measured before ScrollTrigger resolves start/end, so they use this pass
+      onRefreshInit: () => measure(),
       onRefresh: (self) => {
-        measure();
         distance = Math.max(1, self.end - self.start);
         apply(self.progress);
       },
@@ -179,7 +191,7 @@ export default function Sprint() {
         >
           {/* ---------- left: the rail ---------- */}
           <div className="hidden md:block">
-            <div className="sticky top-28">
+            <div ref={railRef} className="sticky" style={{ top: MIN_STICKY_TOP }}>
               <div className="glass rounded-[24px] p-7">
                 <div className="flex items-baseline justify-between">
                   <span className="eyebrow !text-[10px]">Progress</span>

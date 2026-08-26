@@ -287,6 +287,38 @@ Reference: the Gallery Heading study (`forge`-adjacent ThreeUI component), Canva
   - *SUTRA* — the hand-rolled arcs were coming out as a lopsided spiral; they are proper
     circular arcs now, with a bigger dot grid.
 
+## Round 10 — content pass
+
+- **The ring plates carry real tool marks now.** OpenAI, Claude, Gemini, LangChain, Hugging
+  Face, Ollama, Mistral, Perplexity, n8n, Supabase, Vercel and W&B, drawn monochrome in ink
+  that contrasts with each plate. Paths come from Simple Icons (CC0) and are embedded in
+  `src/lib/aiMarks.ts` rather than fetched, so the page still pulls nothing at runtime. They
+  are third-party trademarks shown to say what we build with — keep them monochrome and do
+  not restyle the shapes.
+- **The logo strip is a trust section now.** It went from a 140px greyscale marquee to a
+  **1051px** section with a heading that says the thing outright — "We have already built AI
+  inside these teams" — fourteen logos in **full colour** on cards with **17px** names, and
+  three credibility figures underneath.
+- **"The work" reads plainly.** The heading is "AI systems we have put into production."
+  Project titles now say what the thing is rather than what it is called internally:
+
+  | was | now |
+  | --- | --- |
+  | Enterprise SQL RAG | AI Data Analyst |
+  | Real-Time AI Interviewer | AI Interview Agent |
+  | Document Intelligence | Document Processing Agent |
+  | Agentic Learning System | AI Tutor Platform |
+  | Conversational BI | Sales Data Chatbot |
+  | SUTRA LLM Launch | LLM Developer Launch |
+
+  Descriptions are one plain sentence and the bullets stay technical but say what actually
+  happens — "Text-to-SQL, checked to ~95% accuracy", "Candidate writes code in a sandbox".
+- **The uneven grid is back**, sized 4+2, 2+4, 3+3 across six columns. It works this time
+  because the drawing is no longer framed and the card centres its content: rows come out
+  **391/391, 391/391, 300/300** with symmetric padding, so the extra height reads as padding
+  rather than as the hole it was in round 8. Narrow cards cap their drawing at 210px, which
+  is what stopped them running 130px taller than the card beside them.
+
 ## Still open
 - Real testimonials and named references.
 - More logos once permission is confirmed per client.

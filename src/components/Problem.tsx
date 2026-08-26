@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import Counter from "@/components/Counter";
 import Reveal from "@/components/Reveal";
 import { gsap } from "@/lib/gsap";
@@ -46,13 +47,13 @@ export default function Problem() {
         <img
           src={images.metrics}
           alt=""
-          className="h-full w-full object-cover opacity-[0.18]"
+          className="h-full w-full object-cover opacity-[0.42]"
           loading="lazy"
         />
       </div>
       {/* the backdrop is texture, never something the copy has to fight */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-base via-base/70 to-base" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_75%_65%_at_50%_45%,rgba(5,5,5,0.85),transparent_75%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-base via-base/45 to-base" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_45%,rgba(5,5,5,0.78),transparent_78%)]" />
 
       <div className="relative mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="mx-auto max-w-[860px] text-center">
@@ -91,9 +92,13 @@ export default function Problem() {
                 className="mx-auto mt-6 h-[3px] w-[180px] max-w-full overflow-hidden rounded-full bg-white/10"
                 aria-hidden
               >
-                <span
-                  className="block h-full rounded-full bg-accent"
+                <motion.span
+                  className="block h-full origin-left rounded-full bg-accent"
                   style={{ width: `${stat.value}%` }}
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true, amount: 0.6 }}
+                  transition={{ duration: 1.5, delay: 0.15 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
                 />
               </div>
 

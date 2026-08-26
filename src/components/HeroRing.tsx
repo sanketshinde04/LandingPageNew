@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { AI_MARKS } from "@/lib/aiMarks";
 import { hero } from "@/lib/content";
 
 /* ------------------------------------------------------------------ *
@@ -159,128 +160,26 @@ function luma(c: [number, number, number]) {
 }
 
 /* ------------------------------------------------------------------ *
-   Twelve motifs, one per plate — the pieces a deployed system is made
-   of. Each is drawn inside the 4:3 band that stays visible after the
-   plate is cropped, at one stroke weight.
+   One brand mark per plate — the tools a build is actually assembled
+   from. Each arrives as a 24x24 path, so it is scaled about the plate's
+   centre and filled in ink that contrasts with the plate underneath.
  * ------------------------------------------------------------------ */
-function drawMotif(x: CanvasRenderingContext2D, i: number, ink: string) {
-  const C = TS / 2; // the plate's centre
+const MARK_BOX = 24;
+/** how much of the plate's short side the mark takes up */
+const MARK_SCALE = 0.46;
+
+function drawMark(x: CanvasRenderingContext2D, i: number, ink: string) {
+  const mark = AI_MARKS[i % AI_MARKS.length];
+  if (!mark) return;
+  /* the plate is cropped to 4:3, so the short side is what has to fit */
+  const size = TS * RING.aspect * MARK_SCALE;
+  const k = size / MARK_BOX;
   x.save();
-  x.translate(C, C);
-  x.strokeStyle = ink;
+  x.translate(TS / 2, TS / 2);
+  x.scale(k, k);
+  x.translate(-MARK_BOX / 2, -MARK_BOX / 2);
   x.fillStyle = ink;
-  x.lineWidth = 9;
-  x.lineCap = "round";
-  x.lineJoin = "round";
-
-  const line = (x1: number, y1: number, x2: number, y2: number) => {
-    x.beginPath();
-    x.moveTo(x1, y1);
-    x.lineTo(x2, y2);
-    x.stroke();
-  };
-  const dot = (cx: number, cy: number, r: number) => {
-    x.beginPath();
-    x.arc(cx, cy, r, 0, Math.PI * 2);
-    x.fill();
-  };
-  const box = (bx: number, by: number, bw: number, bh: number, r = 14) => {
-    x.beginPath();
-    x.moveTo(bx + r, by);
-    x.arcTo(bx + bw, by, bx + bw, by + bh, r);
-    x.arcTo(bx + bw, by + bh, bx, by + bh, r);
-    x.arcTo(bx, by + bh, bx, by, r);
-    x.arcTo(bx, by, bx + bw, by, r);
-    x.closePath();
-    x.stroke();
-  };
-
-  switch (i % 12) {
-    case 0: // an agent graph
-      line(-58, -34, 0, 34);
-      line(0, 34, 58, -34);
-      line(-58, -34, 58, -34);
-      dot(-58, -34, 13);
-      dot(58, -34, 13);
-      dot(0, 34, 13);
-      break;
-    case 1: // a prompt
-      box(-72, -46, 144, 78);
-      line(-44, -18, 34, -18);
-      line(-44, 8, 4, 8);
-      break;
-    case 2: // code
-      line(-62, -40, 20, -40);
-      line(-38, -8, 62, -8);
-      line(-38, 24, 10, 24);
-      break;
-    case 3: // the measured result
-      line(-66, 46, 66, 46);
-      line(-44, 46, -44, 4);
-      line(-14, 46, -14, -26);
-      line(16, 46, 16, -6);
-      line(46, 46, 46, -44);
-      break;
-    case 4: // a terminal
-      line(-46, -30, -10, 2);
-      line(-10, 2, -46, 34);
-      line(6, 34, 52, 34);
-      break;
-    case 5: // verified
-      box(-52, -56, 104, 112, 12);
-      line(-26, 4, -8, 22);
-      line(-8, 22, 28, -20);
-      break;
-    case 6: // voice
-      [22, 46, 70, 40, 78, 34, 20].forEach((h, n) =>
-        line(-66 + n * 22, -h / 2, -66 + n * 22, h / 2)
-      );
-      break;
-    case 7: // a fleet of runs
-      for (let r = 0; r < 3; r++)
-        for (let c = 0; c < 3; c++) dot(-42 + c * 42, -42 + r * 42, 9);
-      break;
-    case 8: // structured output
-      x.beginPath();
-      x.moveTo(-18, -48);
-      x.quadraticCurveTo(-46, -48, -46, -12);
-      x.quadraticCurveTo(-46, 0, -60, 0);
-      x.quadraticCurveTo(-46, 0, -46, 12);
-      x.quadraticCurveTo(-46, 48, -18, 48);
-      x.stroke();
-      x.beginPath();
-      x.moveTo(18, -48);
-      x.quadraticCurveTo(46, -48, 46, -12);
-      x.quadraticCurveTo(46, 0, 60, 0);
-      x.quadraticCurveTo(46, 0, 46, 12);
-      x.quadraticCurveTo(46, 48, 18, 48);
-      x.stroke();
-      break;
-    case 9: // shipped
-      line(-66, 0, 18, 0);
-      line(-6, -26, 20, 0);
-      line(-6, 26, 20, 0);
-      line(50, -42, 50, 42);
-      break;
-    case 10: // an evaluation
-      x.beginPath();
-      x.arc(0, 16, 56, Math.PI, Math.PI * 1.82);
-      x.stroke();
-      line(0, 16, 34, -22);
-      dot(0, 16, 10);
-      break;
-    default: // layers in production
-      [-40, 0, 40].forEach((oy) => {
-        x.beginPath();
-        x.moveTo(0, oy - 26);
-        x.lineTo(60, oy);
-        x.lineTo(0, oy + 26);
-        x.lineTo(-60, oy);
-        x.closePath();
-        x.stroke();
-      });
-      break;
-  }
+  x.fill(new Path2D(mark.path));
   x.restore();
 }
 
@@ -367,7 +266,7 @@ export default function HeroRing({ className }: { className?: string }) {
       x.drawImage(buf, 0, 0, TS, TS);
       x.restore();
 
-      drawMotif(x, i, luma(base) > 0.55 ? "rgba(12,18,14,0.62)" : "rgba(233,242,236,0.6)");
+      drawMark(x, i, luma(base) > 0.55 ? "rgba(10,16,12,0.72)" : "rgba(236,244,239,0.72)");
 
       /* the same film grain the rest of the page carries */
       x.save();
@@ -404,10 +303,13 @@ export default function HeroRing({ className }: { className?: string }) {
     const sf = Math.sqrt(1 - cf * cf);
     const U = [Math.cos(ax), Math.sin(ax), 0];
     const V = [-Math.sin(ax) * cf, Math.cos(ax) * cf, sf];
+    /* U x V, negated. The cross product's screen-y component comes out at
+       -0.77 — it points up the screen, while a canvas texture's +y runs down,
+       so using it directly draws every plate upside down. */
     const AXIS = [
-      U[1] * V[2] - U[2] * V[1],
-      U[2] * V[0] - U[0] * V[2],
-      U[0] * V[1] - U[1] * V[0],
+      -(U[1] * V[2] - U[2] * V[1]),
+      -(U[2] * V[0] - U[0] * V[2]),
+      -(U[0] * V[1] - U[1] * V[0]),
     ];
 
     let W = 0;

@@ -43,23 +43,6 @@ export default function UseCases() {
           ))}
         </div>
 
-        <Reveal delay={0.1} className="mt-20">
-          <div className="glass relative overflow-hidden rounded-[32px] p-10 md:p-14">
-            <div className="pointer-events-none absolute -right-40 -top-40 h-[420px] w-[420px] rounded-full bg-accent/10 blur-[120px]" />
-            <h3 className="eyebrow !text-accent">{useCases.fitEyebrow}</h3>
-            <ul className="relative mt-7 grid grid-cols-1 gap-x-14 md:grid-cols-2">
-              {useCases.fit.map((f) => (
-                <li
-                  key={f}
-                  className="flex gap-4 border-t border-white/10 py-4 text-[16px] leading-relaxed text-white/85"
-                >
-                  <span className="font-mono text-accent">→</span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Reveal>
       </div>
     </section>
   );

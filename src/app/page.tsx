@@ -8,7 +8,6 @@ import Manifesto from "@/components/Manifesto";
 import Sprint from "@/components/Sprint";
 import UseCases from "@/components/UseCases";
 import Pod from "@/components/Pod";
-import Engagement from "@/components/Engagement";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
@@ -27,7 +26,6 @@ export default function Home() {
       <Sprint />
       <UseCases />
       <Pod />
-      <Engagement />
       <FAQ />
       <FinalCTA />
       <Footer />

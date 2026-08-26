@@ -8,7 +8,6 @@ export const site = {
 
 export const images = {
   metrics: "/images/metrics.jpg",
-  pod: "/images/pod.jpg",
   finalCta: "/images/finalCta.jpg",
 };
 
@@ -27,30 +26,28 @@ export const hero = {
   eyebrow: "Forward-deployed AI engineering",
   titleLine1: "Build the system.",
   titleLine2: "Ship it fast.",
-  sub: "AI engineers inside your team. One workflow, into production.",
+  sub: "Forward-deployed AI engineers embed with your team and take one workflow all the way into production.",
   primaryCta: { label: "Book a 30-min call", href: "#call" },
   /** set inside the orbiting ring — keep it one short word */
   mark: "DEPLOY",
 };
 
 export const proof = {
-  label: "Built for, taught to, and trusted by teams at",
-  // `file` maps to /public/logos/<file>.png
+  eyebrow: "Who we have built for",
+  title: "We have already built AI",
+  titleAccent: "inside these teams.",
+  sub: "Every name here is an engagement we delivered — the same engineers who did that work are the ones who show up for your build.",
+  /* ordered largest first; `file` maps to /public/logos/<file>.png */
   companies: [
-    { name: "Accel", file: "accel" },
-    { name: "BCG", file: "bcg" },
-    { name: "Schneider Electric", file: "schneider" },
-    { name: "HPE", file: "hpe" },
     { name: "Google", file: "google" },
-    { name: "Amazon", file: "amazon" },
-    { name: "McKinsey", file: "mckinsey" },
-    { name: "Shell", file: "shell" },
-    { name: "Freshworks", file: "freshworks" },
+    { name: "HPE", file: "hpe" },
+    { name: "Schneider Electric", file: "schneider" },
+    { name: "BCG", file: "bcg" },
+    { name: "Accel", file: "accel" },
     { name: "Wispr Flow", file: "wisprflow" },
     { name: "mem0", file: "mem0" },
     { name: "FloCareer", file: "flocareer" },
     { name: "CodeYoung", file: "codeyoung" },
-    { name: "IIT Bombay", file: "iitb" },
   ],
 };
 
@@ -59,53 +56,81 @@ export const proof = {
 --------------------------------------------------------------------------- */
 export const work = {
   eyebrow: "The work",
-  title: "Shipped,",
-  titleAccent: "not slideware.",
-  sub: "Named projects, running in a client's environment today. Each one measured against a number they already had before we arrived.",
-  /* The numbers live in the project index below — a card that carried them too
-     read as a dashboard tile. */
+  title: "AI systems we have",
+  titleAccent: "put into production.",
+  sub: "Six real projects, running inside client companies today. Here is what each one does and how it is built.",
+  /* `size` drives the uneven grid: "wide" takes four of six columns, "half"
+     takes three, "narrow" takes two. */
   projects: [
     {
       visual: "sqlRag" as const,
-      sector: "Enterprise analytics",
-      title: "Enterprise SQL RAG",
-      line: "Ask in English. Get the right number back.",
-      points: ["Business semantics layer", "Cost-aware model routing", "Human feedback loop"],
+      size: "wide" as const,
+      sector: "Enterprise",
+      title: "AI Data Analyst",
+      points: [
+        "Ask the database a question in plain English",
+        "Text-to-SQL, checked to ~95% accuracy",
+        "Business glossary maps terms to the right columns",
+        "Cheap model for simple queries, strong one for hard queries",
+      ],
     },
     {
       visual: "interviewer" as const,
-      sector: "Technical hiring",
-      title: "Real-Time AI Interviewer",
-      line: "Live voice screening that can defend its score.",
-      points: ["Sandboxed live coding", "Explainable scoring"],
+      size: "narrow" as const,
+      sector: "HR Tech",
+      title: "AI Interview Agent",
+      points: [
+        "Runs the first technical round over live voice",
+        "Asks follow-up questions from the answers",
+        "Candidate writes code in a sandbox",
+        "Every score comes with its reasoning",
+      ],
     },
     {
       visual: "documents" as const,
-      sector: "Back office",
-      title: "Document Intelligence",
-      line: "Invoices and contracts, read and checked at volume.",
-      points: ["Automated compliance", "Full audit trail"],
+      size: "narrow" as const,
+      sector: "Finance",
+      title: "Document Processing Agent",
+      points: [
+        "Pulls fields out of invoices, contracts and scans",
+        "Checks each one against your own rules",
+        "Flags what fails instead of guessing",
+        "Every extraction logged for audit",
+      ],
     },
     {
       visual: "learning" as const,
-      sector: "Education",
-      title: "Agentic Learning System",
-      line: "1:1 teaching that moves at each learner's pace.",
-      points: ["9 learner stages", "30+ capabilities", "Teacher stays in control"],
+      size: "wide" as const,
+      sector: "Edtech",
+      title: "AI Tutor Platform",
+      points: [
+        "Teaches one student at a time, at their pace",
+        "Picks the next question from past answers",
+        "Tracks what each student has actually mastered",
+        "Teacher approves anything the system should not decide alone",
+      ],
     },
     {
       visual: "conversationalBI" as const,
-      sector: "Food services",
-      title: "Conversational BI",
-      line: "Answers pulled from the systems of record, daily.",
-      points: ["Modular agent framework", "Used by the operating team"],
+      size: "half" as const,
+      sector: "FoodTech",
+      title: "Sales Data Chatbot",
+      points: [
+        "Answers sales questions inside the team's chat",
+        "Separate agents for retrieval and analysis",
+        "Reads the live database, not a copy",
+      ],
     },
     {
       visual: "sutra" as const,
-      sector: "Developer relations",
-      title: "SUTRA LLM Launch",
-      line: "Took a new model family to its developer audience.",
-      points: ["Technical documentation", "Demo integrations"],
+      size: "half" as const,
+      sector: "DevTools",
+      title: "LLM Developer Launch",
+      points: [
+        "Took a new model family to its developers",
+        "Technical docs and quickstarts",
+        "1,000+ developers engaged in launch week",
+      ],
     },
   ],
 };
@@ -115,130 +140,94 @@ export const work = {
    tall no matter how many projects end up in it.
 --------------------------------------------------------------------------- */
 export const projectIndex = {
-  eyebrow: "Project index",
-  title: "The full list,",
-  titleAccent: "in one screen.",
-  sub: "Client deployments, and the components we carry into every new build — which is why the second workflow costs less than the first.",
-  groups: [
+  eyebrow: "What we bring with us",
+  title: "We do not start",
+  titleAccent: "from a blank page.",
+  sub: "These seven pieces are already built, already running in production somewhere, and already tested. Your build assembles them and adds what is specific to you — which is why the second workflow costs less than the first.",
+  items: [
     {
-      label: "Client deployments",
-      note: "Live in a client environment",
-      items: [
-        {
-          name: "Enterprise SQL RAG",
-          domain: "Enterprise analytics",
-          metric: "~95%",
-          metricLabel: "query accuracy",
-          systems: "Warehouse · semantic layer · model routing · eval harness",
-          outcome:
-            "A text-to-SQL prototype rebuilt into an analytics engine the business trusts, with a human feedback loop behind the accuracy.",
-        },
-        {
-          name: "Real-Time AI Interviewer",
-          domain: "Technical hiring",
-          metric: "60%",
-          metricLabel: "less manual interview time",
-          systems: "Realtime voice · ATS · code sandbox · scoring rubric",
-          outcome:
-            "Live voice interviews with sandboxed coding and explainable scoring, so a rejection can always be justified.",
-        },
-        {
-          name: "Agentic Learning System",
-          domain: "Education",
-          metric: "45%",
-          metricLabel: "more student engagement",
-          systems: "Teacher copilot · mastery model · 30+ capabilities",
-          outcome:
-            "1:1 education across nine learner stages, with the autonomy boundary drawn explicitly around what a teacher must approve.",
-        },
-        {
-          name: "Document Intelligence Pipeline",
-          domain: "Back office",
-          metric: "80%",
-          metricLabel: "less processing time",
-          systems: "Invoices · contracts · reports · compliance checks",
-          outcome:
-            "Extraction and verification at volume inside a regulated workflow, with the audit trail the auditors actually asked for.",
-        },
-        {
-          name: "Conversational BI",
-          domain: "Food services",
-          metric: "Multi-agent",
-          metricLabel: "RAG over live sales data",
-          systems: "Sales DB · agent framework · chat interface",
-          outcome:
-            "Natural-language questions answered from the systems of record, used daily by the operating team rather than a demo audience.",
-        },
-        {
-          name: "SUTRA LLM Launch",
-          domain: "Developer relations",
-          metric: "1,000+",
-          metricLabel: "developers in launch week",
-          systems: "Docs · demo integrations · community",
-          outcome:
-            "Developer relations for a new model family through its launch window — the least teachable forward-deployed skill, demonstrated.",
-        },
+      name: "AI agents",
+      role: "The thing that does the work",
+      detail:
+        "Agents that carry out a real task end to end — read the request, gather what they need, do the work, and hand back a result a person can check.",
+      points: [
+        "Plans the steps, then carries them out",
+        "Calls your tools, not just the model",
+        "Stops and asks when it should",
       ],
+      systems: "Planning · tool use · retries",
     },
     {
-      label: "Components we reuse",
-      note: "Carried into every new build",
-      items: [
-        {
-          name: "Agent harness",
-          domain: "Core",
-          metric: "Traced",
-          metricLabel: "every tool call recorded",
-          systems: "Tool permissions · retries · execution traces",
-          outcome:
-            "Agents you can audit after the fact, because every decision and tool call is recorded rather than inferred.",
-        },
-        {
-          name: "Retrieval & knowledge layer",
-          domain: "Core",
-          metric: "Cited",
-          metricLabel: "answers carry their source",
-          systems: "Policies · manuals · internal history",
-          outcome:
-            "Retrieval over your own documents where every answer cites its source and respects the access rules already in place.",
-        },
-        {
-          name: "MCP & integration connectors",
-          domain: "Integrations",
-          metric: "MCP",
-          metricLabel: "standard, not bespoke glue",
-          systems: "Model Context Protocol servers over your systems",
-          outcome:
-            "Agents reach your stack through a standard protocol, so the next workflow does not pay for the same integration twice.",
-        },
-        {
-          name: "Evaluation suite",
-          domain: "Quality",
-          metric: "Tested",
-          metricLabel: "not demoed once",
-          systems: "Regression runs · scoring · drift checks",
-          outcome:
-            "The workflow is tested systematically, so a model upgrade is a decision with evidence rather than a gamble.",
-        },
-        {
-          name: "Observability layer",
-          domain: "Operations",
-          metric: "Inspectable",
-          metricLabel: "every run, end to end",
-          systems: "Inputs · decisions · tool calls · errors · outcomes",
-          outcome:
-            "When something looks wrong, the run can be opened and read instead of reproduced from guesswork.",
-        },
-        {
-          name: "Human-approval controls",
-          domain: "Risk",
-          metric: "Bounded",
-          metricLabel: "explicit action limits",
-          systems: "Action boundaries · sign-off queues · audit trail",
-          outcome:
-            "The system never acts alone where it should not, and the boundary is written down before anything goes live.",
-        },
+      name: "Agent harness",
+      role: "The runtime they run inside",
+      detail:
+        "The layer that decides what an agent is allowed to touch, retries what fails, and records every step. You can open any run and see exactly what happened.",
+      points: [
+        "Scoped permissions, one tool at a time",
+        "Automatic retries when something fails",
+        "A full trace of every run, kept",
       ],
+      systems: "Permissions · retries · execution traces",
+    },
+    {
+      name: "Skills",
+      role: "What an agent knows how to do",
+      detail:
+        "Reusable capabilities an agent can pick up — read a contract, write a query, file a ticket. Adding a new one is a day's work, not a rebuild.",
+      points: [
+        "Written once, reused on the next build",
+        "Versioned alongside the rest of the code",
+        "A new one takes a day, not a rebuild",
+      ],
+      systems: "Reusable across builds",
+    },
+    {
+      name: "RAG & knowledge layer",
+      role: "Your documents, searchable",
+      detail:
+        "Retrieval over your own policies, manuals and history. Every answer cites the document it came from, and it respects who is allowed to see what.",
+      points: [
+        "Chunking and reranking tuned to your corpus",
+        "Every answer cites the document it used",
+        "Honours the access rules you already have",
+      ],
+      systems: "Chunking · reranking · citations · access rules",
+    },
+    {
+      name: "MCP & integrations",
+      role: "How it reaches your systems",
+      detail:
+        "Model Context Protocol connectors to the tools you already run. It is a standard, so the next workflow does not pay to build the same connection twice.",
+      points: [
+        "A standard protocol, not custom glue",
+        "Connectors for CRM, ERP, ticketing and databases",
+        "The next workflow reuses them for free",
+      ],
+      systems: "CRM · ERP · ticketing · databases",
+    },
+    {
+      name: "Evaluation suite",
+      role: "Proof that it still works",
+      detail:
+        "A test set for your workflow that we can re-run on demand. When a model changes, you get a number telling you whether it got better or worse — not a hunch.",
+      points: [
+        "A test set built from your real cases",
+        "Re-run on every model or prompt change",
+        "Tells you whether a change helped or hurt",
+      ],
+      systems: "Regression runs · scoring · drift checks",
+    },
+    {
+      name: "Observability",
+      role: "What to do when it breaks",
+      detail:
+        "Every input, decision, tool call and error is recorded. When something looks wrong your team can open that run and read it, instead of trying to reproduce it.",
+      points: [
+        "Every input, decision and tool call logged",
+        "Errors surface with the failing run attached",
+        "Your team can debug it without calling us",
+      ],
+      systems: "Logs · traces · error reporting",
     },
   ],
 };
@@ -272,32 +261,32 @@ export const problem = {
 };
 
 export const manifesto = {
-  eyebrow: "The forward-deployed model",
-  title: "We deleted",
-  titleAccent: "the deck.",
-  sub: "A forward-deployed engineer works inside your business instead of advising it from the outside — same Slack, same standups, same messy data. Palantir invented the model; OpenAI, Anthropic and AWS have since built teams around it.",
+  eyebrow: "The model",
+  title: "We build inside",
+  titleAccent: "your stack.",
+  sub: "Our engineers work in the tools you already run — your cloud, your repos, your data, your ticketing. Nothing gets rebuilt somewhere else, and your team does not have to adopt anything new to keep it running.",
   oldWay: {
-    heading: "The old way (consulting)",
+    heading: "The usual way",
     items: [
-      "A 40-page strategy deck, delivered in month three",
-      "A pilot that demos well and dies before production",
+      "A strategy deck, delivered in month three",
+      "A pilot that demos well and never ships",
       "Advice billed by the hour, owned by no one",
-      "A handoff of code your team never built",
+      "Code handed to a team that did not build it",
     ],
   },
   shipWay: {
-    heading: "The forward-deployed way",
+    heading: "How we work",
     items: [
-      "Engineers inside your team from day one",
-      "A system in production, measured on your own baseline",
-      "One workflow, fixed scope, end-to-end accountability",
-      "Your team ships alongside us and keeps the capability",
+      "Engineers in your team from week one",
+      "A system in production, measured on your numbers",
+      "One workflow, fixed scope, one team accountable",
+      "Your engineers build alongside us and keep it",
     ],
   },
   quote: {
-    before: "“Most companies don't have an AI problem. They have a ",
+    before: "Most companies don't have an AI problem. They have a ",
     highlight: "deployment problem",
-    after: ".”",
+    after: ".",
   },
 };
 
@@ -313,50 +302,50 @@ export const sprint = {
   eyebrow: "How a build runs",
   title: "Four steps.",
   titleAccent: "One workflow.",
-  sub: "No parallel workstreams and no discovery phase. We pick the one workflow worth automating first, then take it all the way.",
+  sub: "No parallel workstreams and no discovery phase. We pick one workflow, then take it all the way.",
   stages: [
     {
       no: "01",
       days: "Week 1",
-      title: "Embed & scope",
-      line: "Three days in your Slack and your standups. We leave with one workflow and a number to beat.",
+      title: "Pick the workflow",
+      line: "We sit with your team for a few days and choose one workflow worth automating.",
       marks: [
-        "Workflow picked and scoped",
-        "Baseline agreed in writing",
-        "System and data access in place",
+        "One workflow picked, written down",
+        "The number we have to beat, agreed",
+        "Access to the systems it touches",
       ],
     },
     {
       no: "02",
       days: "Weeks 2–3",
-      title: "Build against reality",
-      line: "Your real data and the edge cases your pilot skipped. You see it running at the end of every day.",
+      title: "Build on your real data",
+      line: "We build against your actual data and the cases that break things. You see it running at the end of every day.",
       marks: [
-        "A working system, not a prototype",
-        "Live integrations into your stack",
-        "Evals, retries and failure handling",
+        "A working system, not a demo",
+        "Connected to your live systems",
+        "Handles errors, retries and edge cases",
       ],
     },
     {
       no: "03",
       days: "Weeks 4–5",
-      title: "Deploy to production",
-      line: "It runs alongside your current process until the numbers say switch. This is the step that usually never happens.",
+      title: "Run it in production",
+      line: "It goes live next to your current process, so you can compare the two before anything depends on it.",
       marks: [
-        "Live inside your environment",
-        "Human approval on the risky steps",
-        "Measured against the week-one baseline",
+        "Running in your environment",
+        "A person approves the risky steps",
+        "Measured against the week-one number",
       ],
     },
     {
       no: "04",
       days: "Week 6",
-      title: "Hand over & train",
-      line: "We document it, sit with whoever will run it, and get out of the way.",
+      title: "Hand it to your team",
+      line: "We document it, train whoever will run it, and step back. The code is yours.",
       marks: [
-        "Docs and operating playbooks",
-        "Eval suites your team can re-run",
-        "Full ownership of the code",
+        "Documentation and operating playbooks",
+        "Tests your team can re-run",
+        "You own the code",
       ],
     },
   ] as Stage[],
@@ -407,79 +396,30 @@ export const useCases = {
       body: "Collect evidence, validate coverage, flag gaps, package for review.",
     },
   ],
-  fitEyebrow: "This works when",
-  fit: [
-    "A named person owns the workflow and cares about the result",
-    "A baseline already exists — time, cost, throughput, errors or SLA",
-    "The data, APIs and representative inputs can be made available",
-    "You run multiple systems and repeated, high-volume workflows",
-    "There is an AI mandate or a POC backlog, but no dedicated AI capacity",
-  ],
 };
 
 export const pod = {
-  eyebrow: "Who actually shows up",
-  title: "Two engineers.",
-  titleAccent: "Inside your team.",
-  sub: "Not a delivery manager and four juniors. A two-person pod that splits the work the way the problem splits.",
+  eyebrow: "Who shows up",
+  title: "A team that works",
+  titleAccent: "inside your team.",
+  sub: "Not advisors reviewing your work from the outside. Engineers in your standups, your repo and your Slack, building alongside the people who will run it afterwards.",
   roles: [
     {
-      tag: "FDE 01",
-      title: "Product / Workflow",
-      body: "Owns the business process, the users, the decision points, the interface and the acceptance criteria. In your standups daily.",
+      tag: "Workflow",
+      title: "Product & process",
+      body: "Owns the business process, the users, the decision points, and what finished actually means. In your standups, every day.",
     },
     {
-      tag: "FDE 02",
-      title: "Engineering / AI",
-      body: "Owns integrations, orchestration, agents, retrieval, models, evaluations, permissions, reliability and observability. Builds live.",
+      tag: "Engineering",
+      title: "AI & integration",
+      body: "Owns the agents, retrieval, models and the connections into your systems. Writes code in your repo, against your data.",
+    },
+    {
+      tag: "Reliability",
+      title: "Evals & operations",
+      body: "Owns testing, permissions, logging and failure handling — the part that decides whether the thing survives contact with production.",
     },
   ],
-  credsEyebrow: "The team behind the pod",
-  creds: [
-    { figure: "500+", label: "AI applications launched" },
-    { figure: "150+", label: "consulting programs delivered" },
-    { figure: "15,000+", label: "professionals trained" },
-    { figure: "40,000+", label: "practitioner community" },
-  ],
-  points: [
-    "Led by Satvik Paramkusham — IIT Delhi, visiting faculty at IIT Bombay, 100K+ on YouTube",
-    "The engineers who ship the work run the handover — there is no separate delivery layer",
-    "Production patterns come from systems already running for clients, not from a playbook",
-  ],
-};
-
-export const engagement = {
-  eyebrow: "The engagement",
-  title: "What you get,",
-  titleAccent: "spelled out.",
-  details: {
-    heading: "How a build runs",
-    rows: [
-      { k: "Shape", v: "One named workflow · fixed scope · end-to-end accountability" },
-      { k: "Team", v: "A 2-engineer forward-deployed pod, embedded with yours" },
-      { k: "Timeline", v: "4–6 weeks, depending on how many systems it touches" },
-      { k: "Pricing", v: "Fixed price per build, quoted after a 30-minute call" },
-      { k: "From you", v: "A problem owner, system access, ~20 minutes a day" },
-      { k: "Standard", v: "Permissions, human approval, evals, observability, retries" },
-      { k: "Afterwards", v: "You own the code. A reliability retainer is optional, never assumed" },
-    ],
-  },
-  card: {
-    ribbon: "Start here",
-    kicker: "Scoping call to production",
-    headline: "4–6 weeks",
-    note: "Fixed price per build. The honest number depends on how many of your systems we have to touch — which is why it's quoted after a call, not printed on a page.",
-    featuresLabel: "What you keep",
-    features: [
-      "Blueprint — the workflow, the data, the definition of success",
-      "The working system, running on real data in your environment",
-      "Integration map across the systems you already run",
-      "Impact report: before and after, on your numbers",
-      "Transfer pack — docs, eval suites and handover sessions",
-    ],
-    cta: { label: "Book a 30-min call", href: "#call" },
-    guarantee: "You keep the code, the docs and the capability · zero dependency on us",
-  },
 };
 
 export const faq = {
@@ -528,8 +468,6 @@ export const finalCta = {
   titleAfter: "",
   sub: "Thirty minutes. Bring one workflow that costs your team real hours. We'll tell you on the call whether it's worth building — and we say no more often than we say yes.",
   primaryCta: { label: "Book a 30-min call", href: "#call" },
-  secondaryCta: { label: "See the work", href: "#work" },
-  reassurance: "No deck, no discovery phase · you leave the call with a scoped answer",
 };
 
 export const footer = {
@@ -544,7 +482,6 @@ export const footer = {
         { label: "Why", href: "#why" },
         { label: "The build", href: "#sprint" },
         { label: "Use cases", href: "#usecases" },
-        { label: "Engagement", href: "#engagement" },
       ],
     },
     {
