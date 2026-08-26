@@ -15,9 +15,7 @@ interface LensPlaneProps {
 }
 
 function LensPlane({ src, radius }: LensPlaneProps) {
-  console.log("[LensPlane] Mounting and loading texture for:", src);
   const texture = useLoader(THREE.TextureLoader, src);
-  console.log("[LensPlane] Texture loaded successfully:", texture.uuid);
   const { size, gl } = useThree();
   const materialRef = useRef<THREE.ShaderMaterial>(null);
 
@@ -86,8 +84,8 @@ function LensPlane({ src, radius }: LensPlaneProps) {
         // drop a water ring every few steps along the cursor's path
         const dx = x - lastRipplePos.current.x;
         const dy = y - lastRipplePos.current.y;
-        if (dx * dx + dy * dy > 0.0012) {
-          spawnRipple(x, y, 1.0);
+        if (dx * dx + dy * dy > 0.0085) {
+          spawnRipple(x, y, 0.45);
         }
       }
     };
@@ -95,7 +93,7 @@ function LensPlane({ src, radius }: LensPlaneProps) {
       const rect = gl.domElement.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1 - (e.clientY - rect.top) / rect.height;
-      if (x >= 0 && x <= 1 && y >= 0 && y <= 1) spawnRipple(x, y, 1.8);
+      if (x >= 0 && x <= 1 && y >= 0 && y <= 1) spawnRipple(x, y, 0.85);
     };
     const onLeave = () => {
       intensityTarget.current = 0;
@@ -111,18 +109,8 @@ function LensPlane({ src, radius }: LensPlaneProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl]);
 
-  const frameCount = useRef(0);
-
   useFrame((_, delta) => {
     const dt = Math.min(delta, 1 / 30);
-    frameCount.current++;
-    if (frameCount.current % 120 === 0) {
-      console.log("[LensPlane] useFrame active:", {
-        intensity: uniforms.uIntensity.value,
-        velocity: uniforms.uVelocity.value,
-        mouse: [uniforms.uMouse.value.x, uniforms.uMouse.value.y]
-      });
-    }
 
     // spring physics towards the cursor
     const stiffness = 110;
@@ -192,7 +180,7 @@ interface LiquidLensProps {
 export default function LiquidLens({
   src,
   className,
-  radius = 0.13,
+  radius = 0.095,
 }: LiquidLensProps) {
   const [enabled, setEnabled] = useState(false);
 
@@ -210,19 +198,11 @@ export default function LiquidLens({
     }
     if (!finePointer || !webgl || reduced) return;
 
-    console.log("[LiquidLens] Checking pointer & WebGL:", { finePointer, webgl, reduced });
-
     // only mount the WebGL layer once the texture is known to load —
     // if the image fails, the plain <img> fallback stays in place
     const probe = new Image();
     probe.crossOrigin = "anonymous";
-    probe.onload = () => {
-      console.log("[LiquidLens] Image loaded successfully, enabling Canvas.");
-      setEnabled(true);
-    };
-    probe.onerror = (err) => {
-      console.error("[LiquidLens] Failed to load image via CORS probe:", err);
-    };
+    probe.onload = () => setEnabled(true);
     probe.src = src;
     return () => {
       probe.onload = null;

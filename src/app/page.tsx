@@ -1,12 +1,14 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import ProofMarquee from "@/components/ProofMarquee";
-import WhyNow from "@/components/WhyNow";
-import Curriculum from "@/components/Curriculum";
+import Work from "@/components/Work";
+import ProjectIndex from "@/components/ProjectIndex";
+import Problem from "@/components/Problem";
 import Manifesto from "@/components/Manifesto";
-import WhoOutcomes from "@/components/WhoOutcomes";
-import Instructor from "@/components/Instructor";
-import Pricing from "@/components/Pricing";
+import Sprint from "@/components/Sprint";
+import UseCases from "@/components/UseCases";
+import Pod from "@/components/Pod";
+import Engagement from "@/components/Engagement";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
@@ -17,12 +19,15 @@ export default function Home() {
       <Navigation />
       <Hero />
       <ProofMarquee />
-      <WhyNow />
-      <Curriculum />
+      {/* Projects sit before the process — the work earns the rest of the scroll. */}
+      <Work />
+      <ProjectIndex />
+      <Problem />
       <Manifesto />
-      <WhoOutcomes />
-      <Instructor />
-      <Pricing />
+      <Sprint />
+      <UseCases />
+      <Pod />
+      <Engagement />
       <FAQ />
       <FinalCTA />
       <Footer />

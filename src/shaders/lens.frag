@@ -38,17 +38,17 @@ vec2 rippleDisplace(vec2 uv, float aspect, out float glint) {
   for (int i = 0; i < RIPPLE_COUNT; i++) {
     vec4 rp = uRipples[i];
     float age = uTime - rp.z;
-    if (age <= 0.0 || age >= 2.6 || rp.w <= 0.001) continue;
+    if (age <= 0.0 || age >= 1.8 || rp.w <= 0.001) continue;
     vec2 d = uv - rp.xy;
     d.x *= aspect;
     float dist = length(d);
-    float radius = 0.015 + age * 0.22;            // ring grows outward
+    float radius = 0.012 + age * 0.20;            // ring grows outward
     float band = dist - radius;
-    float wave = sin(band * 38.0) * exp(-band * band * 160.0);
-    float atten = exp(-age * 1.3) * (1.0 - age / 2.6) * rp.w;
+    float wave = sin(band * 38.0) * exp(-band * band * 260.0);
+    float atten = exp(-age * 2.1) * (1.0 - age / 1.8) * rp.w;
     vec2 dir = dist > 0.0001 ? d / dist : vec2(0.0);
     dir.x /= aspect;
-    total += dir * wave * atten * 0.05;
+    total += dir * wave * atten * 0.018;
     glint += wave * atten;
   }
   return total;
@@ -67,9 +67,9 @@ void main() {
 
   // base footage warped by the water, with chromatic split on the crests
   vec3 color;
-  color.r = sampleCover(uv + rippleOffset * 1.3).r;
+  color.r = sampleCover(uv + rippleOffset * 1.12).r;
   color.g = sampleCover(uv + rippleOffset).g;
-  color.b = sampleCover(uv + rippleOffset * 0.7).b;
+  color.b = sampleCover(uv + rippleOffset * 0.88).b;
 
   float mask = (1.0 - smoothstep(uRadius * 0.96, uRadius, dist)) * uIntensity;
 
@@ -78,14 +78,14 @@ void main() {
     float bulge = sqrt(max(1.0 - k * k, 0.0)); // hemisphere profile
 
     // magnification at the centre, easing back to 1:1 at the rim
-    float zoom = mix(0.82, 1.0, smoothstep(0.0, 1.0, k));
+    float zoom = mix(0.90, 1.0, smoothstep(0.0, 1.0, k));
     vec2 lensUv = uMouse + (uv - uMouse) * zoom + rippleOffset;
 
     // fluid ripple driven by cursor speed
-    lensUv += (uv - uMouse) * sin(uTime * 3.0 + k * 12.0) * 0.012 * uVelocity;
+    lensUv += (uv - uMouse) * sin(uTime * 3.0 + k * 12.0) * 0.005 * uVelocity;
 
     // chromatic aberration / RGB split, strongest near the rim
-    float ca = (1.0 - bulge) * (0.010 + 0.014 * uVelocity);
+    float ca = (1.0 - bulge) * (0.005 + 0.007 * uVelocity);
     vec2 dir = uv - uMouse;
     vec3 refracted;
     refracted.r = sampleCover(lensUv + dir * ca).r;
@@ -93,7 +93,7 @@ void main() {
     refracted.b = sampleCover(lensUv - dir * ca).b;
 
     // soft droplet blur towards the edge of the glass
-    float soft = (1.0 - bulge) * 0.012;
+    float soft = (1.0 - bulge) * 0.006;
     vec3 blurAcc = refracted;
     blurAcc += sampleCover(lensUv + vec2(soft, 0.0));
     blurAcc += sampleCover(lensUv - vec2(soft, 0.0));
@@ -103,21 +103,21 @@ void main() {
 
     // glassy rim light and faint specular lift on the bulge
     float rim = smoothstep(0.78, 0.98, k) * (1.0 - smoothstep(0.98, 1.0, k));
-    refracted += rim * 0.22;
-    refracted += bulge * 0.05;
+    refracted += rim * 0.13;
+    refracted += bulge * 0.03;
 
     color = mix(color, refracted, mask);
   }
 
   // light catching the ripple crests / shadow in the troughs — water shading
-  color += glint * 0.16 * uIntensity;
+  color += glint * 0.06 * uIntensity;
 
   // subtle halo glow just outside the lens
   float halo =
     smoothstep(uRadius * 1.35, uRadius, dist) *
     (1.0 - smoothstep(uRadius * 0.92, uRadius, dist) * 0.0) *
     step(uRadius, dist);
-  color += halo * 0.05 * uIntensity;
+  color += halo * 0.028 * uIntensity;
 
   gl_FragColor = vec4(color, 1.0);
 }

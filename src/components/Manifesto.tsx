@@ -3,7 +3,7 @@ import { manifesto } from "@/lib/content";
 
 export default function Manifesto() {
   return (
-    <section id="shipweeks" className="py-20">
+    <section id="model" className="py-20">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal>
           <div className="glass relative overflow-hidden rounded-[32px] p-10 md:p-16">

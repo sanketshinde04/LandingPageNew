@@ -1,92 +1,82 @@
 "use client";
 
 import { motion } from "framer-motion";
-import LiquidLens from "@/components/LiquidLens";
+import HeroRing from "@/components/HeroRing";
 import Magnetic from "@/components/Magnetic";
-import { hero, images } from "@/lib/content";
+import { hero } from "@/lib/content";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 36, filter: "blur(10px)" },
+  initial: { opacity: 0, y: 30, filter: "blur(10px)" },
   animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  transition: { duration: 1.3, delay, ease },
+  transition: { duration: 1.2, delay, ease },
 });
 
 export default function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-svh flex-col overflow-hidden"
+      className="relative flex min-h-svh items-center overflow-hidden"
     >
-      {/* atmospheric fallback while the footage loads */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_15%,#18261e_0%,#0b120d_55%,#050505_100%)]" />
-      <LiquidLens src={images.hero} className="absolute inset-0 z-0" />
+      {/* ---------- backdrop ---------- */}
+      <div className="absolute inset-0 bg-base" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_58%_54%_at_72%_46%,rgba(48,92,66,0.38),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_48%_58%_at_10%_30%,rgba(30,48,42,0.46),transparent_72%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-[55%] bg-[linear-gradient(to_top,rgba(14,26,19,0.5),transparent)]" />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.75) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.75) 1px, transparent 1px)",
+          backgroundSize: "88px 88px",
+          maskImage:
+            "radial-gradient(ellipse 66% 60% at 50% 46%, black 18%, transparent 82%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 66% 60% at 50% 46%, black 18%, transparent 82%)",
+        }}
+      />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-base" />
 
-      {/* cinematic overlay — tuned for text contrast over the launch footage */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-base/80 via-base/20 to-base" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_80%_at_50%_30%,transparent_40%,rgba(5,5,5,0.6)_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_48%,rgba(5,5,5,0.35),transparent_72%)]" />
+      <div className="relative z-10 mx-auto grid w-full max-w-[1500px] grid-cols-1 items-center gap-10 px-6 pb-16 pt-32 md:px-10 lg:grid-cols-[1.08fr_1fr] lg:gap-6 lg:pb-24">
+        {/* ---------- left: the claim ---------- */}
+        <div>
+          <motion.h1
+            {...fadeUp(0.1)}
+            className="text-[clamp(2.6rem,5.4vw,4.7rem)] font-medium leading-[1.02] tracking-[-0.03em] text-white"
+          >
+            {/* each line holds together — the headline never breaks mid-phrase */}
+            <span className="whitespace-nowrap">{hero.titleLine1}</span>
+            <br />
+            <span className="serif-accent text-accent">{hero.titleLine2}</span>
+          </motion.h1>
 
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-12 pt-32 text-center">
-        <motion.div {...fadeUp(0.1)}>
-          <span className="glass inline-flex items-center gap-2.5 rounded-full px-5 py-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            <span className="eyebrow !text-white/75">{hero.eyebrow}</span>
-          </span>
-        </motion.div>
+          <motion.p
+            {...fadeUp(0.26)}
+            className="mt-8 max-w-[30ch] text-xl leading-relaxed text-white/70 md:text-[1.35rem]"
+          >
+            {hero.sub}
+          </motion.p>
 
-        <motion.h1
-          {...fadeUp(0.25)}
-          className="mt-8 text-[clamp(3.2rem,9vw,7.5rem)] font-medium leading-[0.98] tracking-[-0.02em] text-white"
-        >
-          {hero.titleLine1}
-          <br />
-          <span className="serif-accent text-accent">{hero.titleLine2}</span>
-        </motion.h1>
+          <motion.div {...fadeUp(0.4)} className="mt-10">
+            <Magnetic>
+              <a href={hero.primaryCta.href} className="btn btn-solid">
+                {hero.primaryCta.label} <span aria-hidden>→</span>
+              </a>
+            </Magnetic>
+          </motion.div>
+        </div>
 
-        <motion.p
-          {...fadeUp(0.45)}
-          className="mt-8 max-w-[620px] text-lg leading-relaxed text-white/75 md:text-xl"
-        >
-          {hero.sub}
-        </motion.p>
-
+        {/* ---------- right: the mark, orbiting ---------- */}
         <motion.div
-          {...fadeUp(0.6)}
-          className="mt-10 flex flex-wrap items-center justify-center gap-4"
+          initial={{ opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.6, delay: 0.25, ease }}
+          className="order-first aspect-square w-full max-w-[560px] justify-self-center lg:order-last lg:aspect-[7/5] lg:max-w-none"
         >
-          <Magnetic>
-            <a href={hero.primaryCta.href} className="btn btn-solid">
-              {hero.primaryCta.label}
-            </a>
-          </Magnetic>
-          <Magnetic>
-            <a href={hero.secondaryCta.href} className="btn btn-glass">
-              {hero.secondaryCta.label}
-            </a>
-          </Magnetic>
+          <HeroRing className="h-full w-full" />
         </motion.div>
       </div>
-
-      {/* bottom meta strip */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, delay: 0.9, ease }}
-        className="relative z-10"
-      >
-        <div className="mx-auto flex max-w-[1200px] flex-wrap items-start justify-center gap-x-14 gap-y-6 px-6 pb-12 md:justify-between md:px-10">
-          {hero.meta.map((m) => (
-            <div key={m.value} className="text-center md:text-left">
-              <div className="text-3xl font-medium tracking-tight text-white md:text-4xl">
-                {m.value}
-              </div>
-              <div className="mt-1.5 text-sm text-white/55">{m.label}</div>
-            </div>
-          ))}
-        </div>
-      </motion.div>
     </section>
   );
 }

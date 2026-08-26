@@ -7,7 +7,7 @@ export default function Footer() {
         <div>
           <a href="#top" className="flex items-baseline gap-2">
             <span className="serif-accent text-2xl leading-none text-white">
-              launchpad
+              deploy
             </span>
             <span className="eyebrow !text-[10px] text-white/50">
               by {site.name}
