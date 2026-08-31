@@ -18,6 +18,13 @@ html {
   background: #080e1a;
 }
 
+:root {
+  --font-bricolage: "Avenir Next", "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
+  --font-instrument: "Avenir Next", "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
+  --font-cormorant: "Iowan Old Style", Baskerville, Georgia, serif;
+  --font-plex: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+}
+
 body {
   background: #080e1a;
   color: #fff;
