@@ -186,6 +186,15 @@ body {
   animation: aurora-drift 16s ease-in-out infinite;
 }
 
+/* ---------- scrollers that should not show their bar ---------- */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* ---------- horizontal marquee ---------- */
 @keyframes marquee {
   to {

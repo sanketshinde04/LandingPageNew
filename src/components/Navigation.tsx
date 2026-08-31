@@ -43,7 +43,7 @@ export default function Navigation() {
           ))}
         </nav>
 
-        <Magnetic strength={0.2}>
+        <Magnetic strength={0.1}>
           <BookingDialog
             triggerClassName="btn btn-solid !px-4 !py-2 text-[13px] sm:!px-6 sm:!py-2.5 sm:text-sm"
             label={nav.cta.label}

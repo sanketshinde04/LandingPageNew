@@ -60,6 +60,14 @@ const FIELDS = [
 /** "Asia/Kolkata" -> "Kolkata" */
 const ZONE_CITY = BOOKING_TIMEZONE.split("/").pop()!.replace(/_/g, " ");
 
+/** what the left rail promises — the reason the call is worth thirty minutes */
+const RAIL_FACTS = [
+  { k: "Format", v: "Google Meet, link in the invite" },
+  { k: "When", v: `Weekdays, 2–5pm ${ZONE_CITY} time` },
+  { k: "Bring", v: "One workflow that costs you hours" },
+  { k: "You leave with", v: "A scoped answer, or an honest no" },
+];
+
 /** what the CTA falls back to when the calendar credentials are not set */
 const FALLBACK_HREF = `mailto:${site.contactEmail}?subject=${encodeURIComponent(
   "Scoping call — DEPLOY"
@@ -68,8 +76,8 @@ const FALLBACK_HREF = `mailto:${site.contactEmail}?subject=${encodeURIComponent(
 )}`;
 
 const inputClass = (bad: boolean) =>
-  `w-full rounded-xl border bg-white/[0.03] px-4 py-3 text-[15px] text-white outline-none transition-colors duration-200 placeholder:text-white/25 focus:border-accent/60 focus:bg-white/[0.05] ${
-    bad ? "border-red-400/60" : "border-white/12"
+  `w-full rounded-xl border bg-[#070d1a] px-4 py-3 text-[15px] text-white outline-none transition-colors duration-200 placeholder:text-white/25 focus:border-accent/60 ${
+    bad ? "border-red-400/55" : "border-white/12 hover:border-white/20"
   }`;
 
 /**
@@ -77,6 +85,10 @@ const inputClass = (bad: boolean) =>
  * straight into the calendar through /api/booking and the visitor gets the
  * invite with a Meet link. If the credentials are missing the dialog says so
  * and hands over a mailto, so the button is never a dead end.
+ *
+ * Laid out as two panes: a fixed rail on the left carrying what the call
+ * actually is, and the step on the right. The rail is what stops the panel
+ * reading as an empty box while the picker is only six buttons tall.
  */
 export default function BookingDialog({
   triggerClassName,
@@ -172,9 +184,7 @@ export default function BookingDialog({
       const first = (
         ["name", "email", "phone", "requirements"] as FieldName[]
       ).find((f) => errors[f]);
-      formRef.current
-        ?.querySelector<HTMLElement>(`[name="${first}"]`)
-        ?.focus();
+      formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
       return;
     }
 
@@ -219,7 +229,7 @@ export default function BookingDialog({
     : stage === "done"
       ? "You are booked"
       : stage === "pick"
-        ? "Book a scoping call"
+        ? "Pick a time"
         : "Your details";
 
   return (
@@ -233,7 +243,7 @@ export default function BookingDialog({
           <AnimatePresence>
             {open && (
               <motion.div
-                className="fixed inset-0 z-[200] flex items-end justify-center p-0 sm:items-center sm:p-6"
+                className="fixed inset-0 z-[200] flex items-end justify-center sm:items-center sm:p-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -243,7 +253,7 @@ export default function BookingDialog({
                   type="button"
                   aria-label="Close"
                   onClick={() => setOpen(false)}
-                  className="absolute inset-0 bg-[#03060d]/78 backdrop-blur-sm"
+                  className="absolute inset-0 bg-[#03060d]/80 backdrop-blur-md"
                 />
 
                 <motion.div
@@ -256,325 +266,412 @@ export default function BookingDialog({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 14, scale: 0.985 }}
                   transition={{ duration: 0.34, ease }}
-                  className="glass relative z-10 flex max-h-[92svh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-[24px] outline-none sm:max-h-[88svh] sm:rounded-[24px]"
+                  className="relative z-10 grid max-h-[94svh] w-full max-w-[880px] overflow-hidden rounded-t-[26px] border border-white/12 bg-surface shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none sm:max-h-[86svh] sm:rounded-[26px] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]"
                 >
-                  {/* ---------- head ---------- */}
-                  <header className="flex shrink-0 items-start justify-between gap-4 border-b border-white/10 px-6 py-5 sm:px-8 sm:py-6">
-                    <div>
-                      {!unavailable && stage !== "done" && (
-                        <div className="mb-3 flex gap-1.5" aria-hidden>
-                          <span className="h-[3px] w-8 rounded-full bg-accent" />
-                          <span
-                            className={`h-[3px] w-8 rounded-full transition-colors duration-300 ${
-                              stage === "details" ? "bg-accent" : "bg-white/15"
-                            }`}
-                          />
-                        </div>
-                      )}
-                      <h2 className="text-[1.3rem] font-medium leading-tight tracking-tight text-white">
-                        {heading}
-                      </h2>
-                      {!unavailable && stage === "pick" && (
-                        <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-white/40">
-                          {MEETING_MINUTES} min · weekdays 2–5pm {ZONE_CITY} time
-                        </p>
-                      )}
-                      {!unavailable && stage !== "pick" && chosen && (
-                        <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-accent">
-                          {chosen}
-                        </p>
-                      )}
+                  {/* ---------- left rail: what the call actually is ---------- */}
+                  <aside className="relative hidden flex-col justify-between overflow-hidden border-r border-white/10 bg-[#0a1120] p-8 md:flex">
+                    <div
+                      className="pointer-events-none absolute -left-24 -top-24 h-[320px] w-[320px] rounded-full bg-accent/[0.14] blur-[90px]"
+                      aria-hidden
+                    />
+                    <div
+                      className="pointer-events-none absolute inset-0 opacity-[0.055]"
+                      aria-hidden
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(rgba(255,255,255,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.7) 1px, transparent 1px)",
+                        backgroundSize: "26px 26px",
+                      }}
+                    />
+
+                    <div className="relative">
+                      <span className="eyebrow !text-accent">
+                        Scoping call
+                      </span>
+                      <p className="mt-4 text-[2.6rem] font-medium leading-none tracking-[-0.03em] text-white">
+                        {MEETING_MINUTES}
+                        <span className="ml-1.5 text-[1.1rem] text-white/45">
+                          min
+                        </span>
+                      </p>
+
+                      <dl className="mt-8 space-y-5">
+                        {RAIL_FACTS.map((fact) => (
+                          <div key={fact.k}>
+                            <dt className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/35">
+                              {fact.k}
+                            </dt>
+                            <dd className="mt-1.5 text-[13.5px] leading-snug text-white/75">
+                              {fact.v}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
                     </div>
 
-                    <button
-                      type="button"
-                      aria-label="Close"
-                      onClick={() => setOpen(false)}
-                      className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white/15 text-white/60 transition-colors hover:border-accent/40 hover:text-accent"
-                    >
-                      ×
-                    </button>
-                  </header>
-
-                  {/* ---------- body ---------- */}
-                  {unavailable ? (
-                    <div className="overflow-y-auto px-6 py-7 sm:px-8">
-                      <p className="text-[15px] leading-relaxed text-white/65">
-                        The calendar is not connected yet. Email us and we will
-                        send times back the same day.
-                      </p>
-                      <a
-                        className="btn btn-solid mt-6 w-full justify-center"
-                        href={FALLBACK_HREF}
-                      >
-                        Email {site.contactEmail}
-                      </a>
+                    <div className="relative mt-10 flex items-baseline gap-2 border-t border-white/10 pt-5">
+                      <span className="serif-accent text-lg leading-none text-white">
+                        deploy
+                      </span>
+                      <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">
+                        by {site.name}
+                      </span>
                     </div>
-                  ) : stage === "done" ? (
-                    <div className="overflow-y-auto px-6 py-8 text-center sm:px-8">
-                      <div
-                        className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-accent/40 bg-accent/10 text-2xl text-accent"
-                        aria-hidden
-                      >
-                        ✓
-                      </div>
-                      <p className="mt-5 text-[1.05rem] font-medium text-white">
-                        {chosen}
-                      </p>
-                      <p className="mx-auto mt-3 max-w-[42ch] text-[14px] leading-relaxed text-white/60">
-                        A calendar invite is on its way to{" "}
-                        <b className="text-white/85">{form.email}</b>. Reply to
-                        it if you need to move the time.
-                      </p>
-                      <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                        {meetLink && (
-                          <a
-                            className="btn btn-solid"
-                            href={meetLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Open the Meet link
-                          </a>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => setOpen(false)}
-                          className="btn btn-glass"
-                        >
-                          Done
-                        </button>
-                      </div>
-                    </div>
-                  ) : stage === "pick" ? (
-                    <div className="overflow-y-auto px-6 py-6 sm:px-8">
-                      {/* the day strip */}
-                      <div
-                        className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-2"
-                        role="group"
-                        aria-label="Choose a day"
-                      >
-                        {dates.map((value) => {
-                          const part = dateParts(value);
-                          const relative = relativeDayLabel(value);
-                          const on = value === date;
-                          return (
-                            <button
-                              key={value}
-                              type="button"
-                              aria-pressed={on}
-                              onClick={() => {
-                                setDate(value);
-                                setTime("");
-                              }}
-                              className={`flex w-[68px] shrink-0 flex-col items-center gap-0.5 rounded-xl border px-2 py-3 transition-colors duration-200 ${
-                                on
-                                  ? "border-accent/60 bg-accent/[0.12] text-white"
-                                  : "border-white/12 bg-white/[0.02] text-white/60 hover:border-white/25 hover:text-white"
-                              }`}
-                            >
-                              <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-white/45">
-                                {relative ?? part.weekday}
-                              </span>
-                              <b className="text-[1.15rem] font-medium leading-none">
-                                {part.day}
-                              </b>
-                              <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-white/45">
-                                {part.month}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
+                  </aside>
 
-                      {loading && (
-                        <div
-                          className="mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-3"
-                          aria-hidden
-                        >
-                          {Array.from({ length: 6 }, (_, i) => (
-                            <div
-                              key={i}
-                              className="h-11 animate-pulse rounded-xl bg-white/[0.05]"
+                  {/* ---------- right pane: the step ---------- */}
+                  <div className="flex min-h-0 flex-col">
+                    <header className="flex shrink-0 items-start justify-between gap-4 border-b border-white/10 px-6 py-5 sm:px-7">
+                      <div className="min-w-0">
+                        {!unavailable && stage !== "done" && (
+                          <div className="mb-2.5 flex items-center gap-2 font-mono text-[9.5px] uppercase tracking-[0.16em]">
+                            <span className="text-accent">01 Time</span>
+                            <span
+                              className="h-px w-4 bg-white/20"
+                              aria-hidden
                             />
-                          ))}
-                        </div>
-                      )}
-
-                      {!loading && slots && freeCount > 0 && (
-                        <>
-                          <div className="mt-7 flex items-baseline justify-between">
-                            <span className="eyebrow !text-[10px]">
-                              Start time
-                            </span>
-                            <span className="font-mono text-[11px] text-accent">
-                              {freeCount} slot{freeCount === 1 ? "" : "s"} free
+                            <span
+                              className={
+                                stage === "details"
+                                  ? "text-accent"
+                                  : "text-white/28"
+                              }
+                            >
+                              02 Details
                             </span>
                           </div>
-                          <div
-                            className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3"
-                            role="group"
-                            aria-label="Choose a time"
+                        )}
+                        <h2 className="text-[1.35rem] font-medium leading-tight tracking-tight text-white">
+                          {heading}
+                        </h2>
+                        {!unavailable && stage !== "pick" && chosen && (
+                          <p className="mt-1.5 truncate font-mono text-[11px] uppercase tracking-[0.1em] text-accent">
+                            {chosen}
+                          </p>
+                        )}
+                        {!unavailable && stage === "pick" && (
+                          <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-white/35">
+                            All times {ZONE_CITY}
+                          </p>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        aria-label="Close"
+                        onClick={() => setOpen(false)}
+                        className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white/15 text-white/55 transition-colors hover:border-accent/50 hover:text-accent"
+                      >
+                        ×
+                      </button>
+                    </header>
+
+                    {unavailable ? (
+                      <div className="min-h-0 overflow-y-auto px-6 py-7 sm:px-7">
+                        <p className="text-[15px] leading-relaxed text-white/65">
+                          The calendar is not connected yet. Email us and we
+                          will send times back the same day.
+                        </p>
+                        <a
+                          className="btn btn-solid mt-6 w-full"
+                          href={FALLBACK_HREF}
+                        >
+                          Email {site.contactEmail}
+                        </a>
+                      </div>
+                    ) : stage === "done" ? (
+                      <div className="min-h-0 overflow-y-auto px-6 py-8 sm:px-7">
+                        <div
+                          className="grid h-12 w-12 place-items-center rounded-full border border-accent/40 bg-accent/10 text-xl text-accent"
+                          aria-hidden
+                        >
+                          ✓
+                        </div>
+                        <p className="mt-5 text-[1.15rem] font-medium leading-snug text-white">
+                          {chosen}
+                        </p>
+                        <p className="mt-3 max-w-[44ch] text-[14px] leading-relaxed text-white/60">
+                          A calendar invite is on its way to{" "}
+                          <b className="font-medium text-white/85">
+                            {form.email}
+                          </b>
+                          . Reply to it if you need to move the time.
+                        </p>
+                        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                          {meetLink && (
+                            <a
+                              className="btn btn-solid"
+                              href={meetLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Open the Meet link
+                            </a>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setOpen(false)}
+                            className="btn btn-glass"
                           >
-                            {slots.map((slot) => {
-                              // the API reports only availability, so say *why* it is gone
-                              const past =
-                                toInstant(date, slot.time).getTime() <
-                                Date.now();
+                            Done
+                          </button>
+                        </div>
+                      </div>
+                    ) : stage === "pick" ? (
+                      <div className="min-h-0 overflow-y-auto px-6 py-6 sm:px-7">
+                        {/* the day strip — scrolls, with the bar hidden and the
+                            right edge faded so it reads as "there is more" */}
+                        <div className="relative">
+                          <div
+                            className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1"
+                            role="group"
+                            aria-label="Choose a day"
+                          >
+                            {dates.map((value) => {
+                              const part = dateParts(value);
+                              const relative = relativeDayLabel(value);
+                              const on = value === date;
                               return (
                                 <button
-                                  key={slot.time}
+                                  key={value}
                                   type="button"
-                                  disabled={!slot.available}
-                                  title={
-                                    slot.available
-                                      ? slotRangeLabel(slot.time)
-                                      : past
-                                        ? "That time has passed"
-                                        : "Already booked"
-                                  }
+                                  aria-pressed={on}
                                   onClick={() => {
-                                    setTime(slot.time);
-                                    setStage("details");
+                                    setDate(value);
+                                    setTime("");
                                   }}
-                                  className="rounded-xl border border-white/12 bg-white/[0.02] py-3 text-[14px] text-white/80 transition-colors duration-200 hover:border-accent/50 hover:bg-accent/[0.08] hover:text-white disabled:cursor-not-allowed disabled:border-white/[0.06] disabled:bg-transparent disabled:text-white/20 disabled:line-through disabled:hover:border-white/[0.06] disabled:hover:bg-transparent"
+                                  className={`flex w-[62px] shrink-0 flex-col items-center gap-1 rounded-xl border px-2 py-2.5 transition-colors duration-200 ${
+                                    on
+                                      ? "border-accent/60 bg-accent/[0.13] text-white"
+                                      : "border-white/10 bg-white/[0.02] text-white/60 hover:border-white/25 hover:text-white"
+                                  }`}
                                 >
-                                  {slot.label}
+                                  <span
+                                    className={`font-mono text-[8.5px] uppercase tracking-[0.1em] ${
+                                      on ? "text-accent" : "text-white/40"
+                                    }`}
+                                  >
+                                    {relative ?? part.weekday}
+                                  </span>
+                                  <b className="text-[1.1rem] font-medium leading-none">
+                                    {part.day}
+                                  </b>
+                                  <span className="font-mono text-[8.5px] uppercase tracking-[0.1em] text-white/40">
+                                    {part.month}
+                                  </span>
                                 </button>
                               );
                             })}
                           </div>
-                        </>
-                      )}
-
-                      {!loading && slots && freeCount === 0 && (
-                        <p className="mt-7 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-5 text-center text-[14px] text-white/55">
-                          Nothing free on this day. Try another from the strip
-                          above.
-                        </p>
-                      )}
-
-                      {formError && (
-                        <p
-                          className="mt-5 text-[13px] text-red-300"
-                          role="alert"
-                        >
-                          {formError}
-                        </p>
-                      )}
-                    </div>
-                  ) : (
-                    <form
-                      className="overflow-y-auto px-6 py-6 sm:px-8"
-                      onSubmit={submit}
-                      ref={formRef}
-                      noValidate
-                    >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setStage("pick");
-                          setTime("");
-                          setFormError("");
-                        }}
-                        className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/45 transition-colors hover:text-accent"
-                      >
-                        ← Pick a different time
-                      </button>
-
-                      <div className="mt-5 space-y-4">
-                        {FIELDS.map((field) => {
-                          const message = showError(field.name);
-                          return (
-                            <label className="block" key={field.name}>
-                              <span className="eyebrow !text-[10px] !text-white/45">
-                                {field.label}
-                              </span>
-                              <input
-                                name={field.name}
-                                type={field.type}
-                                autoComplete={field.autoComplete}
-                                placeholder={field.placeholder}
-                                value={form[field.name]}
-                                aria-invalid={message ? true : undefined}
-                                className={`mt-2 ${inputClass(!!message)}`}
-                                onChange={(e) =>
-                                  setForm({
-                                    ...form,
-                                    [field.name]: e.target.value,
-                                  })
-                                }
-                                onBlur={() =>
-                                  setTouched((t) => ({
-                                    ...t,
-                                    [field.name]: true,
-                                  }))
-                                }
-                              />
-                              {message && (
-                                <span className="mt-1.5 block text-[12px] text-red-300">
-                                  {message}
-                                </span>
-                              )}
-                            </label>
-                          );
-                        })}
-
-                        <label className="block">
-                          <span className="eyebrow !text-[10px] !text-white/45 flex items-baseline justify-between">
-                            What do you want to fix?
-                            <i className="font-mono not-italic text-white/30">
-                              {form.requirements.length}/{REQUIREMENTS_MAX}
-                            </i>
-                          </span>
-                          <textarea
-                            name="requirements"
-                            rows={3}
-                            maxLength={REQUIREMENTS_MAX}
-                            placeholder="One workflow, in a sentence or two. What happens today, and what should happen instead."
-                            value={form.requirements}
-                            aria-invalid={
-                              showError("requirements") ? true : undefined
-                            }
-                            className={`mt-2 resize-none ${inputClass(
-                              !!showError("requirements")
-                            )}`}
-                            onChange={(e) =>
-                              setForm({ ...form, requirements: e.target.value })
-                            }
-                            onBlur={() =>
-                              setTouched((t) => ({ ...t, requirements: true }))
-                            }
+                          <div
+                            className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-surface to-transparent"
+                            aria-hidden
                           />
-                          {showError("requirements") && (
-                            <span className="mt-1.5 block text-[12px] text-red-300">
-                              {showError("requirements")}
-                            </span>
-                          )}
-                        </label>
+                        </div>
+
+                        {loading && (
+                          <div
+                            className="mt-7 grid grid-cols-2 gap-2.5 sm:grid-cols-3"
+                            aria-hidden
+                          >
+                            {Array.from({ length: 6 }, (_, i) => (
+                              <div
+                                key={i}
+                                className="h-[46px] animate-pulse rounded-xl bg-white/[0.05]"
+                              />
+                            ))}
+                          </div>
+                        )}
+
+                        {!loading && slots && freeCount > 0 && (
+                          <>
+                            <div className="mt-7 flex items-baseline justify-between border-t border-white/10 pt-5">
+                              <span className="eyebrow !text-[10px]">
+                                Start time
+                              </span>
+                              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-accent">
+                                {freeCount} free
+                              </span>
+                            </div>
+                            <div
+                              className="mt-3.5 grid grid-cols-2 gap-2.5 sm:grid-cols-3"
+                              role="group"
+                              aria-label="Choose a time"
+                            >
+                              {slots.map((slot) => {
+                                // the API reports only availability, so say *why* it is gone
+                                const past =
+                                  toInstant(date, slot.time).getTime() <
+                                  Date.now();
+                                return (
+                                  <button
+                                    key={slot.time}
+                                    type="button"
+                                    disabled={!slot.available}
+                                    title={
+                                      slot.available
+                                        ? slotRangeLabel(slot.time)
+                                        : past
+                                          ? "That time has passed"
+                                          : "Already booked"
+                                    }
+                                    onClick={() => {
+                                      setTime(slot.time);
+                                      setStage("details");
+                                    }}
+                                    className="rounded-xl border border-white/10 bg-white/[0.02] py-3 text-[14px] tabular-nums text-white/80 transition-colors duration-200 hover:border-accent/55 hover:bg-accent/[0.1] hover:text-white disabled:cursor-not-allowed disabled:border-transparent disabled:bg-white/[0.015] disabled:text-white/18 disabled:line-through"
+                                  >
+                                    {slot.label}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </>
+                        )}
+
+                        {!loading && slots && freeCount === 0 && (
+                          <div className="mt-7 border-t border-white/10 pt-7 text-center">
+                            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
+                              Fully booked
+                            </p>
+                            <p className="mx-auto mt-2.5 max-w-[34ch] text-[14px] leading-relaxed text-white/55">
+                              Nothing free on this day. Try another from the
+                              strip above.
+                            </p>
+                          </div>
+                        )}
+
+                        {formError && (
+                          <p
+                            className="mt-5 text-[13px] text-red-300"
+                            role="alert"
+                          >
+                            {formError}
+                          </p>
+                        )}
                       </div>
-
-                      {formError && (
-                        <p className="mt-5 text-[13px] text-red-300" role="alert">
-                          {formError}
-                        </p>
-                      )}
-
-                      <div className="mt-6 border-t border-white/10 pt-6">
+                    ) : (
+                      <form
+                        className="min-h-0 overflow-y-auto px-6 py-6 sm:px-7"
+                        onSubmit={submit}
+                        ref={formRef}
+                        noValidate
+                      >
                         <button
-                          className="btn btn-solid w-full justify-center"
-                          type="submit"
-                          disabled={sending}
+                          type="button"
+                          onClick={() => {
+                            setStage("pick");
+                            setTime("");
+                            setFormError("");
+                          }}
+                          className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/40 transition-colors hover:text-accent"
                         >
-                          {sending ? "Booking…" : "Confirm booking"}
+                          ← Pick a different time
                         </button>
-                        <p className="mt-3 text-center text-[12px] leading-relaxed text-white/40">
-                          You will get a calendar invite with a Meet link. No
-                          newsletter, no follow-up sequence.
-                        </p>
-                      </div>
-                    </form>
-                  )}
+
+                        <div className="mt-5 space-y-4">
+                          {FIELDS.map((field) => {
+                            const message = showError(field.name);
+                            return (
+                              <label className="block" key={field.name}>
+                                <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/40">
+                                  {field.label}
+                                </span>
+                                <input
+                                  name={field.name}
+                                  type={field.type}
+                                  autoComplete={field.autoComplete}
+                                  placeholder={field.placeholder}
+                                  value={form[field.name]}
+                                  aria-invalid={message ? true : undefined}
+                                  className={`mt-2 ${inputClass(!!message)}`}
+                                  onChange={(e) =>
+                                    setForm({
+                                      ...form,
+                                      [field.name]: e.target.value,
+                                    })
+                                  }
+                                  onBlur={() =>
+                                    setTouched((t) => ({
+                                      ...t,
+                                      [field.name]: true,
+                                    }))
+                                  }
+                                />
+                                {message && (
+                                  <span className="mt-1.5 block text-[12px] text-red-300">
+                                    {message}
+                                  </span>
+                                )}
+                              </label>
+                            );
+                          })}
+
+                          <label className="block">
+                            <span className="flex items-baseline justify-between font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/40">
+                              What do you want to fix?
+                              <i className="not-italic text-white/25">
+                                {form.requirements.length}/{REQUIREMENTS_MAX}
+                              </i>
+                            </span>
+                            <textarea
+                              name="requirements"
+                              rows={3}
+                              maxLength={REQUIREMENTS_MAX}
+                              placeholder="One workflow, in a sentence or two. What happens today, and what should happen instead."
+                              value={form.requirements}
+                              aria-invalid={
+                                showError("requirements") ? true : undefined
+                              }
+                              className={`mt-2 resize-none ${inputClass(
+                                !!showError("requirements")
+                              )}`}
+                              onChange={(e) =>
+                                setForm({
+                                  ...form,
+                                  requirements: e.target.value,
+                                })
+                              }
+                              onBlur={() =>
+                                setTouched((t) => ({
+                                  ...t,
+                                  requirements: true,
+                                }))
+                              }
+                            />
+                            {showError("requirements") && (
+                              <span className="mt-1.5 block text-[12px] text-red-300">
+                                {showError("requirements")}
+                              </span>
+                            )}
+                          </label>
+                        </div>
+
+                        {formError && (
+                          <p
+                            className="mt-5 text-[13px] text-red-300"
+                            role="alert"
+                          >
+                            {formError}
+                          </p>
+                        )}
+
+                        <div className="mt-6 border-t border-white/10 pt-5">
+                          <button
+                            className="btn btn-solid w-full"
+                            type="submit"
+                            disabled={sending}
+                          >
+                            {sending ? "Booking…" : "Confirm booking"}
+                          </button>
+                          <p className="mt-3 text-center text-[11.5px] leading-relaxed text-white/35">
+                            You get a calendar invite with a Meet link. No
+                            newsletter, no follow-up sequence.
+                          </p>
+                        </div>
+                      </form>
+                    )}
+                  </div>
                 </motion.div>
               </motion.div>
             )}

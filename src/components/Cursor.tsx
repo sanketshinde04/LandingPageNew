@@ -50,7 +50,8 @@ export default function Cursor() {
   if (!active) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[120]" aria-hidden>
+    /* above the booking dialog (z-200), or the cursor vanishes over it */
+    <div className="pointer-events-none fixed inset-0 z-[300]" aria-hidden>
       {/* trailing glass ring */}
       <motion.div
         style={{ x: ringX, y: ringY }}
