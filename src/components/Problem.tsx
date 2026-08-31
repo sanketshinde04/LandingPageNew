@@ -61,7 +61,7 @@ export default function Problem() {
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             <span className="eyebrow !text-white/75">{problem.eyebrow}</span>
           </span>
-          <h2 className="mt-8 text-[clamp(2.3rem,4.8vw,3.8rem)] font-medium leading-[1.05] tracking-[-0.02em]">
+          <h2 className="mt-8 text-[clamp(1.95rem,4.8vw,3.8rem)] font-medium leading-[1.05] tracking-[-0.02em]">
             {problem.title}{" "}
             <span className="serif-accent text-accent">
               {problem.titleAccent}
@@ -69,12 +69,12 @@ export default function Problem() {
             <br />
             {problem.titleAfter}
           </h2>
-          <p className="mx-auto mt-7 max-w-[660px] text-lg leading-relaxed text-white/65">
+          <p className="mx-auto mt-7 max-w-[660px] text-base leading-relaxed text-white/65 md:text-lg">
             {problem.sub}
           </p>
         </Reveal>
 
-        <div className="mt-24 grid grid-cols-1 gap-12 sm:grid-cols-3">
+        <div className="mt-16 grid grid-cols-1 gap-12 sm:mt-24 sm:grid-cols-3">
           {problem.stats.map((stat, i) => (
             <Reveal
               key={stat.label}

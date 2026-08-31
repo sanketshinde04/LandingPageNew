@@ -174,20 +174,20 @@ export default function Sprint() {
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[760px]">
           <span className="eyebrow !text-accent">{sprint.eyebrow}</span>
-          <h2 className="mt-5 text-[clamp(2.4rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
+          <h2 className="mt-5 text-[clamp(2rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
             {sprint.title}{" "}
             <span className="serif-accent text-accent">
               {sprint.titleAccent}
             </span>
           </h2>
-          <p className="mt-6 max-w-[600px] text-lg leading-relaxed text-white/65">
+          <p className="mt-6 max-w-[600px] text-base leading-relaxed text-white/65 md:text-lg">
             {sprint.sub}
           </p>
         </Reveal>
 
         <div
           ref={bodyRef}
-          className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-[0.86fr_1.14fr] md:gap-16"
+          className="mt-12 grid grid-cols-1 gap-12 md:mt-16 md:grid-cols-[0.86fr_1.14fr] md:gap-16"
         >
           {/* ---------- left: the rail ---------- */}
           <div className="hidden md:block">
@@ -219,7 +219,7 @@ export default function Sprint() {
                     <path
                       ref={pathRef}
                       d="M12 268 C 92 264, 122 238, 162 208 S 252 158, 292 118 S 390 58, 448 26"
-                      stroke="#a8d5b5"
+                      stroke="#4f8cff"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                       style={{ willChange: "stroke-dashoffset" }}
@@ -228,7 +228,7 @@ export default function Sprint() {
                   <span
                     ref={dotRef}
                     style={{ willChange: "transform" }}
-                    className="pointer-events-none absolute left-0 top-0 h-3 w-3 rounded-full bg-accent shadow-[0_0_0_5px_rgba(168,213,181,0.16),0_0_20px_rgba(168,213,181,0.65)]"
+                    className="pointer-events-none absolute left-0 top-0 h-3 w-3 rounded-full bg-accent shadow-[0_0_0_5px_rgba(79,140,255,0.18),0_0_22px_rgba(79,140,255,0.7)]"
                   />
                 </div>
 

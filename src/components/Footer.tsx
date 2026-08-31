@@ -3,7 +3,7 @@ import { footer, site } from "@/lib/content";
 export default function Footer() {
   return (
     <footer className="border-t hairline pb-12 pt-20">
-      <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-14 px-6 md:grid-cols-[1.2fr_0.6fr_0.6fr] md:px-10">
+      <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 px-6 sm:grid-cols-2 md:px-10 lg:grid-cols-[1.5fr_0.8fr_1.1fr_0.8fr] lg:gap-12">
         <div>
           <a href="#top" className="flex items-baseline gap-2">
             <span className="serif-accent text-2xl leading-none text-white">

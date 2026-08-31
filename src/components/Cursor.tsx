@@ -67,7 +67,7 @@ export default function Cursor() {
       </motion.div>
       {/* core dot */}
       <motion.div style={{ x, y }} className="absolute left-0 top-0">
-        <div className="h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_10px_rgba(168,213,181,0.8)]" />
+        <div className="h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_10px_rgba(79,140,255,0.8)]" />
       </motion.div>
     </div>
   );

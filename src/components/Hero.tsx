@@ -21,9 +21,9 @@ export default function Hero() {
     >
       {/* ---------- backdrop ---------- */}
       <div className="absolute inset-0 bg-base" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_58%_54%_at_72%_46%,rgba(48,92,66,0.38),transparent_70%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_48%_58%_at_10%_30%,rgba(30,48,42,0.46),transparent_72%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-[55%] bg-[linear-gradient(to_top,rgba(14,26,19,0.5),transparent)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_58%_54%_at_72%_46%,rgba(40,86,180,0.34),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_48%_58%_at_10%_30%,rgba(26,44,86,0.46),transparent_72%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-[55%] bg-[linear-gradient(to_top,rgba(14,26,56,0.5),transparent)]" />
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.05]"
         style={{
@@ -38,27 +38,27 @@ export default function Hero() {
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-base" />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-[1500px] grid-cols-1 items-center gap-10 px-6 pb-16 pt-32 md:px-10 lg:grid-cols-[1.08fr_1fr] lg:gap-6 lg:pb-24">
+      <div className="relative z-10 mx-auto grid w-full max-w-[1500px] grid-cols-1 items-center gap-8 px-6 pb-16 pt-28 sm:gap-10 sm:pt-32 md:px-10 lg:grid-cols-[1.08fr_1fr] lg:gap-6 lg:pb-24">
         {/* ---------- left: the claim ---------- */}
         <div>
           <motion.h1
             {...fadeUp(0.1)}
-            className="text-[clamp(2.6rem,5.4vw,4.7rem)] font-medium leading-[1.02] tracking-[-0.03em] text-white"
+            className="text-[clamp(2.15rem,5.4vw,4.7rem)] font-medium leading-[1.02] tracking-[-0.03em] text-white"
           >
             {/* each line holds together — the headline never breaks mid-phrase */}
-            <span className="whitespace-nowrap">{hero.titleLine1}</span>
+            <span className="sm:whitespace-nowrap">{hero.titleLine1}</span>
             <br />
             <span className="serif-accent text-accent">{hero.titleLine2}</span>
           </motion.h1>
 
           <motion.p
             {...fadeUp(0.26)}
-            className="mt-8 max-w-[30ch] text-xl leading-relaxed text-white/70 md:text-[1.35rem]"
+            className="mt-6 max-w-[34ch] text-[1.05rem] leading-relaxed text-white/70 sm:mt-8 sm:text-xl md:max-w-[30ch] md:text-[1.35rem]"
           >
             {hero.sub}
           </motion.p>
 
-          <motion.div {...fadeUp(0.4)} className="mt-10">
+          <motion.div {...fadeUp(0.4)} className="mt-8 sm:mt-10">
             <Magnetic>
               <a href={hero.primaryCta.href} className="btn btn-solid">
                 {hero.primaryCta.label} <span aria-hidden>→</span>

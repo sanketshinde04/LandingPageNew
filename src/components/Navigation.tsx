@@ -45,7 +45,7 @@ export default function Navigation() {
         <Magnetic strength={0.2}>
           <a
             href={nav.cta.href}
-            className="btn btn-solid !px-6 !py-2.5 text-sm"
+            className="btn btn-solid !px-4 !py-2 text-[13px] sm:!px-6 sm:!py-2.5 sm:text-sm"
           >
             {nav.cta.label}
           </a>

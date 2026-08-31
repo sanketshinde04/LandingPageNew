@@ -56,21 +56,21 @@ const WORD_TRACKING = 0.035;
 const IDLE_RATE = 0.16;
 const EASE = 0.5;
 
-/* twelve flat plates in the site's own palette — near-blacks, deep greens,
-   sage, and bone, in the order they read best going round */
+/* twelve flat plates in the site's own palette — deep navies, blue, cyan
+   and ice, in the order they read best going round */
 const PLATES = [
-  "#0d1310",
-  "#a8d5b5",
-  "#f2efe8",
-  "#18261e",
-  "#2f4a3a",
-  "#c9d9cd",
-  "#070907",
-  "#5a7a67",
-  "#e6ece7",
-  "#1f2a24",
-  "#8fbfa1",
-  "#101a14",
+  "#0c1424",
+  "#4f8cff",
+  "#eef3ff",
+  "#16233d",
+  "#2b4a86",
+  "#c3d6f5",
+  "#070c16",
+  "#22d3ee",
+  "#e2ecfb",
+  "#1a2a48",
+  "#7fb0ff",
+  "#101a2e",
 ];
 
 /* ---------------------------- helpers ---------------------------- */
@@ -524,7 +524,7 @@ export default function HeroRing({ className }: { className?: string }) {
 
   return (
     <div ref={hostRef} className={`relative ${className ?? ""}`}>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,213,181,0.13),transparent_62%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(79,140,255,0.15),transparent_62%)]" />
       <canvas
         ref={canvasRef}
         className="absolute inset-0 block h-full w-full"

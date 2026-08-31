@@ -21,13 +21,13 @@ export default function ProjectIndex() {
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[820px]">
           <span className="eyebrow !text-accent">{projectIndex.eyebrow}</span>
-          <h2 className="mt-5 text-[clamp(2.4rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
+          <h2 className="mt-5 text-[clamp(2rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
             {projectIndex.title}{" "}
             <span className="serif-accent text-accent">
               {projectIndex.titleAccent}
             </span>
           </h2>
-          <p className="mt-6 max-w-[680px] text-lg leading-relaxed text-white/65">
+          <p className="mt-6 max-w-[680px] text-base leading-relaxed text-white/65 md:text-lg">
             {projectIndex.sub}
           </p>
         </Reveal>
@@ -86,7 +86,7 @@ export default function ProjectIndex() {
             </ul>
 
             {/* ---------- what it means for you ---------- */}
-            <div className="glass relative flex min-h-[360px] flex-col overflow-hidden rounded-[24px] p-9 md:p-11">
+            <div className="glass relative flex min-h-[320px] flex-col overflow-hidden rounded-[24px] p-6 sm:p-9 md:p-11">
               <div className="pointer-events-none absolute -right-32 -top-32 h-[380px] w-[380px] rounded-full bg-accent/[0.07] blur-[110px]" />
 
               <motion.div

@@ -1,7 +1,7 @@
 export const site = {
   name: "Build Fast with AI",
   product: "DEPLOY",
-  title: "DEPLOY — Build the system. Ship it fast.",
+  title: "DEPLOY — Build AI systems that actually ship.",
   description:
     "Forward-deployed AI engineers embed with your team, turn one real workflow into a deployed production system, and hand you the code and the capability.",
 };
@@ -16,17 +16,16 @@ export const nav = {
     { label: "Work", href: "#work" },
     { label: "Projects", href: "#projects" },
     { label: "The build", href: "#sprint" },
-    { label: "Use cases", href: "#usecases" },
   ],
   cta: { label: "Book a 30-min call", href: "#call" },
 };
 
 /* One claim, one line, one action. Everything else earns its place further down. */
 export const hero = {
-  eyebrow: "Forward-deployed AI engineering",
-  titleLine1: "Build the system.",
-  titleLine2: "Ship it fast.",
-  sub: "Forward-deployed AI engineers embed with your team and take one workflow all the way into production.",
+  eyebrow: "Forward-deployed AI engineers",
+  titleLine1: "Build AI systems",
+  titleLine2: "that actually ship.",
+  sub: "Forward-deployed AI engineers embed with your team and turn one real workflow into AI agents running in production.",
   primaryCta: { label: "Book a 30-min call", href: "#call" },
   /** set inside the orbiting ring — keep it one short word */
   mark: "DEPLOY",
@@ -67,6 +66,8 @@ export const work = {
       size: "wide" as const,
       sector: "Enterprise",
       title: "AI Data Analyst",
+      detail:
+        "A text-to-SQL agent that answers plain-English questions against a live production database. A business glossary maps everyday terms to the right tables, a cheap model handles the easy queries and a stronger one takes the hard ones, and every answer is checked against a held-out test set.",
       points: [
         "Ask the database a question in plain English",
         "Text-to-SQL, checked to ~95% accuracy",
@@ -79,6 +80,8 @@ export const work = {
       size: "narrow" as const,
       sector: "HR Tech",
       title: "AI Interview Agent",
+      detail:
+        "Runs the first technical round over live voice, asks follow-up questions based on what the candidate actually said, and gives them a sandbox to write real code in. Every score arrives with the reasoning behind it, so a rejection can always be justified.",
       points: [
         "Runs the first technical round over live voice",
         "Asks follow-up questions from the answers",
@@ -91,6 +94,8 @@ export const work = {
       size: "narrow" as const,
       sector: "Finance",
       title: "Document Processing Agent",
+      detail:
+        "Reads invoices, contracts and scans, pulls out the fields that matter, and checks each one against your own rules. Anything that fails a rule is flagged for a person rather than guessed at, and every extraction is logged for audit.",
       points: [
         "Pulls fields out of invoices, contracts and scans",
         "Checks each one against your own rules",
@@ -103,6 +108,8 @@ export const work = {
       size: "wide" as const,
       sector: "Edtech",
       title: "AI Tutor Platform",
+      detail:
+        "Teaches one student at a time and moves at their pace, choosing the next question from how they answered the last. It tracks what each student has genuinely mastered, and the teacher approves anything the system should not decide on its own.",
       points: [
         "Teaches one student at a time, at their pace",
         "Picks the next question from past answers",
@@ -115,6 +122,8 @@ export const work = {
       size: "half" as const,
       sector: "FoodTech",
       title: "Sales Data Chatbot",
+      detail:
+        "Answers questions about live sales inside the chat tool the team already uses. Separate agents handle retrieval and analysis, and it reads the production database directly rather than a nightly copy.",
       points: [
         "Answers sales questions inside the team's chat",
         "Separate agents for retrieval and analysis",
@@ -126,6 +135,8 @@ export const work = {
       size: "half" as const,
       sector: "DevTools",
       title: "LLM Developer Launch",
+      detail:
+        "Took a new model family to the developers who would actually use it: technical documentation, quickstarts and working demo integrations, delivered through the launch window.",
       points: [
         "Took a new model family to its developers",
         "Technical docs and quickstarts",
@@ -283,11 +294,6 @@ export const manifesto = {
       "Your engineers build alongside us and keep it",
     ],
   },
-  quote: {
-    before: "Most companies don't have an AI problem. They have a ",
-    highlight: "deployment problem",
-    after: ".",
-  },
 };
 
 export type Stage = {
@@ -351,51 +357,6 @@ export const sprint = {
   ] as Stage[],
   railStart: "Day 0 — pilot chaos",
   railEnd: "Week 6 — in production",
-};
-
-export const useCases = {
-  eyebrow: "Where it applies",
-  title: "Find the workflow",
-  titleAccent: "worth automating first.",
-  sub: "These are the shapes we see most often. If one of them looks like your Monday morning, that's the workflow to bring to the call.",
-  items: [
-    {
-      fn: "Sales & Growth",
-      icon: "signal" as const,
-      example: "Lead revival",
-      body: "Spot intent, research the account, draft outreach, stop for approval.",
-    },
-    {
-      fn: "Operations",
-      icon: "approval" as const,
-      example: "Approval router",
-      body: "Reconcile status across systems, chase only what is outstanding.",
-    },
-    {
-      fn: "Finance",
-      icon: "ledger" as const,
-      example: "Cash collection",
-      body: "Rank overdue invoices and prepare the action for each account.",
-    },
-    {
-      fn: "People",
-      icon: "onboard" as const,
-      example: "Employee onboarding",
-      body: "Role-based tasks, baseline access, readiness verified before day one.",
-    },
-    {
-      fn: "Engineering",
-      icon: "release" as const,
-      example: "Release readiness",
-      body: "Tests, CI/CD, migrations, approvals and incidents, checked before ship.",
-    },
-    {
-      fn: "Risk & Compliance",
-      icon: "evidence" as const,
-      example: "Evidence pack",
-      body: "Collect evidence, validate coverage, flag gaps, package for review.",
-    },
-  ],
 };
 
 export const pod = {
@@ -481,8 +442,7 @@ export const footer = {
         { label: "Projects", href: "#projects" },
         { label: "Why", href: "#why" },
         { label: "The build", href: "#sprint" },
-        { label: "Use cases", href: "#usecases" },
-      ],
+          ],
     },
     {
       heading: "Company",
@@ -492,6 +452,19 @@ export const footer = {
         { label: "LinkedIn", href: "https://www.linkedin.com/company/build-fast-with-ai/" },
         { label: "X", href: "https://x.com/BuildFastWithAI" },
         { label: "GitHub", href: "https://github.com/buildfastwithai/gen-ai-experiments" },
+      ],
+    },
+    {
+      heading: "Legal",
+      links: [
+        {
+          label: "Terms & conditions",
+          href: "https://www.buildfastwithai.com/terms-and-conditions",
+        },
+        {
+          label: "Privacy policy",
+          href: "https://www.buildfastwithai.com/privacy-policy",
+        },
       ],
     },
   ],

@@ -6,7 +6,6 @@ import ProjectIndex from "@/components/ProjectIndex";
 import Problem from "@/components/Problem";
 import Manifesto from "@/components/Manifesto";
 import Sprint from "@/components/Sprint";
-import UseCases from "@/components/UseCases";
 import Pod from "@/components/Pod";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
@@ -18,13 +17,12 @@ export default function Home() {
       <Navigation />
       <Hero />
       <ProofMarquee />
+      <Manifesto />
       {/* Projects sit before the process — the work earns the rest of the scroll. */}
       <Work />
       <ProjectIndex />
       <Problem />
-      <Manifesto />
       <Sprint />
-      <UseCases />
       <Pod />
       <FAQ />
       <FinalCTA />

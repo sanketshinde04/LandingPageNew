@@ -319,6 +319,38 @@ Reference: the Gallery Heading study (`forge`-adjacent ThreeUI component), Canva
   rather than as the hole it was in round 8. Narrow cards cap their drawing at 210px, which
   is what stopped them running 130px taller than the card beside them.
 
+## Round 12 — de-slopping, a real slider, responsive
+
+- **Hero headline names the product.** "Build the system. / Ship it fast." said nothing about
+  AI. Now "Build AI systems / that actually ship." — the second line stays the serif accent,
+  so the rhythm is unchanged.
+- **The model section lost the pull quote.** The card was the tallest thing on the page. The
+  quote ("Most companies don't have an AI problem…") repeated what the two lists already say,
+  so it went rather than the paragraph, which is the part that explains "inside your stack".
+  Vertical padding came down with it.
+- **The divider between the two lists is now a real control.** Drag it left or right and the
+  columns resize; the travel is clamped to 28–72% so neither list can be crushed. Pointer or
+  arrow keys, `role="separator"` with a live `aria-valuenow`. On mobile the lists stack and
+  the handle is hidden.
+- **The work cards dropped everything that read as AI slop.** Gone: the "60% less interview
+  time" stat pills, the blue gradient hover shadow, the gradient arrow button, the shine
+  sweep, and the fake device-window chrome around the drawing. What is left is a flat card,
+  one border, one accent. The sector — HR Tech, Finance, Edtech — moved **above** the project
+  title as a plain mono label, not a bubble.
+- **The whole card opens the story**, not just the link at the bottom. Keyboard-reachable
+  (Enter/Space), Escape closes.
+- **The CTA photograph is smaller.** Section padding 36/52/60 → 24/32/36 and the card caps at
+  1280px, taking the image from ~880px tall to 564px.
+- **The footer grid was wrong.** Four children in a three-column template, so Legal wrapped to
+  a second row under the brand. Now 1 / 2 / 4 columns across the breakpoints, one row on
+  desktop.
+- **Responsive pass.** Headline clamps start lower (2.15rem), the first hero line is only
+  `nowrap` from `sm` up, the logo wall drops to two columns on phones, the nav button shrinks,
+  and `.marquee-mask` got `overflow: hidden` — the project track is ~3250px wide and was
+  opening a horizontal scrollbar on a 375px screen. Verified at 375: `scrollWidth === 375`.
+  `overflow-x` was deliberately *not* put on `html`, since that makes it a scroll container
+  and breaks the Sprint rail's `position: sticky`.
+
 ## Still open
 - Real testimonials and named references.
 - More logos once permission is confirmed per client.

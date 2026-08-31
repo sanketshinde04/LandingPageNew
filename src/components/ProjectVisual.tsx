@@ -17,7 +17,7 @@ export type VisualName =
 
 const S = "rgba(255,255,255,0.2)"; // structure
 const T = "rgba(255,255,255,0.4)"; // content
-const A = "#a8d5b5"; // the one thing worth looking at
+const A = "#4f8cff"; // the one thing worth looking at
 
 /* a question in plain language, resolving into one row of a table */
 function SqlRag() {

@@ -7,11 +7,11 @@ export default function Pod() {
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[760px]">
           <span className="eyebrow !text-accent">{pod.eyebrow}</span>
-          <h2 className="mt-5 text-[clamp(2.4rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
+          <h2 className="mt-5 text-[clamp(2rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
             {pod.title}{" "}
             <span className="serif-accent text-accent">{pod.titleAccent}</span>
           </h2>
-          <p className="mt-6 max-w-[640px] text-lg leading-relaxed text-white/65">
+          <p className="mt-6 max-w-[640px] text-base leading-relaxed text-white/65 md:text-lg">
             {pod.sub}
           </p>
         </Reveal>

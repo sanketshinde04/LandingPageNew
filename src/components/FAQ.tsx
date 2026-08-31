@@ -55,7 +55,7 @@ export default function FAQ() {
       <div className="mx-auto max-w-[820px] px-6 md:px-10">
         <Reveal>
           <span className="eyebrow !text-accent">{faq.eyebrow}</span>
-          <h2 className="mt-5 text-[clamp(2.4rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
+          <h2 className="mt-5 text-[clamp(2rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
             {faq.title}{" "}
             <span className="serif-accent text-accent">{faq.titleAccent}</span>
           </h2>
