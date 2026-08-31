@@ -235,6 +235,7 @@ export default function ProjectVisual({ name, className }: ProjectVisualProps) {
       strokeLinejoin="round"
       preserveAspectRatio="xMidYMid meet"
       className={className}
+      data-project-visual
       aria-hidden
     >
       <Draw />

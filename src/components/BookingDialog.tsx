@@ -91,7 +91,7 @@ const inputClass = (bad: boolean) =>
  */
 export default function BookingDialog({
   triggerClassName,
-  label = "Book a 30-min call",
+  label = "Book a call",
 }: Props) {
   const [open, setOpen] = useState(false);
   const [dates] = useState(() => bookableDates());
@@ -233,8 +233,11 @@ export default function BookingDialog({
 
   return (
     <>
-      <button className={triggerClassName} type="button" onClick={start}>
-        {label} <span aria-hidden>→</span>
+      <button className={`booking-trigger ${triggerClassName ?? ""}`} type="button" onClick={start}>
+        <span className="inline-flex items-center gap-2">
+          {label}
+        </span>
+        <span aria-hidden>→</span>
       </button>
 
       {mounted &&
@@ -426,32 +429,31 @@ export default function BookingDialog({
                       </div>
                     ) : stage === "pick" ? (
                       <div className="min-h-0 overflow-y-auto px-6 py-6 sm:px-7">
-                        {/* the day strip — scrolls, with the bar hidden and the
-                            right edge faded so it reads as "there is more" */}
-                        <div className="relative">
-                          <div
-                            className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1"
-                            role="group"
-                            aria-label="Choose a day"
-                          >
-                            {dates.map((value) => {
-                              const part = dateParts(value);
-                              const relative = relativeDayLabel(value);
-                              const on = value === date;
-                              return (
-                                <button
-                                  key={value}
-                                  type="button"
-                                  aria-pressed={on}
-                                  onClick={() => {
-                                    setDate(value);
-                                    setTime("");
-                                  }}
-                                  className={`flex w-[62px] shrink-0 flex-col items-center gap-1 rounded-xl border px-2 py-2.5 transition-colors duration-200 ${
-                                    on
-                                      ? "border-accent/60 bg-accent/[0.13] text-white"
-                                      : "border-white/10 bg-white/[0.02] text-white/60 hover:border-white/25 hover:text-white"
-                                  }`}
+                        {/* Keep the full weekday range balanced instead of
+                            letting the browser create an uneven final row. */}
+                        <div
+                          className="grid grid-cols-4 gap-2 sm:grid-cols-5"
+                          role="group"
+                          aria-label="Choose a day"
+                        >
+                          {dates.map((value) => {
+                            const part = dateParts(value);
+                            const relative = relativeDayLabel(value);
+                            const on = value === date;
+                            return (
+                              <button
+                                key={value}
+                                type="button"
+                                aria-pressed={on}
+                                onClick={() => {
+                                  setDate(value);
+                                  setTime("");
+                                }}
+                                className={`flex w-full min-w-0 flex-col items-center gap-1 rounded-xl border px-2 py-2.5 transition-colors duration-200 ${
+                                  on
+                                    ? "border-accent/60 bg-accent/[0.13] text-white"
+                                    : "border-white/10 bg-white/[0.02] text-white/60 hover:border-white/25 hover:text-white"
+                                }`}
                                 >
                                   <span
                                     className={`font-mono text-[8.5px] uppercase tracking-[0.1em] ${
@@ -466,14 +468,9 @@ export default function BookingDialog({
                                   <span className="font-mono text-[8.5px] uppercase tracking-[0.1em] text-white/40">
                                     {part.month}
                                   </span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                          <div
-                            className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-surface to-transparent"
-                            aria-hidden
-                          />
+                              </button>
+                            );
+                          })}
                         </div>
 
                         {loading && (

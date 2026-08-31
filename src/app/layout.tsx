@@ -1,13 +1,25 @@
 import type { Metadata } from "next";
-import { Inter, Cormorant_Garamond, IBM_Plex_Mono } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  Cormorant_Garamond,
+  IBM_Plex_Mono,
+  Instrument_Sans,
+} from "next/font/google";
 import "./globals.css";
 import ScrollProvider from "@/components/ScrollProvider";
-import Cursor from "@/components/Cursor";
 import { site } from "@/lib/content";
 
-const inter = Inter({
-  variable: "--font-inter",
+const display = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const instrument = Instrument_Sans({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
 });
 
 const cormorant = Cormorant_Garamond({
@@ -36,11 +48,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${cormorant.variable} ${plexMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${display.variable} ${instrument.variable} ${cormorant.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="grain vignette min-h-full bg-base text-white">
         <ScrollProvider>{children}</ScrollProvider>
-        <Cursor />
       </body>
     </html>
   );

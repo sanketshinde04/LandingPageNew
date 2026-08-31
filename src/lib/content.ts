@@ -21,11 +21,12 @@ export const images = {
 
 export const nav = {
   links: [
-    { label: "Work", href: "#work" },
-    { label: "Projects", href: "#projects" },
-    { label: "The build", href: "#sprint" },
+    { label: "Work", href: "/#work" },
+    { label: "Proof", href: "/proof" },
+    { label: "Projects", href: "/#projects" },
+    { label: "The build", href: "/#sprint" },
   ],
-  cta: { label: "Book a 30-min call", href: "#call" },
+  cta: { label: "Book a call", href: "#call" },
 };
 
 /* One claim, one line, one action. Everything else earns its place further down. */
@@ -34,7 +35,7 @@ export const hero = {
   titleLine1: "Build AI systems",
   titleLine2: "that actually ship.",
   sub: "Forward-deployed AI engineers embed with your team and turn one real workflow into AI agents running in production.",
-  primaryCta: { label: "Book a 30-min call", href: "#call" },
+  primaryCta: { label: "Book a call", href: "#call" },
   /** set inside the orbiting ring — keep it one short word */
   mark: "DEPLOY",
 };
@@ -436,7 +437,7 @@ export const finalCta = {
   titleAccent: "deploy?",
   titleAfter: "",
   sub: "Thirty minutes. Bring one workflow that costs your team real hours. We'll tell you on the call whether it's worth building — and we say no more often than we say yes.",
-  primaryCta: { label: "Book a 30-min call", href: "#call" },
+  primaryCta: { label: "Book a call", href: "#call" },
 };
 
 export const footer = {

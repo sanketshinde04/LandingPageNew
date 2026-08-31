@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Reveal from "@/components/Reveal";
+import SectionAurora from "@/components/SectionAurora";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { sprint } from "@/lib/content";
 
@@ -171,6 +172,7 @@ export default function Sprint() {
 
   return (
     <section id="sprint" className="relative py-32 md:py-40">
+      <SectionAurora variant="cyan" />
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[760px]">
           <span className="eyebrow !text-accent">{sprint.eyebrow}</span>
@@ -258,7 +260,7 @@ export default function Sprint() {
                 key={stage.no}
                 data-step
                 data-active="false"
-                className="group border-t border-white/10 py-11 transition-opacity duration-700 first:border-t-0 first:pt-0 data-[active=false]:opacity-35 data-[active=true]:opacity-100"
+                className="group border-t border-white/10 py-11 transition-[opacity,transform] duration-700 first:border-t-0 first:pt-0 data-[active=false]:translate-x-1 data-[active=false]:opacity-70 data-[active=true]:translate-x-0 data-[active=true]:opacity-100"
               >
                 <div className="flex items-center gap-4">
                   <span className="font-mono text-sm text-white/35 transition-colors duration-700 group-data-[active=true]:text-accent">

@@ -1,11 +1,13 @@
 import ManifestoSplit from "@/components/ManifestoSplit";
 import Reveal from "@/components/Reveal";
+import SectionAurora from "@/components/SectionAurora";
 import { manifesto } from "@/lib/content";
 
 /** Centred claim, one paragraph, then the two ways of working side by side. */
 export default function Manifesto() {
   return (
-    <section id="model" className="py-20 md:py-28">
+    <section id="model" className="relative overflow-hidden py-20 md:py-28">
+      <SectionAurora variant="ice" />
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal>
           <div className="glass relative overflow-hidden rounded-[32px] px-6 py-12 text-center sm:px-8 md:px-16 md:py-16">

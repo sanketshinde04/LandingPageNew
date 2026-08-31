@@ -9,7 +9,7 @@
   --color-accent: #4f8cff;
   --color-accent-2: #22d3ee;
   --color-bone: #eef3ff;
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-instrument);
   --font-serif: var(--font-cormorant);
   --font-mono: var(--font-plex);
 }
@@ -21,9 +21,19 @@ html {
 body {
   background: #080e1a;
   color: #fff;
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-instrument), "Avenir Next", "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-bricolage), "Avenir Next", "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
+  font-weight: 500;
 }
 
 ::selection {
@@ -61,7 +71,7 @@ body {
 
 /* ---------- type helpers ---------- */
 .serif-accent {
-  font-family: var(--font-cormorant), serif;
+  font-family: var(--font-cormorant), "Iowan Old Style", Baskerville, Georgia, serif;
   font-style: italic;
   font-weight: 500;
   letter-spacing: 0.005em;
@@ -134,6 +144,11 @@ body {
   transform: translateY(-2px);
 }
 
+.booking-trigger:hover,
+.booking-trigger:active {
+  transform: none;
+}
+
 .btn-glass {
   background: rgba(120, 160, 255, 0.08);
   border: 1px solid rgba(140, 175, 255, 0.18);
@@ -171,18 +186,210 @@ body {
   transform: translateX(20%) translateY(20%);
 }
 
-/* ---------- drifting glow ---------- */
+/* ---------- restrained live aurora ---------- */
 @keyframes aurora-drift {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    opacity: 0.82;
   }
   50% {
-    transform: translate3d(3%, -4%, 0) scale(1.1);
+    transform: translate3d(3%, -4%, 0) scale(1.1) rotate(3deg);
+    opacity: 1;
   }
 }
-.animate-aurora {
-  animation: aurora-drift 16s ease-in-out infinite;
+
+.aurora-field {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(58px);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.aurora-field-primary {
+  top: 2%;
+  right: 4%;
+  width: min(64vw, 900px);
+  height: min(42vw, 560px);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(79, 140, 255, 0.62) 0%,
+    rgba(46, 102, 220, 0.26) 42%,
+    transparent 72%
+  );
+  animation: aurora-drift 10s ease-in-out infinite;
+}
+
+.aurora-field-secondary {
+  bottom: -8%;
+  left: -8%;
+  width: min(58vw, 760px);
+  height: min(36vw, 460px);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(34, 211, 238, 0.4) 0%,
+    rgba(79, 140, 255, 0.18) 44%,
+    transparent 74%
+  );
+  animation: aurora-drift 13s ease-in-out -4s infinite reverse;
+}
+
+.aurora-field-wash {
+  inset: 18% 18% 10%;
+  border-radius: 45%;
+  background: linear-gradient(
+    118deg,
+    transparent 24%,
+    rgba(79, 140, 255, 0.14) 45%,
+    rgba(34, 211, 238, 0.18) 54%,
+    transparent 76%
+  );
+  filter: blur(56px);
+  opacity: 0.9;
+  animation: aurora-wash 16s ease-in-out infinite;
+}
+
+.aurora-field-ribbon {
+  inset: 8% -20% 22%;
+  border-radius: 42%;
+  background: linear-gradient(
+    108deg,
+    transparent 25%,
+    rgba(79, 140, 255, 0.18) 43%,
+    rgba(34, 211, 238, 0.2) 52%,
+    transparent 71%
+  );
+  filter: blur(30px);
+  opacity: 0.9;
+  animation: aurora-ribbon 14s ease-in-out -3s infinite;
+}
+
+@keyframes aurora-wash {
+  0%,
+  100% {
+    transform: translate3d(-2%, 2%, 0) rotate(-4deg) scale(0.98);
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) rotate(4deg) scale(1.06);
+  }
+}
+
+@keyframes aurora-ribbon {
+  0%,
+  100% {
+    transform: translate3d(-6%, 3%, 0) rotate(-5deg) scale(0.96);
+  }
+  50% {
+    transform: translate3d(7%, -4%, 0) rotate(5deg) scale(1.04);
+  }
+}
+
+/* ---------- section-specific aurora fields ---------- */
+.section-aurora {
+  --aurora-primary: rgba(79, 140, 255, 0.2);
+  --aurora-secondary: rgba(34, 211, 238, 0.12);
+  --aurora-primary-position: 78% 18%;
+  --aurora-secondary-position: 16% 82%;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.section-aurora::before,
+.section-aurora::after {
+  content: "";
+  position: absolute;
+  inset: -24%;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.section-aurora::before {
+  background:
+    radial-gradient(
+      ellipse 42% 34% at var(--aurora-primary-position),
+      var(--aurora-primary) 0%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 38% 30% at var(--aurora-secondary-position),
+      var(--aurora-secondary) 0%,
+      transparent 74%
+    );
+  filter: blur(46px);
+  animation: section-aurora-drift 13s ease-in-out infinite;
+}
+
+.section-aurora::after {
+  background: linear-gradient(
+    112deg,
+    transparent 28%,
+    rgba(79, 140, 255, 0.08) 43%,
+    rgba(34, 211, 238, 0.1) 53%,
+    transparent 70%
+  );
+  filter: blur(30px);
+  opacity: 0.8;
+  animation: section-aurora-ribbon 17s ease-in-out -5s infinite reverse;
+}
+
+.section-aurora-cyan {
+  --aurora-primary: rgba(34, 211, 238, 0.24);
+  --aurora-secondary: rgba(79, 140, 255, 0.14);
+  --aurora-primary-position: 18% 24%;
+  --aurora-secondary-position: 82% 76%;
+}
+
+.section-aurora-ice {
+  --aurora-primary: rgba(127, 176, 255, 0.2);
+  --aurora-secondary: rgba(238, 243, 255, 0.08);
+  --aurora-primary-position: 68% 12%;
+  --aurora-secondary-position: 12% 88%;
+}
+
+.section-aurora-deep {
+  --aurora-primary: rgba(46, 102, 220, 0.24);
+  --aurora-secondary: rgba(34, 211, 238, 0.1);
+  --aurora-primary-position: 86% 72%;
+  --aurora-secondary-position: 14% 22%;
+}
+
+.section-aurora-steel {
+  --aurora-primary: rgba(79, 140, 255, 0.16);
+  --aurora-secondary: rgba(195, 214, 245, 0.1);
+  --aurora-primary-position: 50% 8%;
+  --aurora-secondary-position: 86% 88%;
+}
+
+.section-aurora ~ * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes section-aurora-drift {
+  0%,
+  100% {
+    transform: translate3d(-2%, 1%, 0) scale(0.98);
+    opacity: 0.72;
+  }
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes section-aurora-ribbon {
+  0%,
+  100% {
+    transform: translate3d(-4%, 3%, 0) rotate(-4deg) scale(0.98);
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) rotate(4deg) scale(1.03);
+  }
 }
 
 /* ---------- scrollers that should not show their bar ---------- */
@@ -297,12 +504,6 @@ body {
     transparent 60%,
     rgba(0, 4, 12, 0.4) 100%
   );
-}
-
-/* ---------- custom cursor ---------- */
-html.custom-cursor,
-html.custom-cursor * {
-  cursor: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

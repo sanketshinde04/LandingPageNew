@@ -1,14 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { animate } from "animejs";
 import { AnimatePresence, motion } from "framer-motion";
 import ProjectVisual from "@/components/ProjectVisual";
 import Reveal from "@/components/Reveal";
+import SectionAurora from "@/components/SectionAurora";
 import { work } from "@/lib/content";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 /** the track is duplicated so the marquee can wrap without a visible seam */
 const LOOP = [...work.projects, ...work.projects];
+
+function SectorBadge({ sector }: { sector: string }) {
+  return (
+    <span
+      className="inline-flex w-fit items-center rounded-[3px] bg-white px-2 py-1 font-mono text-[10px] uppercase tracking-[0.17em] text-[#080e1a] shadow-[0_6px_22px_rgba(255,255,255,0.08)] transition-transform duration-300 group-hover:-translate-y-0.5"
+    >
+      {sector}
+    </span>
+  );
+}
 
 /**
  * A carousel of project cards. Flat surfaces, one accent, no gradients — the
@@ -17,6 +29,32 @@ const LOOP = [...work.projects, ...work.projects];
  */
 export default function Work() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const cards = Array.from(track.querySelectorAll<HTMLElement>("[data-work-card]"));
+    const listeners = cards.map((card) => {
+      const visual = card.querySelector<SVGElement>("[data-project-visual]");
+      if (!visual) return null;
+
+      const onEnter = () => animate(visual, { translateY: -5, scale: 1.025, duration: 420, ease: "outQuint" });
+      const onLeave = () => animate(visual, { translateY: 0, scale: 1, duration: 520, ease: "outQuint" });
+      card.addEventListener("pointerenter", onEnter);
+      card.addEventListener("pointerleave", onLeave);
+      return { card, onEnter, onLeave };
+    });
+
+    return () => {
+      listeners.forEach((listener) => {
+        if (!listener) return;
+        listener.card.removeEventListener("pointerenter", listener.onEnter);
+        listener.card.removeEventListener("pointerleave", listener.onLeave);
+      });
+    };
+  }, []);
 
   useEffect(() => {
     if (openIndex === null) return;
@@ -32,6 +70,7 @@ export default function Work() {
 
   return (
     <section id="work" className="relative py-24 md:py-40">
+      <SectionAurora variant="blue" />
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[760px]">
           <span className="eyebrow !text-accent">{work.eyebrow}</span>
@@ -48,6 +87,7 @@ export default function Work() {
       <Reveal delay={0.1} className="mt-12 md:mt-14">
         <div className="marquee-mask">
           <div
+            ref={trackRef}
             className={`marquee-track gap-4 py-1 pl-6 md:gap-5 md:pl-10 ${
               openIndex !== null ? "is-paused" : ""
             }`}
@@ -65,6 +105,7 @@ export default function Work() {
                   }
                 }}
                 aria-label={`Read the full story: ${project.title}`}
+                data-work-card
                 className="group flex h-[470px] w-[300px] shrink-0 cursor-pointer flex-col rounded-2xl border border-white/10 bg-white/[0.02] outline-none transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.04] focus-visible:border-accent/60 sm:w-[380px]"
               >
                 {/* the drawing, sitting on the card rather than in a frame */}
@@ -76,9 +117,7 @@ export default function Work() {
                 </div>
 
                 <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">
-                    {project.sector}
-                  </span>
+                  <SectorBadge sector={project.sector} />
                   <h3 className="mt-2.5 text-[1.25rem] font-medium leading-tight tracking-tight text-white">
                     {project.title}
                   </h3>
@@ -142,9 +181,7 @@ export default function Work() {
                 ×
               </button>
 
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">
-                {active.sector}
-              </span>
+              <SectorBadge sector={active.sector} />
               <h3 className="mt-3 max-w-[22ch] text-[1.5rem] font-medium leading-tight tracking-tight text-white md:text-[1.7rem]">
                 {active.title}
               </h3>

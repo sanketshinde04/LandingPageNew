@@ -1,8 +1,10 @@
+import SectionAurora from "@/components/SectionAurora";
 import { footer, site } from "@/lib/content";
 
 export default function Footer() {
   return (
-    <footer className="border-t hairline pb-12 pt-20">
+    <footer className="relative overflow-hidden border-t hairline pb-12 pt-20">
+      <SectionAurora variant="blue" />
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 px-6 sm:grid-cols-2 md:px-10 lg:grid-cols-[1.5fr_0.8fr_1.1fr_0.8fr] lg:gap-12">
         <div>
           <a href="#top" className="flex items-baseline gap-2">

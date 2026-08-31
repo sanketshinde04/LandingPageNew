@@ -26,7 +26,7 @@ const RING = {
   ratio: 0.58, // semi-minor / semi-major -> the plane's tilt
   axis: -19, // screen angle of the major axis (deg, y down)
   n: 12,
-  tile: 404, // plate width in ring units (R = a)
+  tile: 372, // plate width in ring units (R = a)
   aspect: 0.75, // plate height / width — a 4:3 landscape crop
   radius: 0.2, // corner radius as a fraction of the width
   dist: 13, // camera distance in ring radii
@@ -166,7 +166,7 @@ function luma(c: [number, number, number]) {
  * ------------------------------------------------------------------ */
 const MARK_BOX = 24;
 /** how much of the plate's short side the mark takes up */
-const MARK_SCALE = 0.46;
+const MARK_SCALE = 0.36;
 
 function drawMark(x: CanvasRenderingContext2D, i: number, ink: string) {
   const mark = AI_MARKS[i % AI_MARKS.length];
@@ -175,11 +175,29 @@ function drawMark(x: CanvasRenderingContext2D, i: number, ink: string) {
   const size = TS * RING.aspect * MARK_SCALE;
   const k = size / MARK_BOX;
   x.save();
-  x.translate(TS / 2, TS / 2);
+  x.translate(TS / 2, TS * 0.4);
   x.scale(k, k);
   x.translate(-MARK_BOX / 2, -MARK_BOX / 2);
   x.fillStyle = ink;
   x.fill(new Path2D(mark.path));
+  x.restore();
+}
+
+function drawMarkLabel(x: CanvasRenderingContext2D, i: number, ink: string) {
+  const mark = AI_MARKS[i % AI_MARKS.length];
+  if (!mark) return;
+  x.save();
+  x.fillStyle = ink;
+  x.globalAlpha = 0.78;
+  x.textAlign = "center";
+  x.textBaseline = "middle";
+  x.font = "600 27px monospace";
+  const label = mark.label.toUpperCase();
+  const measured = x.measureText(label).width;
+  if (measured > TS * 0.68) {
+    x.font = `600 ${Math.max(20, (27 * TS * 0.68) / measured)}px monospace`;
+  }
+  x.fillText(label, TS / 2, TS * 0.76);
   x.restore();
 }
 
@@ -236,8 +254,8 @@ export default function HeroRing({ className }: { className?: string }) {
     const paintPlate = (x: CanvasRenderingContext2D, hex: string, i: number) => {
       const base = rgbOf(hex);
       const n = noiseField(0x2c41 + i * 9176);
-      const hi = mixRGB(base, [255, 255, 255], 0.14);
-      const lo = mixRGB(base, [0, 0, 0], 0.2);
+      const hi = mixRGB(base, [255, 255, 255], 0.1);
+      const lo = mixRGB(base, [0, 0, 0], 0.12);
 
       const N = 150;
       const buf = mkc(N, N);
@@ -248,7 +266,7 @@ export default function HeroRing({ className }: { className?: string }) {
           const u = (px + 0.5) / N;
           const v = (py + 0.5) / N;
           let s =
-            0.5 + (fbm(n, u * 6.2, v * 6.2, 5) - 0.5) * 1.85 + (v - 0.5) * 0.09;
+            0.5 + (fbm(n, u * 6.2, v * 6.2, 5) - 0.5) * 0.95 + (v - 0.5) * 0.06;
           s = s < 0 ? 0 : s > 1 ? 1 : s;
           const c =
             s < 0.5 ? mixRGB(lo, base, s * 2) : mixRGB(base, hi, (s - 0.5) * 2);
@@ -267,6 +285,11 @@ export default function HeroRing({ className }: { className?: string }) {
       x.restore();
 
       drawMark(x, i, luma(base) > 0.55 ? "rgba(10,16,12,0.72)" : "rgba(236,244,239,0.72)");
+      drawMarkLabel(
+        x,
+        i,
+        luma(base) > 0.55 ? "rgba(10,16,12,0.72)" : "rgba(236,244,239,0.72)"
+      );
 
       /* the same film grain the rest of the page carries */
       x.save();
@@ -326,7 +349,7 @@ export default function HeroRing({ className }: { className?: string }) {
        rest of the page does rather than a lookalike */
     const probe = document.createElement("span");
     probe.style.cssText =
-      "position:absolute;visibility:hidden;font-family:var(--font-inter)";
+      "position:absolute;visibility:hidden;font-family:var(--font-instrument),'Avenir Next','Segoe UI Variable','Helvetica Neue',system-ui,sans-serif";
     document.body.appendChild(probe);
     const sansFamily = getComputedStyle(probe).fontFamily || "Inter, sans-serif";
     probe.remove();
@@ -431,6 +454,11 @@ export default function HeroRing({ className }: { className?: string }) {
       roundRectPath(ctx, TS, TS * RING.aspect, TS * RING.aspect * RING.radius);
       ctx.clip();
       ctx.drawImage(img, -TS / 2, -TS / 2, TS, TS);
+      ctx.globalAlpha = C[2] > 0 ? 0.78 : 0.38;
+      ctx.strokeStyle = C[2] > 0 ? "rgba(238,243,255,0.52)" : "rgba(160,184,224,0.3)";
+      ctx.lineWidth = 7;
+      roundRectPath(ctx, TS, TS * RING.aspect, TS * RING.aspect * RING.radius);
+      ctx.stroke();
       ctx.restore();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
     };

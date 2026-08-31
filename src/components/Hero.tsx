@@ -38,6 +38,12 @@ export default function Hero() {
         }}
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-base" />
+      <div className="pointer-events-none absolute inset-[-18%] overflow-hidden" aria-hidden="true">
+        <div className="aurora-field aurora-field-primary" />
+        <div className="aurora-field aurora-field-secondary" />
+        <div className="aurora-field aurora-field-wash" />
+        <div className="aurora-field aurora-field-ribbon" />
+      </div>
 
       <div className="relative z-10 mx-auto grid w-full max-w-[1500px] grid-cols-1 items-center gap-8 px-6 pb-16 pt-28 sm:gap-10 sm:pt-32 md:px-10 lg:grid-cols-[1.08fr_1fr] lg:gap-6 lg:pb-24">
         {/* ---------- left: the claim ---------- */}
