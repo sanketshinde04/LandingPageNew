@@ -1,10 +1,18 @@
 export const site = {
   name: "Build Fast with AI",
   product: "DEPLOY",
+  contactEmail: "talk@buildfastwithai.com",
   title: "DEPLOY — Build AI systems that actually ship.",
   description:
     "Forward-deployed AI engineers embed with your team, turn one real workflow into a deployed production system, and hand you the code and the capability.",
 };
+
+/** Always on the invite alongside whoever books. */
+export const bookingHosts = [
+  "aaryan@buildfastwithai.com",
+  "sanket@buildfastwithai.com",
+  "satvik@buildfastwithai.com",
+];
 
 export const images = {
   metrics: "/images/metrics.jpg",

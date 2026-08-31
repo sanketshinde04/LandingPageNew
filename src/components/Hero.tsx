@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import BookingDialog from "@/components/BookingDialog";
 import HeroRing from "@/components/HeroRing";
 import Magnetic from "@/components/Magnetic";
 import { hero } from "@/lib/content";
@@ -60,9 +61,10 @@ export default function Hero() {
 
           <motion.div {...fadeUp(0.4)} className="mt-8 sm:mt-10">
             <Magnetic>
-              <a href={hero.primaryCta.href} className="btn btn-solid">
-                {hero.primaryCta.label} <span aria-hidden>→</span>
-              </a>
+              <BookingDialog
+                triggerClassName="btn btn-solid"
+                label={hero.primaryCta.label}
+              />
             </Magnetic>
           </motion.div>
         </div>

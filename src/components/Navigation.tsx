@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import BookingDialog from "@/components/BookingDialog";
 import Magnetic from "@/components/Magnetic";
 import { nav, site } from "@/lib/content";
 
@@ -43,12 +44,10 @@ export default function Navigation() {
         </nav>
 
         <Magnetic strength={0.2}>
-          <a
-            href={nav.cta.href}
-            className="btn btn-solid !px-4 !py-2 text-[13px] sm:!px-6 sm:!py-2.5 sm:text-sm"
-          >
-            {nav.cta.label}
-          </a>
+          <BookingDialog
+            triggerClassName="btn btn-solid !px-4 !py-2 text-[13px] sm:!px-6 sm:!py-2.5 sm:text-sm"
+            label={nav.cta.label}
+          />
         </Magnetic>
       </div>
     </header>

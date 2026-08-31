@@ -1,3 +1,4 @@
+import BookingDialog from "@/components/BookingDialog";
 import Magnetic from "@/components/Magnetic";
 import Reveal from "@/components/Reveal";
 import { finalCta, images } from "@/lib/content";
@@ -39,9 +40,10 @@ export default function FinalCTA() {
             </p>
             <div className="mt-10">
               <Magnetic>
-                <a href={finalCta.primaryCta.href} className="btn btn-solid">
-                  {finalCta.primaryCta.label}
-                </a>
+                <BookingDialog
+                  triggerClassName="btn btn-solid"
+                  label={finalCta.primaryCta.label}
+                />
               </Magnetic>
             </div>
           </div>
