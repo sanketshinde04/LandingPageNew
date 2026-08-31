@@ -15,8 +15,13 @@ export default function Cursor() {
 
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
-  const ringX = useSpring(x, { stiffness: 260, damping: 24, mass: 0.5 });
-  const ringY = useSpring(y, { stiffness: 260, damping: 24, mass: 0.5 });
+  /* Even the dot is sprung now — tracking the pointer 1:1 read as harsh on a
+     fast flick. Tight enough to still feel like the cursor, soft enough to
+     smooth the whip. */
+  const dotX = useSpring(x, { stiffness: 700, damping: 42, mass: 0.32 });
+  const dotY = useSpring(y, { stiffness: 700, damping: 42, mass: 0.32 });
+  const ringX = useSpring(x, { stiffness: 130, damping: 22, mass: 0.6 });
+  const ringY = useSpring(y, { stiffness: 130, damping: 22, mass: 0.6 });
 
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine)").matches) return;
@@ -59,15 +64,15 @@ export default function Cursor() {
       >
         <motion.div
           animate={{
-            scale: pressed ? 0.7 : hovering ? 1.7 : 1,
-            opacity: hovering ? 0.9 : 0.55,
+            scale: pressed ? 0.82 : hovering ? 1.28 : 1,
+            opacity: hovering ? 0.8 : 0.5,
           }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/50 bg-white/[0.04] backdrop-blur-[2px]"
         />
       </motion.div>
       {/* core dot */}
-      <motion.div style={{ x, y }} className="absolute left-0 top-0">
+      <motion.div style={{ x: dotX, y: dotY }} className="absolute left-0 top-0">
         <div className="h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_10px_rgba(79,140,255,0.8)]" />
       </motion.div>
     </div>

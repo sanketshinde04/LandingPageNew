@@ -65,7 +65,6 @@ const RAIL_FACTS = [
   { k: "Format", v: "Google Meet, link in the invite" },
   { k: "When", v: `Weekdays, 2–5pm ${ZONE_CITY} time` },
   { k: "Bring", v: "One workflow that costs you hours" },
-  { k: "You leave with", v: "A scoped answer, or an honest no" },
 ];
 
 /** what the CTA falls back to when the calendar credentials are not set */
@@ -321,26 +320,21 @@ export default function BookingDialog({
 
                   {/* ---------- right pane: the step ---------- */}
                   <div className="flex min-h-0 flex-col">
-                    <header className="flex shrink-0 items-start justify-between gap-4 border-b border-white/10 px-6 py-5 sm:px-7">
+                    {!unavailable && stage !== "done" && (
+                      <div className="shrink-0 px-6 pt-6 sm:px-7" aria-hidden>
+                        <div className="flex h-[3px] gap-1.5">
+                          <span className="flex-1 rounded-full bg-accent" />
+                          <span
+                            className={`flex-1 rounded-full transition-colors duration-500 ${
+                              stage === "details" ? "bg-accent" : "bg-white/12"
+                            }`}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <header className="flex shrink-0 items-center justify-between gap-4 border-b border-white/10 px-6 py-5 sm:px-7">
                       <div className="min-w-0">
-                        {!unavailable && stage !== "done" && (
-                          <div className="mb-2.5 flex items-center gap-2 font-mono text-[9.5px] uppercase tracking-[0.16em]">
-                            <span className="text-accent">01 Time</span>
-                            <span
-                              className="h-px w-4 bg-white/20"
-                              aria-hidden
-                            />
-                            <span
-                              className={
-                                stage === "details"
-                                  ? "text-accent"
-                                  : "text-white/28"
-                              }
-                            >
-                              02 Details
-                            </span>
-                          </div>
-                        )}
                         <h2 className="text-[1.35rem] font-medium leading-tight tracking-tight text-white">
                           {heading}
                         </h2>
@@ -360,9 +354,22 @@ export default function BookingDialog({
                         type="button"
                         aria-label="Close"
                         onClick={() => setOpen(false)}
-                        className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white/15 text-white/55 transition-colors hover:border-accent/50 hover:text-accent"
+                        className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/15 text-white/55 transition-colors hover:border-accent/50 hover:text-accent"
                       >
-                        ×
+                        <svg
+                          width="11"
+                          height="11"
+                          viewBox="0 0 11 11"
+                          fill="none"
+                          aria-hidden
+                        >
+                          <path
+                            d="M1 1l9 9M10 1l-9 9"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                          />
+                        </svg>
                       </button>
                     </header>
 

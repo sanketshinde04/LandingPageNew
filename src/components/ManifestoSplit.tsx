@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { manifesto } from "@/lib/content";
 
 /** how far the handle may travel, as a percentage of the row's width */
-const MIN = 28;
-const MAX = 72;
+const MIN = 3;
+const MAX = 97;
 const STEP = 4;
 
 function Column({
@@ -43,9 +43,9 @@ function Column({
 }
 
 /**
- * The two lists sit either side of a handle you can actually drag: pull it
- * right and the old way takes the room, pull it left and our way does. It is a
- * real control — pointer or arrow keys — not a decorative rule.
+ * The two lists sit either side of a handle you can actually drag. The columns
+ * never move: the handle just travels across them, riding over the text. It is
+ * a real control — pointer or arrow keys — rather than a static rule.
  */
 export default function ManifestoSplit() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -95,14 +95,14 @@ export default function ManifestoSplit() {
       style={{ ["--split" as string]: `${pct}%` }}
     >
       <div className="flex flex-col gap-10 md:flex-row md:gap-0">
-        <div className="w-full md:w-[var(--split)] md:pr-14">
+        <div className="w-full md:w-1/2 md:pr-14">
           <Column
             heading={manifesto.oldWay.heading}
             items={manifesto.oldWay.items}
             tone="old"
           />
         </div>
-        <div className="w-full md:w-[calc(100%-var(--split))] md:pl-14">
+        <div className="w-full md:w-1/2 md:pl-14">
           <Column
             heading={manifesto.shipWay.heading}
             items={manifesto.shipWay.items}
@@ -111,11 +111,11 @@ export default function ManifestoSplit() {
         </div>
       </div>
 
-      {/* the handle — sits in the gap the two columns leave for it */}
-      <div className="pointer-events-none absolute inset-y-0 left-[var(--split)] hidden w-12 -translate-x-1/2 md:block">
+      {/* the handle — rides over both columns; the lists never resize */}
+      <div className="pointer-events-none absolute inset-y-0 left-[var(--split)] z-10 hidden w-12 -translate-x-1/2 md:block">
         <div
           className={`absolute inset-y-0 left-1/2 w-px -translate-x-1/2 transition-colors duration-300 ${
-            dragging ? "bg-accent/60" : "bg-white/15"
+            dragging ? "bg-accent/70" : "bg-white/20"
           }`}
         />
         <button

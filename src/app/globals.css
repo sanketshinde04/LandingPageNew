@@ -126,13 +126,12 @@ body {
 }
 
 .btn-solid {
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
+  background: var(--color-accent);
   color: #04070f;
-  box-shadow: 0 10px 32px -10px rgba(79, 140, 255, 0.65);
 }
 .btn-solid:hover {
+  background: #6ea3ff;
   transform: translateY(-2px);
-  box-shadow: 0 16px 44px -10px rgba(34, 211, 238, 0.7);
 }
 
 .btn-glass {
