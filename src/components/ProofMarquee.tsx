@@ -1,5 +1,4 @@
 import Reveal from "@/components/Reveal";
-import SectionAurora from "@/components/SectionAurora";
 import { proof } from "@/lib/content";
 
 /* Nine logos split into three fixed columns, so a logo can never appear in two
@@ -35,8 +34,7 @@ function LogoTile({ company }: { company: { name: string; file: string } }) {
 
 export default function ProofMarquee() {
   return (
-    <section className="relative overflow-hidden border-y hairline bg-surface py-20 md:py-32">
-      <SectionAurora variant="cyan" />
+    <section className="overflow-hidden border-y hairline bg-surface py-20 md:py-32">
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-10 px-6 md:gap-12 md:px-10 lg:grid-cols-[0.9fr_1.1fr]">
         <Reveal>
           <span className="eyebrow !text-accent">{proof.eyebrow}</span>

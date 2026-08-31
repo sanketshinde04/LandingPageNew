@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import Reveal from "@/components/Reveal";
-import SectionAurora from "@/components/SectionAurora";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { sprint } from "@/lib/content";
 
@@ -172,7 +171,6 @@ export default function Sprint() {
 
   return (
     <section id="sprint" className="relative py-32 md:py-40">
-      <SectionAurora variant="cyan" />
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[760px]">
           <span className="eyebrow !text-accent">{sprint.eyebrow}</span>

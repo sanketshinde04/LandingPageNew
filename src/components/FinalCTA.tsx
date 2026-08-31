@@ -1,7 +1,6 @@
 import BookingDialog from "@/components/BookingDialog";
 import Magnetic from "@/components/Magnetic";
 import Reveal from "@/components/Reveal";
-import SectionAurora from "@/components/SectionAurora";
 import { finalCta, images } from "@/lib/content";
 
 /**
@@ -11,8 +10,7 @@ import { finalCta, images } from "@/lib/content";
  */
 export default function FinalCTA() {
   return (
-    <section id="call" className="relative scroll-mt-24 overflow-hidden px-4 pb-12 md:px-8 lg:px-10">
-      <SectionAurora variant="steel" />
+    <section id="call" className="scroll-mt-24 px-4 pb-12 md:px-8 lg:px-10">
       <Reveal>
         <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(ellipse_90%_90%_at_50%_30%,#122241_0%,#0a1120_60%,#070c16_100%)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}

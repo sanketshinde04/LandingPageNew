@@ -1,11 +1,9 @@
 import Reveal from "@/components/Reveal";
-import SectionAurora from "@/components/SectionAurora";
 import { pod } from "@/lib/content";
 
 export default function Pod() {
   return (
-    <section className="relative overflow-hidden py-32 md:py-40">
-      <SectionAurora variant="ice" />
+    <section className="py-32 md:py-40">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[760px]">
           <span className="eyebrow !text-accent">{pod.eyebrow}</span>

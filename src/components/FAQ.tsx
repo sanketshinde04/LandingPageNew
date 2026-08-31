@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "@/components/Reveal";
-import SectionAurora from "@/components/SectionAurora";
 import { faq } from "@/lib/content";
 
 function FaqItem({ q, a }: { q: string; a: string }) {
@@ -52,8 +51,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 export default function FAQ() {
   return (
-    <section className="relative overflow-hidden pb-40">
-      <SectionAurora variant="deep" />
+    <section className="pb-40">
       <div className="mx-auto max-w-[820px] px-6 md:px-10">
         <Reveal>
           <span className="eyebrow !text-accent">{faq.eyebrow}</span>

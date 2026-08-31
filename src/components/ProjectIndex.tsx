@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Reveal from "@/components/Reveal";
-import SectionAurora from "@/components/SectionAurora";
 import { projectIndex } from "@/lib/content";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -18,8 +17,7 @@ export default function ProjectIndex() {
   const item = projectIndex.items[selected] ?? projectIndex.items[0];
 
   return (
-    <section id="projects" className="relative overflow-hidden border-y hairline bg-surface py-32 md:py-40">
-      <SectionAurora variant="deep" />
+    <section id="projects" className="border-y hairline bg-surface py-32 md:py-40">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[820px]">
           <span className="eyebrow !text-accent">{projectIndex.eyebrow}</span>

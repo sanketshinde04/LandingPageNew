@@ -5,7 +5,6 @@ import { animate } from "animejs";
 import { AnimatePresence, motion } from "framer-motion";
 import ProjectVisual from "@/components/ProjectVisual";
 import Reveal from "@/components/Reveal";
-import SectionAurora from "@/components/SectionAurora";
 import { work } from "@/lib/content";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -70,7 +69,6 @@ export default function Work() {
 
   return (
     <section id="work" className="relative py-24 md:py-40">
-      <SectionAurora variant="blue" />
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[760px]">
           <span className="eyebrow !text-accent">{work.eyebrow}</span>

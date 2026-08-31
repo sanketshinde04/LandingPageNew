@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Counter from "@/components/Counter";
 import Reveal from "@/components/Reveal";
-import SectionAurora from "@/components/SectionAurora";
 import { gsap } from "@/lib/gsap";
 import { images, problem } from "@/lib/content";
 
@@ -43,7 +42,6 @@ export default function Problem() {
       ref={sectionRef}
       className="relative overflow-hidden py-32 md:py-40"
     >
-      <SectionAurora variant="steel" />
       <div ref={bgRef} className="absolute -inset-y-[12%] inset-x-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
