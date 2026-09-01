@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { AI_MARKS } from "@/lib/aiMarks";
 import { hero } from "@/lib/content";
 
 /* ------------------------------------------------------------------ *
-   A ring of twelve plates orbiting a tilted plane, with the wordmark
+   A ring of eight plates orbiting a tilted plane, with the wordmark
    drawn between the far half and the near half — so plates pass in
    front of the word as they come round.
 
@@ -25,8 +24,8 @@ const RING = {
   a: 866, // projected semi-major axis
   ratio: 0.58, // semi-minor / semi-major -> the plane's tilt
   axis: -19, // screen angle of the major axis (deg, y down)
-  n: 12,
-  tile: 372, // plate width in ring units (R = a)
+  n: 8,
+  tile: 430, // larger plates keep capability labels readable in perspective
   aspect: 0.75, // plate height / width — a 4:3 landscape crop
   radius: 0.2, // corner radius as a fraction of the width
   dist: 13, // camera distance in ring radii
@@ -56,7 +55,7 @@ const WORD_TRACKING = 0.035;
 const IDLE_RATE = 0.16;
 const EASE = 0.5;
 
-/* twelve flat plates in the site's own palette — deep navies, blue, cyan
+/* eight flat plates in the site's own palette — deep navies, blue, cyan
    and ice, in the order they read best going round */
 const PLATES = [
   "#0c1424",
@@ -67,10 +66,6 @@ const PLATES = [
   "#c3d6f5",
   "#070c16",
   "#22d3ee",
-  "#e2ecfb",
-  "#1a2a48",
-  "#7fb0ff",
-  "#101a2e",
 ];
 
 /* ---------------------------- helpers ---------------------------- */
@@ -160,44 +155,82 @@ function luma(c: [number, number, number]) {
 }
 
 /* ------------------------------------------------------------------ *
-   One brand mark per plate — the tools a build is actually assembled
-   from. Each arrives as a 24x24 path, so it is scaled about the plate's
-   centre and filled in ink that contrasts with the plate underneath.
+   One capability per plate. These are deliberately simple technical
+   symbols rather than vendor marks: the orbit now explains what the
+   team builds while the client-logo section below carries social proof.
  * ------------------------------------------------------------------ */
+const CAPABILITIES = [
+  {
+    label: "RAG Agent",
+    path: "M4 5c0-1.1 2.2-2 5-2s5 .9 5 2-2.2 2-5 2-5-.9-5-2Zm0 0v4c0 1.1 2.2 2 5 2s5-.9 5-2V5M4 9v4c0 1.1 2.2 2 5 2 1 0 2-.1 2.8-.4M17 13v8M13 17h8",
+  },
+  {
+    label: "Voice Agent",
+    path: "M4 10v4M7 7v10M10 4v16M13 8v8M16 5v14M19 9v6M22 11v2",
+  },
+  {
+    label: "Data Agent",
+    path: "M4 5c0-1.1 2.7-2 6-2s6 .9 6 2-2.7 2-6 2-6-.9-6-2Zm0 0v5c0 1.1 2.7 2 6 2s6-.9 6-2V5M4 10v5c0 1.1 2.7 2 6 2 .9 0 1.8-.1 2.5-.2M18 15v6M15 18h6",
+  },
+  {
+    label: "Document AI",
+    path: "M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6M9 16h6",
+  },
+  {
+    label: "Workflow",
+    path: "M5 5h4v4H5V5Zm10 0h4v4h-4V5ZM5 15h4v4H5v-4Zm10 0h4v4h-4v-4ZM9 7h6M7 9v6M17 9v6M9 17h6",
+  },
+  {
+    label: "Eval System",
+    path: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm-4 9 2.5 2.5L16 9",
+  },
+  {
+    label: "Tool Calling",
+    path: "M9 7H6a3 3 0 0 0-3 3v4a3 3 0 0 0 3 3h3M15 7h3a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3h-3M8 12h8",
+  },
+  {
+    label: "Human Review",
+    path: "M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM3 21v-3c0-2.8 2.7-5 6-5 1.4 0 2.7.4 3.7 1.1M14 18l2 2 5-6",
+  },
+] as const;
+
 const MARK_BOX = 24;
 /** how much of the plate's short side the mark takes up */
 const MARK_SCALE = 0.36;
 
 function drawMark(x: CanvasRenderingContext2D, i: number, ink: string) {
-  const mark = AI_MARKS[i % AI_MARKS.length];
+  const mark = CAPABILITIES[i % CAPABILITIES.length];
   if (!mark) return;
   /* the plate is cropped to 4:3, so the short side is what has to fit */
   const size = TS * RING.aspect * MARK_SCALE;
   const k = size / MARK_BOX;
   x.save();
-  x.translate(TS / 2, TS * 0.4);
+  x.translate(TS / 2, TS * 0.37);
   x.scale(k, k);
   x.translate(-MARK_BOX / 2, -MARK_BOX / 2);
-  x.fillStyle = ink;
-  x.fill(new Path2D(mark.path));
+  x.strokeStyle = ink;
+  x.lineWidth = 1.65;
+  x.lineCap = "round";
+  x.lineJoin = "round";
+  x.stroke(new Path2D(mark.path));
   x.restore();
 }
 
 function drawMarkLabel(x: CanvasRenderingContext2D, i: number, ink: string) {
-  const mark = AI_MARKS[i % AI_MARKS.length];
+  const mark = CAPABILITIES[i % CAPABILITIES.length];
   if (!mark) return;
   x.save();
   x.fillStyle = ink;
-  x.globalAlpha = 0.78;
+  x.globalAlpha = 0.96;
   x.textAlign = "center";
   x.textBaseline = "middle";
-  x.font = "600 27px monospace";
+  x.font = '700 40px "Segoe UI", sans-serif';
   const label = mark.label.toUpperCase();
   const measured = x.measureText(label).width;
-  if (measured > TS * 0.68) {
-    x.font = `600 ${Math.max(20, (27 * TS * 0.68) / measured)}px monospace`;
+  if (measured > TS * 0.74) {
+    x.font = `700 ${Math.max(30, (40 * TS * 0.74) / measured)}px "Segoe UI", sans-serif`;
   }
-  x.fillText(label, TS / 2, TS * 0.76);
+  x.fillText(label, TS / 2, TS * 0.77);
   x.restore();
 }
 
@@ -435,10 +468,18 @@ export default function HeroRing({ className }: { className?: string }) {
         C[1] + AXIS[1] * h,
         C[2] + AXIS[2] * h,
       ]);
-      const ex = pT[0] - p0[0];
-      const ey = pT[1] - p0[1];
+      let ex = pT[0] - p0[0];
+      let ey = pT[1] - p0[1];
       const fx = pA[0] - p0[0];
       const fy = pA[1] - p0[1];
+
+      /* The tangent reverses on half of the orbit. Because the image is drawn
+         around its centre, flipping only that horizontal texture axis keeps
+         the same projected plate shape while preventing mirrored labels. */
+      if (ex < 0) {
+        ex *= -1;
+        ey *= -1;
+      }
       if (Math.abs(ex * fy - ey * fx) < 0.4) return; // edge on
 
       const img = (C[2] > 0 ? front : back)[i % front.length];

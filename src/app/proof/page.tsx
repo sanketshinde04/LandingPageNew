@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
 import Reveal from "@/components/Reveal";
@@ -18,6 +19,7 @@ const stories: {
   readTime: string;
   title: string;
   excerpt: string;
+  thumbnail: string;
 }[] = [
   {
     id: "sql-rag",
@@ -25,6 +27,7 @@ const stories: {
     type: "Case Study",
     readTime: "10 min read",
     title: "Scaling Enterprise SQL RAG to ~95% Accuracy",
+    thumbnail: "/case-studies/sql-rag-thumbnail.webp",
     excerpt:
       "How business semantics, cost-aware model routing, evals, and human feedback turned a text-to-SQL prototype into a production analytics engine.",
   },
@@ -34,6 +37,7 @@ const stories: {
     type: "Case Study",
     readTime: "10 min read",
     title: "Building a Real-Time AI Interviewer for Technical Hiring",
+    thumbnail: "/case-studies/ai-interviewer-thumbnail.webp",
     excerpt:
       "Production-grade live voice interaction, contextual candidate retrieval, sandboxed live coding, and explainable scoring across 150+ engineer-days.",
   },
@@ -43,6 +47,7 @@ const stories: {
     type: "Architecture",
     readTime: "11 min read",
     title: "Designing an Agentic Learning System for 1:1 Education",
+    thumbnail: "/case-studies/agentic-learning-thumbnail.webp",
     excerpt:
       "Architectural blueprint for AI-assisted 1:1 education across 9 learner stages and 30+ capabilities: teacher copilots, mastery tracking, and safe autonomy.",
   },
@@ -84,6 +89,20 @@ export default function ProofPage() {
                   id={story.id}
                   className="group overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.025] transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.045]"
                 >
+                  <a
+                    href={`/proof/${story.id}`}
+                    aria-label={`Read ${story.title}`}
+                    className="relative block aspect-[16/9] overflow-hidden border-b border-white/10 bg-white/[0.03]"
+                  >
+                    <Image
+                      src={story.thumbnail}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 33vw, 100vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                    />
+                    <span className="absolute inset-0 bg-gradient-to-t from-[#080e1a]/20 to-transparent" />
+                  </a>
                   <div className="flex min-h-[330px] flex-col p-6 md:p-7">
                     <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
                       <span className="text-accent">{story.type}</span>

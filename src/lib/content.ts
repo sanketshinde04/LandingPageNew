@@ -23,7 +23,6 @@ export const nav = {
   links: [
     { label: "Work", href: "/#work" },
     { label: "Proof", href: "/proof" },
-    { label: "Projects", href: "/#projects" },
     { label: "The build", href: "/#sprint" },
   ],
   cta: { label: "Book a call", href: "#call" },
@@ -372,22 +371,22 @@ export const pod = {
   eyebrow: "Who shows up",
   title: "A team that works",
   titleAccent: "inside your team.",
-  sub: "Not advisors reviewing your work from the outside. Engineers in your standups, your repo and your Slack, building alongside the people who will run it afterwards.",
+  sub: "Not advisors reviewing your work from the outside. The people who know the workflow, build the system, and make it dependable sit inside the work with your team.",
   roles: [
     {
-      tag: "Workflow",
+      tag: "Outcome",
       title: "Product & process",
-      body: "Owns the business process, the users, the decision points, and what finished actually means. In your standups, every day.",
+      body: "Knows the workflow, the edge cases, and the decision that matters. Turns a vague request into an outcome the team can measure.",
     },
     {
-      tag: "Engineering",
+      tag: "Systems",
       title: "AI & integration",
-      body: "Owns the agents, retrieval, models and the connections into your systems. Writes code in your repo, against your data.",
+      body: "Builds the agents, retrieval, model calls, and system connections directly in your repo and against real data.",
     },
     {
-      tag: "Reliability",
+      tag: "Confidence",
       title: "Evals & operations",
-      body: "Owns testing, permissions, logging and failure handling — the part that decides whether the thing survives contact with production.",
+      body: "Turns a promising demo into a dependable system with evaluations, permissions, logs, and the failure paths production exposes.",
     },
   ],
 };
@@ -448,7 +447,6 @@ export const footer = {
       heading: "The build",
       links: [
         { label: "Work", href: "#work" },
-        { label: "Projects", href: "#projects" },
         { label: "Why", href: "#why" },
         { label: "The build", href: "#sprint" },
           ],
