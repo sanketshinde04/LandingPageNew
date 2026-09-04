@@ -6,6 +6,13 @@ import { site } from "@/lib/content";
 export const metadata: Metadata = {
   title: site.title,
   description: site.description,
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
