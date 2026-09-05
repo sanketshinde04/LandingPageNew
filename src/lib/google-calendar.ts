@@ -108,6 +108,8 @@ export async function createBooking(input: {
   time: string;
   name: string;
   email: string;
+  company: string;
+  jobTitle: string;
   phone: string;
   requirements: string;
 }): Promise<CreatedEvent> {
@@ -120,11 +122,17 @@ export async function createBooking(input: {
     endMinutes % 60,
   ).padStart(2, "0")}`;
 
+  const summary = input.company
+    ? `DEPLOY scoping call - ${input.name} (${input.company})`
+    : `DEPLOY scoping call - ${input.name}`;
+
   const body = {
-    summary: `DEPLOY scoping call - ${input.name}`,
+    summary,
     description: [
       `Name: ${input.name}`,
       `Email: ${input.email}`,
+      `Company: ${input.company}`,
+      `Job Title: ${input.jobTitle}`,
       `Phone: ${input.phone}`,
       "",
       "What they want to fix:",

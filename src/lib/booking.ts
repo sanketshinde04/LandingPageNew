@@ -134,6 +134,8 @@ export type BookingInput = {
   time: string;
   name: string;
   email: string;
+  company: string;
+  jobTitle: string;
   phone: string;
   requirements: string;
 };
@@ -145,7 +147,7 @@ const phoneDigits = (value: string) => value.replace(/\D/g, "").length;
 export const REQUIREMENTS_MIN = 12;
 export const REQUIREMENTS_MAX = 600;
 
-export type FieldName = "name" | "email" | "phone" | "requirements";
+export type FieldName = "name" | "email" | "company" | "jobTitle" | "phone" | "requirements";
 export type FieldErrors = Partial<Record<FieldName, string>>;
 
 export function normalise(body: unknown): BookingInput {
@@ -156,6 +158,8 @@ export function normalise(body: unknown): BookingInput {
     time: str(b.time, 5),
     name: str(b.name, 120),
     email: str(b.email, 200),
+    company: str(b.company, 120),
+    jobTitle: str(b.jobTitle, 120),
     phone: str(b.phone, 32),
     requirements: str(b.requirements, REQUIREMENTS_MAX),
   };
@@ -169,6 +173,8 @@ export function fieldErrors(input: Partial<BookingInput>): FieldErrors {
   const errors: FieldErrors = {};
   const name = (input.name ?? "").trim();
   const email = (input.email ?? "").trim();
+  const company = (input.company ?? "").trim();
+  const jobTitle = (input.jobTitle ?? "").trim();
   const phone = (input.phone ?? "").trim();
   const requirements = (input.requirements ?? "").trim();
 
@@ -177,6 +183,12 @@ export function fieldErrors(input: Partial<BookingInput>): FieldErrors {
 
   if (!email) errors.email = "The invite goes here.";
   else if (!EMAIL.test(email)) errors.email = "Check the spelling - that is not a valid address.";
+
+  if (!company) errors.company = "Tell us which company you're building for.";
+  else if (company.length < 2) errors.company = "That looks too short.";
+
+  if (!jobTitle) errors.jobTitle = "Your role or job title.";
+  else if (jobTitle.length < 2) errors.jobTitle = "That looks too short.";
 
   if (!phone) errors.phone = "In case the call drops.";
   else if (phoneDigits(phone) < 7) errors.phone = "That is too short for a phone number.";
@@ -199,7 +211,7 @@ export function validateBooking(body: unknown):
   if (!slotTimes().includes(value.time)) return { ok: false, error: "Pick a time from the list." };
 
   const errors = fieldErrors(value);
-  const first = (["name", "email", "phone", "requirements"] as FieldName[]).find((f) => errors[f]);
+  const first = (["name", "email", "company", "jobTitle", "phone", "requirements"] as FieldName[]).find((f) => errors[f]);
   if (first) return { ok: false, error: errors[first] as string };
 
   if (toInstant(value.date, value.time).getTime() < Date.now()) {

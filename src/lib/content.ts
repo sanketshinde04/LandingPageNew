@@ -44,15 +44,23 @@ export const proof = {
   title: "We have already built AI",
   titleAccent: "inside these teams.",
   sub: "Every name here is an engagement we delivered — the same engineers who did that work are the ones who show up for your build.",
-  /* ordered largest first; `file` maps to /public/logos/<file>.png */
+  /* 12 verified companies (4 per column) excluding Google, McKinsey, Amazon, IIT Bombay, OpenAI, Mistral, Meta AI, LangChain, Hugging Face, Anthropic, n8n, and Ollama */
   companies: [
-    { name: "Google", file: "google" },
-    { name: "HPE", file: "hpe" },
-    { name: "Schneider Electric", file: "schneider" },
+    // Column 1
     { name: "BCG", file: "bcg" },
-    { name: "Accel", file: "accel" },
     { name: "Wispr Flow", file: "wisprflow" },
+    { name: "Freshworks", file: "freshworks" },
+    { name: "Qdrant", iconKey: "qdrant" },
+
+    // Column 2
+    { name: "HPE", file: "hpe" },
+    { name: "Shell", file: "shell" },
+    { name: "NVIDIA", iconKey: "nvidia" },
     { name: "mem0", file: "mem0" },
+
+    // Column 3
+    { name: "Schneider Electric", file: "schneider" },
+    { name: "Accel", file: "accel" },
     { name: "FloCareer", file: "flocareer" },
     { name: "CodeYoung", file: "codeyoung" },
   ],
