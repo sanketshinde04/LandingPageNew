@@ -8,14 +8,13 @@ type CompanyItem = {
   iconKey?: string;
 };
 
-/* 12 companies split into three fixed columns (4 companies each).
-   Because each column carries 4 unique tiles inside the viewport,
-   every logo is completely distinct in view at any given moment.
-   The outer columns move upward and the centre one downward. */
+/* 12 companies split into two fixed columns (6 companies each).
+   Column 1 moves upward, and Column 2 moves downward.
+   With 6 unique companies per column in a 400px window,
+   every logo is completely distinct in view at any given moment. */
 const COLUMNS: CompanyItem[][] = [
-  proof.companies.slice(0, 4) as CompanyItem[],
-  proof.companies.slice(4, 8) as CompanyItem[],
-  proof.companies.slice(8, 12) as CompanyItem[],
+  proof.companies.slice(0, 6) as CompanyItem[],
+  proof.companies.slice(6, 12) as CompanyItem[],
 ];
 
 function LogoTile({ company }: { company: CompanyItem }) {
@@ -70,22 +69,20 @@ export default function ProofMarquee() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <div className="marquee-vertical-mask grid h-[320px] grid-cols-2 gap-3 sm:h-[350px] sm:grid-cols-3 sm:gap-4">
+          <div className="marquee-vertical-mask grid h-[360px] grid-cols-2 gap-3.5 sm:h-[400px] sm:gap-5">
             {COLUMNS.map((column, ci) => (
               <div
                 key={ci}
-                className={`relative h-full overflow-hidden ${
-                  ci === 2 ? "hidden sm:block" : ""
-                }`}
+                className="relative h-full overflow-hidden"
               >
                 <div
-                  className="marquee-vertical-track flex flex-col gap-3 sm:gap-4"
+                  className="marquee-vertical-track flex flex-col gap-3.5 sm:gap-4"
                   style={{
                     animationDirection: ci === 1 ? "reverse" : "normal",
-                    animationDuration: ci === 1 ? "30s" : "26s",
+                    animationDuration: ci === 1 ? "28s" : "24s",
                   }}
                 >
-                  {[...column, ...column, ...column].map((company, i) => (
+                  {[...column, ...column].map((company, i) => (
                     <LogoTile
                       key={`${company.name}-${i}`}
                       company={company}
