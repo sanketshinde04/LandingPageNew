@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BOOKING_TIMEZONE,
@@ -11,6 +12,7 @@ import {
   MEETING_MINUTES,
   REQUIREMENTS_MAX,
   type Slot,
+  WINDOW_LABEL,
   bookableDates,
   dateParts,
   fieldErrors,
@@ -26,6 +28,8 @@ type Props = {
   /** the trigger takes the caller's own button classes, so this drops into any section */
   triggerClassName?: string;
   label?: string;
+  /** "page" drops the trigger and the overlay and renders the panel inline - /audit */
+  variant?: "dialog" | "page";
 };
 
 type Stage = "pick" | "details" | "done";
@@ -92,7 +96,7 @@ const ZONE_CITY = BOOKING_TIMEZONE.split("/").pop()!.replace(/_/g, " ");
 /** what the left rail promises — the reason the call is worth thirty minutes */
 const RAIL_FACTS = [
   { k: "Format", v: "Google Meet, link in the invite" },
-  { k: "When", v: `Weekdays, 2–5pm ${ZONE_CITY} time` },
+  { k: "When", v: `Weekdays, ${WINDOW_LABEL} ${ZONE_CITY} time` },
   { k: "Bring", v: "One workflow that costs you hours" },
 ];
 
@@ -121,8 +125,11 @@ const inputClass = (bad: boolean) =>
 export default function BookingDialog({
   triggerClassName,
   label = "Book a call",
+  variant = "dialog",
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const isPage = variant === "page";
+  // on the page the panel *is* the page, so it starts open and never closes
+  const [open, setOpen] = useState(isPage);
   const [dates] = useState(() => bookableDates());
   const [date, setDate] = useState(() => bookableDates()[0] ?? "");
   const [slots, setSlots] = useState<Slot[] | null>(null);
@@ -179,9 +186,9 @@ export default function BookingDialog({
     void loadSlots(date);
   }, [open, date, loadSlots]);
 
-  // an open dialog owns the screen
+  // an open dialog owns the screen - the page variant owns nothing
   useEffect(() => {
-    if (!open) return;
+    if (!open || isPage) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     panelRef.current?.focus();
@@ -191,7 +198,7 @@ export default function BookingDialog({
       document.body.style.overflow = previous;
       window.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [open, isPage]);
 
   const start = () => {
     setStage("pick");
@@ -267,33 +274,16 @@ export default function BookingDialog({
         ? "Pick a time"
         : "Your details";
 
-  return (
-    <>
-      <button className={`booking-trigger ${triggerClassName ?? ""}`} type="button" onClick={start}>
-        <span className="inline-flex items-center gap-2">
-          {label}
-        </span>
-        <span aria-hidden>→</span>
-      </button>
+  /* On the page the panel is the whole screen on a phone - full-bleed, no
+     rounding, no card edge - and only becomes a floating card from sm: up.
+     As a dialog it stays a bottom sheet on mobile. */
+  const panelClass = isPage
+    ? "relative z-10 grid h-[100svh] w-full overflow-hidden bg-surface outline-none sm:h-[84svh] sm:max-h-[590px] sm:max-w-[860px] sm:rounded-[26px] sm:border sm:border-white/12 sm:shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]"
+    : "relative z-10 grid h-[92svh] max-h-[640px] w-full max-w-[860px] overflow-hidden rounded-t-[26px] border border-white/12 bg-surface shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none sm:h-[84svh] sm:max-h-[590px] sm:rounded-[26px] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]";
 
-      {mounted &&
-        createPortal(
-          <AnimatePresence>
-            {open && (
-              <motion.div
-                className="fixed inset-0 z-[200] flex items-end justify-center sm:items-center sm:p-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.22 }}
-              >
-                <button
-                  type="button"
-                  aria-label="Close"
-                  onClick={() => setOpen(false)}
-                  className="absolute inset-0 bg-[#03060d]/80 backdrop-blur-md"
-                />
-
+  /* The panel itself — identical in the dialog and on the shareable /audit page,
+     so the two can never drift apart. */
+  const panel = (
                 <motion.div
                   ref={panelRef}
                   data-lenis-prevent
@@ -305,7 +295,7 @@ export default function BookingDialog({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 14, scale: 0.985 }}
                   transition={{ duration: 0.34, ease }}
-                  className="relative z-10 grid h-[92svh] max-h-[640px] w-full max-w-[860px] overflow-hidden rounded-t-[26px] border border-white/12 bg-surface shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none sm:h-[84svh] sm:max-h-[590px] sm:rounded-[26px] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]"
+                  className={panelClass}
                 >
                   {/* ---------- left rail: what the call actually is ---------- */}
                   <aside className="relative hidden flex-col justify-between overflow-hidden border-r border-white/10 bg-[#0a1120] p-8 md:flex">
@@ -388,8 +378,15 @@ export default function BookingDialog({
                             All times {ZONE_CITY}
                           </p>
                         )}
+                        {isPage && !unavailable && stage === "pick" && (
+                          <p className="mt-1.5 text-[12.5px] leading-snug text-white/45 md:hidden">
+                            {MEETING_MINUTES} min on Google Meet · weekdays,{" "}
+                            {WINDOW_LABEL}
+                          </p>
+                        )}
                       </div>
 
+                      {!isPage && (
                       <button
                         type="button"
                         aria-label="Close"
@@ -411,6 +408,7 @@ export default function BookingDialog({
                           />
                         </svg>
                       </button>
+                      )}
                     </header>
 
                     {unavailable ? (
@@ -455,13 +453,19 @@ export default function BookingDialog({
                               Open the Meet link
                             </a>
                           )}
-                          <button
-                            type="button"
-                            onClick={() => setOpen(false)}
-                            className="btn btn-glass"
-                          >
-                            Done
-                          </button>
+                          {isPage ? (
+                            <Link className="btn btn-glass" href="/">
+                              Back to the site
+                            </Link>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setOpen(false)}
+                              className="btn btn-glass"
+                            >
+                              Done
+                            </button>
+                          )}
                         </div>
                       </div>
                     ) : stage === "pick" ? (
@@ -726,6 +730,44 @@ export default function BookingDialog({
                     )}
                   </div>
                 </motion.div>
+  );
+
+  if (isPage) {
+    return (
+      <div className="grid min-h-svh w-full place-items-center sm:px-6 sm:py-10">
+        {panel}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <button className={`booking-trigger ${triggerClassName ?? ""}`} type="button" onClick={start}>
+        <span className="inline-flex items-center gap-2">
+          {label}
+        </span>
+        <span aria-hidden>→</span>
+      </button>
+
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                className="fixed inset-0 z-[200] flex items-end justify-center sm:items-center sm:p-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22 }}
+              >
+                <button
+                  type="button"
+                  aria-label="Close"
+                  onClick={() => setOpen(false)}
+                  className="absolute inset-0 bg-[#03060d]/80 backdrop-blur-md"
+                />
+
+                {panel}
               </motion.div>
             )}
           </AnimatePresence>,
