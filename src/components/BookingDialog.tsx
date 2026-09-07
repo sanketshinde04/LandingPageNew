@@ -102,7 +102,7 @@ const RAIL_FACTS = [
 
 /** what the CTA falls back to when the calendar credentials are not set */
 const FALLBACK_HREF = `mailto:${site.contactEmail}?subject=${encodeURIComponent(
-  "Scoping call — DEPLOY"
+  "Scoping call: DEPLOY"
 )}&body=${encodeURIComponent(
   "Company:\nRole:\nThe workflow we want to fix:\n\nTwo or three times that work for you:"
 )}`;

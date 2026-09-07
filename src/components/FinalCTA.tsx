@@ -4,7 +4,7 @@ import Reveal from "@/components/Reveal";
 import { finalCta, images } from "@/lib/content";
 
 /**
- * One inset card that carries its own photograph — the picture is meant to be
+ * One inset card that carries its own photograph - the picture is meant to be
  * seen, so it sits high and the copy is protected by a gradient over the middle
  * rather than by flattening the whole image.
  */
@@ -16,7 +16,7 @@ export default function FinalCTA() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={images.finalCta}
-            alt=""
+            alt="Ready to deploy forward-deployed AI engineering"
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
           />

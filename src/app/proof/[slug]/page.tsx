@@ -7,6 +7,12 @@ import Navigation from "@/components/Navigation";
 import ProofInteractive from "@/components/ProofInteractive";
 import Reveal from "@/components/Reveal";
 import { proofStories, type ProofBlock } from "@/lib/proofContent";
+import {
+  siteConfig,
+  generateArticleSchema,
+  generateBreadcrumbSchema,
+  getCanonicalUrl,
+} from "@/lib/seo";
 
 interface ProofPageProps {
   params: Promise<{ slug: string }>;
@@ -16,15 +22,69 @@ export function generateStaticParams() {
   return Object.keys(proofStories).map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: ProofPageProps): Promise<Metadata> {
+const META_OVERRIDES: Record<
+  string,
+  { title: string; description: string }
+> = {
+  "sql-rag": {
+    title: "Text-to-SQL RAG at ~95% Accuracy: Enterprise Case Study",
+    description:
+      "How a semantic business layer, cost-aware model routing, evals and an RLHF-style feedback loop took text-to-SQL from prototype to ~95% end-to-end accuracy.",
+  },
+  "ai-interviewer": {
+    title: "Real-Time AI Interviewer: Voice Latency, Sandbox & Evals",
+    description:
+      "Building a live-voice AI technical interviewer: sub-second latency budgets, TTS selection, sandboxed live coding and explainable scoring over 150+ engineer-days.",
+  },
+  "agentic-learning": {
+    title: "Agentic AI Architecture for 1:1 Education | Case Study",
+    description:
+      "Blueprint for an agentic learning system: digital learning identity, 9 learner stages, 30+ capabilities, teacher copilots, mastery tracking and safe autonomy.",
+  },
+};
+
+export async function generateMetadata({
+  params,
+}: ProofPageProps): Promise<Metadata> {
   const { slug } = await params;
   const story = proofStories[slug];
 
   if (!story) return {};
 
+  const override = META_OVERRIDES[slug];
+  const title = override ? override.title : `${story.title} | ${siteConfig.name}`;
+  const description = override ? override.description : story.standfirst;
+  const canonicalUrl = getCanonicalUrl(`/proof/${slug}`);
+
   return {
-    title: `${story.title} — DEPLOY`,
-    description: story.standfirst,
+    title,
+    description,
+    alternates: {
+      canonical: `/proof/${slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      type: "article",
+      publishedTime: "2026-08-01T00:00:00.000Z",
+      authors: [siteConfig.name],
+      images: [
+        {
+          url: siteConfig.ogImage,
+          width: 1200,
+          height: 630,
+          alt: `${story.title} | Build Fast with AI`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [siteConfig.ogImage],
+      creator: siteConfig.twitterHandle,
+    },
   };
 }
 
@@ -41,7 +101,10 @@ function ContentBlock({ block }: { block: ProofBlock }) {
     return (
       <ul className="my-8 space-y-3 border-y border-white/10 py-6">
         {block.items.map((item) => (
-          <li key={item} className="flex gap-3 font-serif text-[18px] leading-[1.65] text-white/75">
+          <li
+            key={item}
+            className="flex gap-3 font-serif text-[18px] leading-[1.65] text-white/75"
+          >
             <span className="mt-[9px] h-px w-3 shrink-0 bg-accent" />
             <span>{item}</span>
           </li>
@@ -83,8 +146,38 @@ export default async function ProofStoryPage({ params }: ProofPageProps) {
 
   if (!story) notFound();
 
+  const override = META_OVERRIDES[slug];
+  const pageTitle = override ? override.title : story.title;
+  const pageDescription = override ? override.description : story.standfirst;
+
+  const articleSchema = generateArticleSchema({
+    title: pageTitle,
+    description: pageDescription,
+    slug: story.slug,
+    datePublished: "2026-08-01T00:00:00.000Z",
+    category: story.category,
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Proof", url: "/proof" },
+    { name: story.title, url: `/proof/${story.slug}` },
+  ]);
+
   return (
     <main id="top">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
       <Navigation />
 
       <header className="border-b hairline px-6 pb-14 pt-32 md:px-10 md:pb-20 md:pt-40">
@@ -136,7 +229,11 @@ export default async function ProofStoryPage({ params }: ProofPageProps) {
           </Reveal>
 
           {story.sections.map((section, index) => (
-            <Reveal key={section.heading} delay={index === 0 ? 0.05 : 0} className="mt-16 md:mt-20">
+            <Reveal
+              key={section.heading}
+              delay={index === 0 ? 0.05 : 0}
+              className="mt-16 md:mt-20"
+            >
               <section>
                 <div className="mb-6 flex items-start gap-4">
                   <span className="pt-2 font-mono text-[10px] tracking-[0.14em] text-accent">
@@ -147,7 +244,10 @@ export default async function ProofStoryPage({ params }: ProofPageProps) {
                   </h2>
                 </div>
                 {section.blocks.map((block, blockIndex) => (
-                  <ContentBlock key={`${section.heading}-${blockIndex}`} block={block} />
+                  <ContentBlock
+                    key={`${section.heading}-${blockIndex}`}
+                    block={block}
+                  />
                 ))}
               </section>
             </Reveal>

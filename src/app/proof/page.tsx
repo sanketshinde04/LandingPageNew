@@ -1,13 +1,40 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
 import Reveal from "@/components/Reveal";
+import { siteConfig, generateBreadcrumbSchema, getCanonicalUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Proof — DEPLOY",
+  title: "Proof: AI Systems in Production and What They Moved",
   description:
-    "Deployed systems and measured results — the AI work shipped into real operational use with client teams.",
+    "Measured outcomes from forward-deployed AI builds: 80% less processing time, 60% less manual interview time, 45% more student engagement. Real numbers.",
+  alternates: {
+    canonical: "/proof",
+  },
+  openGraph: {
+    title: "Proof: AI Systems in Production and What They Moved",
+    description:
+      "Measured outcomes from forward-deployed AI builds: 80% less processing time, 60% less manual interview time, 45% more student engagement. Real numbers.",
+    url: getCanonicalUrl("/proof"),
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: "DEPLOY Proof: AI Systems in Production",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Proof: AI Systems in Production and What They Moved",
+    description:
+      "Measured outcomes from forward-deployed AI builds: 80% less processing time, 60% less manual interview time, 45% more student engagement. Real numbers.",
+    images: [siteConfig.ogImage],
+    creator: siteConfig.twitterHandle,
+  },
 };
 
 type ThumbnailKind = "sql" | "interviewer" | "learning";
@@ -29,7 +56,7 @@ const stories: {
     title: "Scaling Enterprise SQL RAG to ~95% Accuracy",
     thumbnail: "/case-studies/sql-rag-thumbnail.webp",
     excerpt:
-      "How business semantics, cost-aware model routing, evals, and human feedback turned a text-to-SQL prototype into a production analytics engine.",
+      "How business semantics, cost-aware model routing, evals, and an RLHF feedback loop turned a text-to-SQL prototype into a production analytics engine.",
   },
   {
     id: "ai-interviewer",
@@ -54,8 +81,19 @@ const stories: {
 ];
 
 export default function ProofPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Proof", url: "/proof" },
+  ]);
+
   return (
     <main id="top">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
       <Navigation />
 
       <header className="relative border-b hairline px-6 pb-16 pt-36 md:px-10 md:pb-24 md:pt-48">
@@ -66,7 +104,7 @@ export default function ProofPage() {
               The work, and what it <span className="serif-accent">moved.</span>
             </h1>
             <p className="mt-7 max-w-[700px] text-base leading-relaxed text-white/65 md:text-lg">
-              Every one of these ran against real data inside a real team&apos;s workflow — the only kind of proof that predicts whether the next build ships.
+              Every one of these ran against real data inside a client team&apos;s production workflow - the only kind of proof that predicts whether the next AI system ships.
             </p>
           </Reveal>
         </div>
@@ -77,7 +115,7 @@ export default function ProofPage() {
           <Reveal>
             <span className="eyebrow !text-accent">Engineering breakdowns</span>
             <h2 className="mt-5 max-w-[760px] text-[clamp(2rem,4.5vw,4rem)] font-medium leading-[1.05] tracking-[-0.03em]">
-              How these systems were actually built.
+              Enterprise AI case studies and production architecture notes.
             </h2>
           </Reveal>
 
@@ -89,20 +127,20 @@ export default function ProofPage() {
                   id={story.id}
                   className="group overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.025] transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.045]"
                 >
-                  <a
+                  <Link
                     href={`/proof/${story.id}`}
                     aria-label={`Read ${story.title}`}
                     className="relative block aspect-[16/9] overflow-hidden border-b border-white/10 bg-white/[0.03]"
                   >
                     <Image
                       src={story.thumbnail}
-                      alt=""
+                      alt={`${story.title} case study thumbnail`}
                       fill
                       sizes="(min-width: 1024px) 33vw, 100vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                     />
                     <span className="absolute inset-0 bg-gradient-to-t from-[#080e1a]/20 to-transparent" />
-                  </a>
+                  </Link>
                   <div className="flex min-h-[330px] flex-col p-6 md:p-7">
                     <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
                       <span className="text-accent">{story.type}</span>
@@ -114,7 +152,7 @@ export default function ProofPage() {
                     <p className="mt-4 text-[14px] leading-relaxed text-white/60">
                       {story.excerpt}
                     </p>
-                    <a
+                    <Link
                       href={`/proof/${story.id}`}
                       className="mt-auto flex items-center gap-2 pt-8 font-mono text-[10px] uppercase tracking-[0.15em] text-white/45 transition-colors duration-300 group-hover:text-accent"
                     >
@@ -122,7 +160,7 @@ export default function ProofPage() {
                       <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
                         →
                       </span>
-                    </a>
+                    </Link>
                   </div>
                 </article>
               ))}
