@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import BookingDialog from "@/components/BookingDialog";
 import HeroRing from "@/components/HeroRing";
 import Magnetic from "@/components/Magnetic";
@@ -14,7 +15,28 @@ const fadeUp = (delay: number) => ({
   transition: { duration: 1.2, delay, ease },
 });
 
+const SHIPPING_ITEMS = [
+  "that actually ship.",
+  "Multi-Agent Swarms.",
+  "Browser Agents.",
+  "Decision Engines.",
+  "Ops Agents.",
+  "Voice Agents.",
+  "Document AI.",
+  "Data Agents.",
+  "RAG Pipelines.",
+] as const;
+
 export default function Hero() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % SHIPPING_ITEMS.length);
+    }, 5800);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section
       id="top"
@@ -55,7 +77,23 @@ export default function Hero() {
             {/* each line holds together — the headline never breaks mid-phrase */}
             <span className="sm:whitespace-nowrap">{hero.titleLine1}</span>
             <br />
-            <span className="serif-accent text-accent">{hero.titleLine2}</span>
+            <span className="relative inline-block align-top">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.94 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{
+                    duration: 0.5,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="serif-accent inline-block origin-left pb-1 pr-4 text-accent sm:whitespace-nowrap"
+                >
+                  {SHIPPING_ITEMS[index]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
           </motion.h1>
 
           <motion.p

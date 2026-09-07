@@ -46,21 +46,19 @@ export const proof = {
   sub: "Every name here is an engagement we delivered — the same engineers who did that work are the ones who show up for your build.",
   /* 12 verified companies (6 per column for 2 columns) excluding Google, McKinsey, Amazon, IIT Bombay, OpenAI, Mistral, Meta AI, LangChain, Hugging Face, Anthropic, n8n, and Ollama */
   companies: [
-    // Column 1 (6 companies)
+    // Column 1 (5 companies)
     { name: "BCG", file: "bcg" },
     { name: "HPE", file: "hpe" },
     { name: "Schneider Electric", file: "schneider" },
     { name: "Wispr Flow", file: "wisprflow" },
     { name: "Freshworks", file: "freshworks" },
-    { name: "NVIDIA", iconKey: "nvidia" },
 
-    // Column 2 (6 companies)
+    // Column 2 (5 companies)
     { name: "Accel", file: "accel" },
     { name: "Shell", file: "shell" },
     { name: "mem0", file: "mem0" },
     { name: "FloCareer", file: "flocareer" },
     { name: "CodeYoung", file: "codeyoung" },
-    { name: "PyTorch", iconKey: "pytorch" },
   ],
 };
 

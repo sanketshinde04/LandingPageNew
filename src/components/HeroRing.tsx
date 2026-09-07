@@ -177,20 +177,20 @@ const CAPABILITIES = [
     path: "M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6M9 16h6",
   },
   {
-    label: "Workflow",
-    path: "M5 5h4v4H5V5Zm10 0h4v4h-4V5ZM5 15h4v4H5v-4Zm10 0h4v4h-4v-4ZM9 7h6M7 9v6M17 9v6M9 17h6",
+    label: "Multi-Agent",
+    path: "M12 3a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM6 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM18 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM10.2 7.5 7.8 15.2M13.8 7.5 16.2 15.2M8.5 17.5h7M12 10.5 13.5 12 12 13.5 10.5 12Z",
   },
   {
-    label: "Eval System",
-    path: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm-4 9 2.5 2.5L16 9",
+    label: "Decision Engine",
+    path: "M12 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM6 18a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM18 18a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM12 9v3M12 12 7.8 15.6M12 12l4.2 3.6",
   },
   {
-    label: "Tool Calling",
-    path: "M9 7H6a3 3 0 0 0-3 3v4a3 3 0 0 0 3 3h3M15 7h3a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3h-3M8 12h8",
+    label: "Browser Agent",
+    path: "M3 5h18a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H3a1.5 1.5 0 0 1-1.5-1.5v-11A1.5 1.5 0 0 1 3 5ZM1.5 9.5h21M5 7.5h.01M8 7.5h.01M11 7.5h.01M13 12l5 2-2 1 2 3-1.4.8-2-3-1.6 1.2V12",
   },
   {
-    label: "Human Review",
-    path: "M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM3 21v-3c0-2.8 2.7-5 6-5 1.4 0 2.7.4 3.7 1.1M14 18l2 2 5-6",
+    label: "Ops Agent",
+    path: "M3 4h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2ZM2 9h20M6 6.5h.01M9 6.5h.01M5 14.5h3l2-4 3 6 1.5-2h4.5",
   },
 ] as const;
 

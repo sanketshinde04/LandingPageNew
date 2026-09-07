@@ -2,7 +2,8 @@ import { footer, site } from "@/lib/content";
 
 export default function Footer() {
   return (
-    <footer className="border-t hairline pb-12 pt-20">
+    <footer className="relative pb-12 pt-20">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 px-6 sm:grid-cols-2 md:px-10 lg:grid-cols-[1.5fr_0.8fr_1.1fr_0.8fr] lg:gap-12">
         <div>
           <a href="#top" className="flex items-baseline gap-2">

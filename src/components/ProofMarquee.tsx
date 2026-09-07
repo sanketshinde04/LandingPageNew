@@ -12,9 +12,10 @@ type CompanyItem = {
    Column 1 moves upward, and Column 2 moves downward.
    With 6 unique companies per column in a 400px window,
    every logo is completely distinct in view at any given moment. */
+const half = Math.ceil(proof.companies.length / 2);
 const COLUMNS: CompanyItem[][] = [
-  proof.companies.slice(0, 6) as CompanyItem[],
-  proof.companies.slice(6, 12) as CompanyItem[],
+  proof.companies.slice(0, half) as CompanyItem[],
+  proof.companies.slice(half) as CompanyItem[],
 ];
 
 function LogoTile({ company }: { company: CompanyItem }) {
@@ -55,7 +56,10 @@ function LogoTile({ company }: { company: CompanyItem }) {
 
 export default function ProofMarquee() {
   return (
-    <section className="overflow-hidden border-y hairline bg-surface py-20 md:py-32">
+    <section className="relative overflow-hidden py-20 md:py-32">
+      {/* soft fading ambient dividers so sections blend smoothly without harsh cutout lines */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-10 px-6 md:gap-12 md:px-10 lg:grid-cols-[0.9fr_1.1fr]">
         <Reveal>
           <span className="eyebrow !text-accent">{proof.eyebrow}</span>
