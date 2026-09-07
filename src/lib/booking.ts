@@ -5,14 +5,32 @@
  * No secrets here — this file is imported by the browser.
  */
 
-/** The business timezone. Slots are always 2-5pm *here*, whatever the visitor's clock says. */
+/** The business timezone. Slots are always in these hours *here*, whatever the visitor's clock says. */
 export const BOOKING_TIMEZONE = "Asia/Kolkata";
 
-/** 14:00-17:00, in 30-minute steps, meetings 30 minutes long. */
-export const WINDOW_START_HOUR = 14;
-export const WINDOW_END_HOUR = 17;
+/**
+ * The bookable windows of the day, as [startHour, endHour) local to
+ * BOOKING_TIMEZONE: an afternoon block and an evening one.
+ */
+export const BOOKING_WINDOWS: ReadonlyArray<readonly [number, number]> = [
+  [14, 17],
+  [19, 21],
+];
+
+/** Kept for the first window, which is still the one the copy leads with. */
+export const WINDOW_START_HOUR = BOOKING_WINDOWS[0][0];
+export const WINDOW_END_HOUR = BOOKING_WINDOWS[0][1];
 export const SLOT_MINUTES = 30;
 export const MEETING_MINUTES = 30;
+
+/** "2–5pm & 7–9pm" — the windows written the way the rail says them. */
+export const WINDOW_LABEL = BOOKING_WINDOWS.map(([start, end]) => {
+  const h12 = (h: number) => (h % 12 === 0 ? 12 : h % 12);
+  const suffix = (h: number) => (h >= 12 ? "pm" : "am");
+  return suffix(start) === suffix(end)
+    ? `${h12(start)}–${h12(end)}${suffix(end)}`
+    : `${h12(start)}${suffix(start)}–${h12(end)}${suffix(end)}`;
+}).join(" & ");
 
 /** How many working days ahead the picker offers. */
 export const BOOKABLE_DAYS = 10;
@@ -41,24 +59,26 @@ export function zoneOffset(instant: Date, timeZone: string = BOOKING_TIMEZONE): 
  *
  * The offset is looked up from midday on the same date: near enough for any
  * zone, and exact for fixed-offset ones like IST. A DST transition landing
- * inside the 2-5pm window would be the one case worth revisiting.
+ * inside a booking window would be the one case worth revisiting.
  */
 export function toInstant(dateISO: string, time: string, timeZone: string = BOOKING_TIMEZONE): Date {
   const offset = zoneOffset(new Date(`${dateISO}T12:00:00Z`), timeZone);
   return new Date(`${dateISO}T${time}:00${offset}`);
 }
 
-/** ["14:00", "14:30", "15:00", "15:30", "16:00", "16:30"] */
+/** ["14:00", "14:30", ... "16:30", "19:00", "19:30", "20:00", "20:30"] — every window, in order. */
 export function slotTimes(): string[] {
   const out: string[] = [];
-  for (
-    let minutes = WINDOW_START_HOUR * 60;
-    minutes + MEETING_MINUTES <= WINDOW_END_HOUR * 60;
-    minutes += SLOT_MINUTES
-  ) {
-    const h = String(Math.floor(minutes / 60)).padStart(2, "0");
-    const m = String(minutes % 60).padStart(2, "0");
-    out.push(`${h}:${m}`);
+  for (const [startHour, endHour] of BOOKING_WINDOWS) {
+    for (
+      let minutes = startHour * 60;
+      minutes + MEETING_MINUTES <= endHour * 60;
+      minutes += SLOT_MINUTES
+    ) {
+      const h = String(Math.floor(minutes / 60)).padStart(2, "0");
+      const m = String(minutes % 60).padStart(2, "0");
+      out.push(`${h}:${m}`);
+    }
   }
   return out;
 }
