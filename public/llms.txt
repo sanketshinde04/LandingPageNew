@@ -1,0 +1,67 @@
+# DEPLOY by Build Fast with AI
+
+> Forward-deployed AI engineers embed directly with your team to take one high-impact business workflow from POC to a deployed production AI system in 4-6 weeks with full code ownership.
+
+DEPLOY is the forward-deployed AI engineering service from Build Fast with AI (Intellify Edventures Pvt. Ltd.). We bridge the gap between AI prototypes and production-grade software by embedding specialized engineers into your team, codebase, and infrastructure.
+
+## Core Services
+
+- **Forward-Deployed AI Engineering**: Embedded AI engineers working directly inside your Git repositories, cloud environment (AWS, GCP, Azure, or on-premise), and communication channels (Slack, Teams).
+- **AI POC to Production**: Fixed-scope 4-6 week sprint taking a single workflow from evaluation baseline to live deployment.
+- **Enterprise Agentic Systems**: Autonomous AI agents with deterministic tool use, permission harnesses, and human-in-the-loop escalation.
+- **Text-to-SQL & Analytics**: Semantic business layers and RAG systems over operational relational databases reaching ~95% benchmark accuracy.
+- **Real-Time Voice AI**: Sub-second latency voice interviewers and copilots with sandboxed code execution and explainable evaluation.
+- **Agentic Learning Systems**: Adaptive EdTech AI architectures covering learner diagnostics, teacher copilots, and safe autonomy levels.
+
+## Key Links & Resources
+
+- [Home](https://deploy.buildfastwithai.com/): Overview of the forward-deployed model, production projects, and methodology.
+- [Proof & Case Studies Hub](https://deploy.buildfastwithai.com/proof): Measured client results, architecture blueprints, and production engineering post-mortems.
+- [Case Study: Enterprise SQL RAG](https://deploy.buildfastwithai.com/proof/sql-rag): Scaling natural language to SQL to ~95% accuracy with semantic layers, model routing, and RLHF feedback loops.
+- [Case Study: Real-Time AI Interviewer](https://deploy.buildfastwithai.com/proof/ai-interviewer): Voice latency optimization, TTS evaluation, sandboxed code execution, and explainable AI scoring.
+- [Case Study: Agentic Learning Platform](https://deploy.buildfastwithai.com/proof/agentic-learning): Blueprint for AI-assisted 1:1 education across 9 learner stages, teacher copilots, and mastery tracking.
+- [Book an AI Scoping Call](https://deploy.buildfastwithai.com/audit): 30-minute scoping call on Google Meet with forward-deployed engineering leads.
+
+## The 4-6 Week Build Methodology
+
+1. **Week 1: Scoping and baseline metrics**: Embed with the team, define security boundaries, agree on target accuracy metrics, and provision repository access.
+2. **Weeks 2-3: Build against live production data**: Engineer agent harnesses, retrieval pipelines, evaluations, and API integrations directly against real data and edge cases.
+3. **Weeks 4-5: Deploy to production environment**: Deploy alongside existing operations in shadow or live mode to validate real operational lift.
+4. **Week 6: Team training and full handover**: Transfer full code ownership, test suites, architecture documentation, and runbooks to your internal team.
+
+## Pre-Built Modular Infrastructure
+
+We assemble builds using proven, tested components:
+- **AI Agents**: Autonomous multi-step planning, tool use, and retries.
+- **Agent Harness**: Scoped runtime permissions, sandbox isolation, and execution traces.
+- **Skills**: Version-controlled capabilities (e.g. document extraction, SQL generation, ticket triage).
+- **RAG & Knowledge Layer**: Chunking, reranking, and citation engine with role-based access control.
+- **MCP Connectors**: Standard Model Context Protocol integrations for databases, CRM, ERP, and ticketing.
+- **Evaluation Suite**: Automated golden test sets measuring regression and accuracy on model updates.
+- **Observability**: Complete telemetry for latency, token costs, tool calls, and error traces.
+
+## Verified Client Engagements
+
+Forward-deployed AI systems shipped for enterprise teams including:
+- BCG
+- HPE
+- Schneider Electric
+- Wispr Flow
+- Freshworks
+- NVIDIA
+- Accel
+- Shell
+- mem0
+- FloCareer
+- CodeYoung
+- PyTorch
+
+## Contact & Booking
+
+- Website: https://deploy.buildfastwithai.com
+- Main Site: https://www.buildfastwithai.com
+- Contact Email: talk@buildfastwithai.com
+- Scoping Call: https://deploy.buildfastwithai.com/audit
+- GitHub: https://github.com/buildfastwithai/gen-ai-experiments
+- LinkedIn: https://www.linkedin.com/company/build-fast-with-ai/
+- X (Twitter): https://x.com/BuildFastWithAI

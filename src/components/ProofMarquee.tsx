@@ -29,7 +29,7 @@ function LogoTile({ company }: { company: CompanyItem }) {
           <svg
             viewBox="0 0 24 24"
             className="h-5 w-5 fill-white transition-transform duration-200 group-hover:scale-105"
-            aria-hidden="true"
+            aria-label={`${company.name} logo`}
           >
             <path d={mark.path} />
           </svg>
@@ -37,11 +37,10 @@ function LogoTile({ company }: { company: CompanyItem }) {
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={`/logos/${company.file}.png`}
-            alt=""
+            alt={`${company.name} enterprise AI deployment`}
             width={32}
             height={32}
             loading="lazy"
-            aria-hidden="true"
             className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-105"
           />
         )}

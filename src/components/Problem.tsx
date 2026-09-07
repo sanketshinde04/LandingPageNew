@@ -46,7 +46,7 @@ export default function Problem() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={images.metrics}
-          alt=""
+          alt="Enterprise AI deployment metrics and benchmark data"
           className="h-full w-full object-cover opacity-[0.42]"
           loading="lazy"
         />
@@ -87,7 +87,7 @@ export default function Problem() {
                 className="text-[clamp(3rem,6vw,5rem)] font-medium leading-none tracking-tight text-white"
               />
 
-              {/* proportion bar — the number, made visible */}
+              {/* proportion bar: the number, made visible */}
               <div
                 className="mx-auto mt-6 h-[3px] w-[180px] max-w-full overflow-hidden rounded-full bg-white/10"
                 aria-hidden

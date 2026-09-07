@@ -9,10 +9,27 @@ import Pod from "@/components/Pod";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
+import { faq } from "@/lib/content";
+import { generateFAQSchema, generateServiceSchema } from "@/lib/seo";
 
 export default function Home() {
+  const faqSchema = generateFAQSchema(faq.items);
+  const serviceSchema = generateServiceSchema();
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serviceSchema),
+        }}
+      />
       <Navigation />
       <Hero />
       <ProofMarquee />

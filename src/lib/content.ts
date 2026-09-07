@@ -2,9 +2,9 @@ export const site = {
   name: "Build Fast with AI",
   product: "DEPLOY",
   contactEmail: "talk@buildfastwithai.com",
-  title: "DEPLOY — Build AI systems that actually ship.",
+  title: "Forward-Deployed AI Engineers | AI POC to Production in 4-6 Weeks",
   description:
-    "Forward-deployed AI engineers embed with your team, turn one real workflow into a deployed production system, and hand you the code and the capability.",
+    "Forward-deployed AI engineers embed with your team, turn one real workflow from POC to a deployed production AI system, and hand you the code and the capability.",
 };
 
 /** Always on the invite alongside whoever books. */
@@ -33,9 +33,9 @@ export const hero = {
   eyebrow: "Forward-deployed AI engineers",
   titleLine1: "Build AI systems",
   titleLine2: "that actually ship.",
-  sub: "Forward-deployed AI engineers embed with your team and turn one real workflow into AI agents running in production.",
+  sub: "Forward-deployed AI engineers embed with your team and turn one real workflow into production AI systems and AI agents running in your infrastructure.",
   primaryCta: { label: "Book a call", href: "#call" },
-  /** set inside the orbiting ring — keep it one short word */
+  /** set inside the orbiting ring: keep it one short word */
   mark: "DEPLOY",
 };
 
@@ -43,8 +43,7 @@ export const proof = {
   eyebrow: "Who we have built for",
   title: "We have already built AI",
   titleAccent: "inside these teams.",
-  sub: "Every name here is an engagement we delivered — the same engineers who did that work are the ones who show up for your build.",
-  /* 12 verified companies (6 per column for 2 columns) excluding Google, McKinsey, Amazon, IIT Bombay, OpenAI, Mistral, Meta AI, LangChain, Hugging Face, Anthropic, n8n, and Ollama */
+  sub: "Every name here is an engagement we delivered - the same forward-deployed AI engineers who did that work are the ones who show up for your build.",
   companies: [
     // Column 1 (6 companies)
     { name: "BCG", file: "bcg" },
@@ -71,22 +70,20 @@ export const work = {
   eyebrow: "The work",
   title: "AI systems we have",
   titleAccent: "put into production.",
-  sub: "Six real projects, running inside client companies today. Here is what each one does and how it is built.",
-  /* `size` drives the uneven grid: "wide" takes four of six columns, "half"
-     takes three, "narrow" takes two. */
+  sub: "Six real projects and enterprise AI deployments running inside client companies today. Here is what each one does and how it is built.",
   projects: [
     {
       visual: "sqlRag" as const,
       size: "wide" as const,
       sector: "Enterprise",
-      title: "AI Data Analyst",
+      title: "AI Data Analyst (Text-to-SQL)",
       detail:
-        "A text-to-SQL agent that answers plain-English questions against a live production database. A business glossary maps everyday terms to the right tables, a cheap model handles the easy queries and a stronger one takes the hard ones, and every answer is checked against a held-out test set.",
+        "A text-to-SQL agent and enterprise semantic layer that answers plain-English questions against a live production database. A business glossary maps terms to tables, a cost-aware model routing pipeline handles queries, and every answer is verified against held-out evals.",
       points: [
         "Ask the database a question in plain English",
-        "Text-to-SQL, checked to ~95% accuracy",
-        "Business glossary maps terms to the right columns",
-        "Cheap model for simple queries, strong one for hard queries",
+        "Natural language to SQL, checked to ~95% accuracy",
+        "Business glossary semantic layer maps terms to columns",
+        "Cost-aware model routing for simple and complex queries",
       ],
     },
     {
@@ -95,12 +92,12 @@ export const work = {
       sector: "HR Tech",
       title: "AI Interview Agent",
       detail:
-        "Runs the first technical round over live voice, asks follow-up questions based on what the candidate actually said, and gives them a sandbox to write real code in. Every score arrives with the reasoning behind it, so a rejection can always be justified.",
+        "Runs the first technical round over live voice AI, asks dynamic follow-up questions based on candidate responses, and provides a sandboxed coding environment. Every score arrives with explainable AI reasoning.",
       points: [
         "Runs the first technical round over live voice",
-        "Asks follow-up questions from the answers",
-        "Candidate writes code in a sandbox",
-        "Every score comes with its reasoning",
+        "Sub-second voice AI latency and dynamic follow-ups",
+        "Sandboxed live coding execution environment",
+        "Explainable AI scoring and automated screening",
       ],
     },
     {
@@ -109,12 +106,12 @@ export const work = {
       sector: "Finance",
       title: "Document Processing Agent",
       detail:
-        "Reads invoices, contracts and scans, pulls out the fields that matter, and checks each one against your own rules. Anything that fails a rule is flagged for a person rather than guessed at, and every extraction is logged for audit.",
+        "Reads invoices, contracts and scans, pulls out structured fields, and validates each field against custom deterministic rules. Flags anomalies for human-in-the-loop review with complete audit logging.",
       points: [
-        "Pulls fields out of invoices, contracts and scans",
-        "Checks each one against your own rules",
-        "Flags what fails instead of guessing",
-        "Every extraction logged for audit",
+        "Intelligent document processing for invoices and scans",
+        "Automated rule validation and exception handling",
+        "Human-in-the-loop review for edge cases",
+        "Every extraction logged for compliance audit",
       ],
     },
     {
@@ -123,12 +120,12 @@ export const work = {
       sector: "Edtech",
       title: "AI Tutor Platform",
       detail:
-        "Teaches one student at a time and moves at their pace, choosing the next question from how they answered the last. It tracks what each student has genuinely mastered, and the teacher approves anything the system should not decide on its own.",
+        "An agentic AI architecture for 1:1 education that adapts in real time to learner mastery. Provides teacher copilots and safe autonomy levels for personalized learning.",
       points: [
-        "Teaches one student at a time, at their pace",
-        "Picks the next question from past answers",
-        "Tracks what each student has actually mastered",
-        "Teacher approves anything the system should not decide alone",
+        "Adaptive 1:1 learning AI moving at student pace",
+        "Mastery tracking and learning identity graph",
+        "Teacher copilot for lesson insights and feedback",
+        "Safe AI autonomy levels with human oversight",
       ],
     },
     {
@@ -137,11 +134,11 @@ export const work = {
       sector: "FoodTech",
       title: "Sales Data Chatbot",
       detail:
-        "Answers questions about live sales inside the chat tool the team already uses. Separate agents handle retrieval and analysis, and it reads the production database directly rather than a nightly copy.",
+        "Answers questions about live sales inside team chat tools like Slack. Specialized agents handle data retrieval and analytics directly on production databases.",
       points: [
-        "Answers sales questions inside the team's chat",
-        "Separate agents for retrieval and analysis",
-        "Reads the live database, not a copy",
+        "Answers sales data queries inside team chat",
+        "Multi-agent architecture for retrieval and analysis",
+        "Direct connection to live data systems",
       ],
     },
     {
@@ -150,107 +147,103 @@ export const work = {
       sector: "DevTools",
       title: "LLM Developer Launch",
       detail:
-        "Took a new model family to the developers who would actually use it: technical documentation, quickstarts and working demo integrations, delivered through the launch window.",
+        "Took a new foundation model family to developers: technical documentation, quickstarts and working integrations delivered during the launch window.",
       points: [
         "Took a new model family to its developers",
-        "Technical docs and quickstarts",
-        "1,000+ developers engaged in launch week",
+        "Technical documentation and SDK quickstarts",
+        "1,000+ developers onboarded during launch week",
       ],
     },
   ],
 };
 
-/* ---------------------------------------------------------------------------
-   Two tabs, six rows each, one detail panel — so the index stays one screen
-   tall no matter how many projects end up in it.
---------------------------------------------------------------------------- */
 export const projectIndex = {
   eyebrow: "What we bring with us",
   title: "We do not start",
   titleAccent: "from a blank page.",
-  sub: "These seven pieces are already built, already running in production somewhere, and already tested. Your build assembles them and adds what is specific to you — which is why the second workflow costs less than the first.",
+  sub: "These core components are already tested and running in production. Your build assembles them and adds what is specific to your workflow - which is why the second workflow costs less than the first.",
   items: [
     {
       name: "AI agents",
-      role: "The thing that does the work",
+      role: "The core execution engine",
       detail:
-        "Agents that carry out a real task end to end — read the request, gather what they need, do the work, and hand back a result a person can check.",
+        "Autonomous agents that carry out complex tasks end to end: read requests, gather data, execute tool calls, and produce verifiable results.",
       points: [
-        "Plans the steps, then carries them out",
-        "Calls your tools, not just the model",
-        "Stops and asks when it should",
+        "Plans steps and executes deterministically",
+        "Tool use and API integration with your systems",
+        "Human-in-the-loop escalation when needed",
       ],
       systems: "Planning · tool use · retries",
     },
     {
       name: "Agent harness",
-      role: "The runtime they run inside",
+      role: "Runtime and guardrails",
       detail:
-        "The layer that decides what an agent is allowed to touch, retries what fails, and records every step. You can open any run and see exactly what happened.",
+        "The security and orchestration layer that manages permissions, handles retries, and maintains comprehensive execution traces.",
       points: [
-        "Scoped permissions, one tool at a time",
-        "Automatic retries when something fails",
-        "A full trace of every run, kept",
+        "Granular tool permissions and sandboxing",
+        "Automatic retries and graceful error recovery",
+        "Complete observability and execution traces",
       ],
       systems: "Permissions · retries · execution traces",
     },
     {
       name: "Skills",
-      role: "What an agent knows how to do",
+      role: "Modular capabilities",
       detail:
-        "Reusable capabilities an agent can pick up — read a contract, write a query, file a ticket. Adding a new one is a day's work, not a rebuild.",
+        "Reusable skill modules an agent can load: contract review, SQL query generation, CRM updates, and ticket triage.",
       points: [
-        "Written once, reused on the next build",
-        "Versioned alongside the rest of the code",
-        "A new one takes a day, not a rebuild",
+        "Modular and reusable across builds",
+        "Version-controlled in your repository",
+        "Rapid extension for new business tasks",
       ],
       systems: "Reusable across builds",
     },
     {
       name: "RAG & knowledge layer",
-      role: "Your documents, searchable",
+      role: "Enterprise semantic search",
       detail:
-        "Retrieval over your own policies, manuals and history. Every answer cites the document it came from, and it respects who is allowed to see what.",
+        "High-accuracy retrieval over private documents, policies, and knowledge bases with verified citations and role-based access control.",
       points: [
-        "Chunking and reranking tuned to your corpus",
-        "Every answer cites the document it used",
-        "Honours the access rules you already have",
+        "Optimized chunking and reranking pipelines",
+        "Precise document citation on every answer",
+        "Role-based access control integration",
       ],
       systems: "Chunking · reranking · citations · access rules",
     },
     {
       name: "MCP & integrations",
-      role: "How it reaches your systems",
+      role: "System interoperability",
       detail:
-        "Model Context Protocol connectors to the tools you already run. It is a standard, so the next workflow does not pay to build the same connection twice.",
+        "Model Context Protocol (MCP) connectors to integrate seamlessly with your CRM, ERP, databases, and issue trackers without proprietary lock-in.",
       points: [
-        "A standard protocol, not custom glue",
-        "Connectors for CRM, ERP, ticketing and databases",
-        "The next workflow reuses them for free",
+        "Standardized open protocol connectors",
+        "Direct integration with databases and SaaS tools",
+        "Reusable across future AI workflows",
       ],
       systems: "CRM · ERP · ticketing · databases",
     },
     {
       name: "Evaluation suite",
-      role: "Proof that it still works",
+      role: "Continuous accuracy evals",
       detail:
-        "A test set for your workflow that we can re-run on demand. When a model changes, you get a number telling you whether it got better or worse — not a hunch.",
+        "Automated evaluation suites built on real golden test sets to measure accuracy, catch regressions, and optimize model costs over time.",
       points: [
-        "A test set built from your real cases",
-        "Re-run on every model or prompt change",
-        "Tells you whether a change helped or hurt",
+        "Golden test sets reflecting real edge cases",
+        "Automated eval runs on prompt and model changes",
+        "Objective benchmark scoring before deployment",
       ],
       systems: "Regression runs · scoring · drift checks",
     },
     {
       name: "Observability",
-      role: "What to do when it breaks",
+      role: "Monitoring and telemetry",
       detail:
-        "Every input, decision, tool call and error is recorded. When something looks wrong your team can open that run and read it, instead of trying to reproduce it.",
+        "Full telemetry across latency, token costs, tool calls, and reasoning steps for effortless debugging and continuous monitoring.",
       points: [
-        "Every input, decision and tool call logged",
-        "Errors surface with the failing run attached",
-        "Your team can debug it without calling us",
+        "Detailed logging for every prompt and tool call",
+        "Real-time alerts on error rate and cost spikes",
+        "Self-serve debugging for your internal team",
       ],
       systems: "Logs · traces · error reporting",
     },
@@ -262,7 +255,7 @@ export const problem = {
   title: "Your pilot worked.",
   titleAccent: "It still didn't ship.",
   titleAfter: "That gap is the whole business.",
-  sub: "The demo is the easy part. What kills projects is everything after it — integrations, permissions, edge cases, evaluations, and nobody accountable for the thing running on a Monday morning.",
+  sub: "The demo is the easy part. What stalls projects is everything after it: production integrations, permission boundaries, edge cases, evaluations, and long-term ownership.",
   stats: [
     {
       value: 95,
@@ -274,7 +267,7 @@ export const problem = {
       value: 9,
       suffix: "%",
       label: "fewer than one in ten GenAI POCs in India ever reach production",
-      source: "EY–CII, AIdea of India, 2025",
+      source: "EY-CII, AIdea of India, 2025",
     },
     {
       value: 42,
@@ -289,7 +282,7 @@ export const manifesto = {
   eyebrow: "The model",
   title: "We build inside",
   titleAccent: "your stack.",
-  sub: "Our engineers work in the tools you already run — your cloud, your repos, your data, your ticketing. Nothing gets rebuilt somewhere else, and your team does not have to adopt anything new to keep it running.",
+  sub: "Our forward-deployed AI engineers work directly in your tools: your cloud, your Git repos, your databases, and your ticketing. Nothing is locked in a third-party black box.",
   oldWay: {
     heading: "The usual way",
     items: [
@@ -302,10 +295,10 @@ export const manifesto = {
   shipWay: {
     heading: "How we work",
     items: [
-      "Engineers in your team from week one",
-      "A system in production, measured on your numbers",
-      "One workflow, fixed scope, one team accountable",
-      "Your engineers build alongside us and keep it",
+      "Forward-deployed engineers embedded from day one",
+      "A production AI system measured against real KPIs",
+      "One workflow, fixed scope, total accountability",
+      "Your engineers build alongside us and own the code",
     ],
   },
 };
@@ -322,77 +315,77 @@ export const sprint = {
   eyebrow: "How a build runs",
   title: "Four steps.",
   titleAccent: "One workflow.",
-  sub: "No parallel workstreams and no discovery phase. We pick one workflow, then take it all the way.",
+  sub: "No infinite discovery phases. We pick one high-value workflow, engineer it, and take it all the way to production.",
   stages: [
     {
       no: "01",
       days: "Week 1",
-      title: "Pick the workflow",
-      line: "We sit with your team for a few days and choose one workflow worth automating.",
+      title: "Scoping and baseline metrics",
+      line: "We embed with your team to define the workflow, security boundaries, and target accuracy metrics.",
       marks: [
-        "One workflow picked, written down",
-        "The number we have to beat, agreed",
-        "Access to the systems it touches",
+        "One high-impact workflow defined and scoped",
+        "Target accuracy and ROI baseline agreed upon",
+        "Repository and data access provisioned",
       ],
     },
     {
       no: "02",
-      days: "Weeks 2–3",
-      title: "Build on your real data",
-      line: "We build against your actual data and the cases that break things. You see it running at the end of every day.",
+      days: "Weeks 2-3",
+      title: "Build against live production data",
+      line: "We build the agents, evaluations, and integrations directly against real data and edge cases.",
       marks: [
-        "A working system, not a demo",
-        "Connected to your live systems",
-        "Handles errors, retries and edge cases",
+        "Working production architecture, not a prototype",
+        "Integrated with your core APIs and databases",
+        "Robust error handling, retries, and eval suite",
       ],
     },
     {
       no: "03",
-      days: "Weeks 4–5",
-      title: "Run it in production",
-      line: "It goes live next to your current process, so you can compare the two before anything depends on it.",
+      days: "Weeks 4-5",
+      title: "Deploy to production environment",
+      line: "The AI system runs in shadow or live production alongside existing operations to measure actual lift.",
       marks: [
-        "Running in your environment",
-        "A person approves the risky steps",
-        "Measured against the week-one number",
+        "Running in your secure cloud infrastructure",
+        "Human-in-the-loop review for critical steps",
+        "Measured against the week-one accuracy target",
       ],
     },
     {
       no: "04",
       days: "Week 6",
-      title: "Hand it to your team",
-      line: "We document it, train whoever will run it, and step back. The code is yours.",
+      title: "Team training and full handover",
+      line: "We document the architecture, train your engineering team, and transfer full code ownership.",
       marks: [
-        "Documentation and operating playbooks",
-        "Tests your team can re-run",
-        "You own the code",
+        "Comprehensive documentation and runbooks",
+        "Automated regression evals your team can run",
+        "Complete code and IP ownership",
       ],
     },
   ] as Stage[],
-  railStart: "Day 0 — pilot chaos",
-  railEnd: "Week 6 — in production",
+  railStart: "Day 0: pilot chaos",
+  railEnd: "Week 6: in production",
 };
 
 export const pod = {
   eyebrow: "Who shows up",
   title: "A team that works",
   titleAccent: "inside your team.",
-  sub: "Not advisors reviewing your work from the outside. The people who know the workflow, build the system, and make it dependable sit inside the work with your team.",
+  sub: "Not high-level advisors reviewing your work from afar. Forward-deployed AI engineers who build, test, and ship production systems inside your team.",
   roles: [
     {
       tag: "Outcome",
-      title: "Product & process",
-      body: "Knows the workflow, the edge cases, and the decision that matters. Turns a vague request into an outcome the team can measure.",
+      title: "Product & Process Lead",
+      body: "Knows the domain workflow, edge cases, and business requirements. Translates complex operational goals into measurable eval targets.",
     },
     {
       tag: "Systems",
-      title: "AI & integration",
-      body: "Builds the agents, retrieval, model calls, and system connections directly in your repo and against real data.",
+      title: "Forward-Deployed AI Engineer",
+      body: "Builds the agent architecture, RAG pipelines, model routing, and API integrations directly inside your codebase.",
     },
     {
       tag: "Confidence",
-      title: "Evals & operations",
-      body: "Turns a promising demo into a dependable system with evaluations, permissions, logs, and the failure paths production exposes.",
+      title: "Evals & Operations Engineer",
+      body: "Turns prototype code into dependable production software with evals, guardrails, security boundaries, and telemetry.",
     },
   ],
 };
@@ -403,36 +396,36 @@ export const faq = {
   titleAccent: "answered.",
   items: [
     {
-      q: "What exactly is a forward-deployed engineer?",
-      a: "An engineer who works inside your business instead of advising it from the outside. Same Slack, same standups, same messy data. Palantir invented the model and OpenAI, Anthropic and AWS have since built teams around it. The short version: we ship code in your environment, not recommendations in a deck.",
+      q: "What exactly is a forward-deployed AI engineer?",
+      a: "A forward-deployed AI engineer embeds directly inside your engineering team rather than offering external advisory services. They work in your Slack, participate in your standups, write code in your Git repositories, and solve edge cases against your actual data. Palantir pioneered this model, and leading AI organizations like OpenAI, Anthropic, and AWS now use it to bridge the gap between research models and production applications.",
     },
     {
-      q: "How is this different from hiring consultants?",
-      a: "Consultants hand you a plan and an invoice. We hand you a running system and the code behind it. The work is scoped to one workflow, and you can tell whether it worked by looking at a number that already existed before we showed up.",
+      q: "How is this different from hiring AI consultants or a traditional agency?",
+      a: "Traditional consultants deliver slide decks, high-level roadmaps, and hourly invoices. We deliver a fully functional, tested AI system running in your cloud, along with full ownership of the source code. The engagement has a fixed scope focused on a single workflow, and success is judged by a predefined metric agreed upon before work begins.",
     },
     {
-      q: "How long does a build actually take?",
-      a: "Four to six weeks in most cases, measured from the scoping call to a system running in production. The range is real rather than padding — a workflow touching two systems moves faster than one touching seven, and we would rather quote the range than miss a date.",
+      q: "How long does a forward-deployed AI build take?",
+      a: "Most builds take four to six weeks from scoping call to a live production deployment. Simple workflows with few integrations move faster, while multi-system enterprise workflows take the full duration. We quote fixed timelines rather than open-ended consulting engagements.",
     },
     {
-      q: "What do you actually need from us?",
-      a: "One person who knows the workflow properly and can answer questions about the edge cases. Access to the systems it touches. Roughly twenty minutes a day from that person. That is genuinely the whole list, and if we cannot get those three things the build will not work.",
+      q: "How much does an AI implementation cost?",
+      a: "Our forward-deployed engagements operate on a transparent, fixed-scope investment model rather than open-ended hourly billing. Because we bring pre-built, production-tested components (agent harnesses, eval suites, and MCP connectors), we deliver in weeks what traditional consultancies take months to build. Book a 30-minute scoping call for a custom quote based on your workflow complexity.",
     },
     {
-      q: "Which models and tools do you use?",
-      a: "Whichever ships fastest and runs cheapest for your workflow, and we build so you can swap them later. Models change every few months. Your operations should not have to change with them, so nothing we write is welded to one provider.",
+      q: "What do you need from our team during the engagement?",
+      a: "We require three things: a designated domain expert who understands the workflow and its edge cases, API and repository access to the relevant systems, and approximately 20-30 minutes per day for feedback and reviews. With these in place, our forward-deployed engineers handle the heavy lifting.",
     },
     {
-      q: "What happens when the build is over?",
-      a: "Your team runs it. Handover is part of the build and not an upsell: documentation, a walkthrough with whoever owns the thing, and the code sitting in your repository. Some clients keep us on a reliability retainer to look after evaluations, model upgrades and cost as things change around the system — that is a choice you make afterwards, not a dependency we build in.",
+      q: "Which foundation models and AI frameworks do you use?",
+      a: "We select the most cost-effective and highest-performing models for your specific use case, including Anthropic Claude, OpenAI GPT-4o, Google Gemini, and open-source models like Llama and Mistral. We build model-agnostic architectures with structured routing so you can swap models without rewriting your business logic.",
     },
     {
-      q: "What if it doesn't work?",
-      a: "We agree on the number to beat before we start, so there is no argument about it afterwards. If the system does not beat it, we will tell you plainly instead of dressing it up. We would also rather say no on the first call than take on a workflow we do not think AI should be running — and that is the most common outcome of a first conversation.",
+      q: "What happens after the AI system is deployed?",
+      a: "Your team has full ownership of the codebase and intellectual property. Handover includes comprehensive architecture documentation, runbooks, and test suites. We also offer optional reliability retainers to assist with model upgrades, continuous evaluations, and monitoring as your operational volume scales.",
     },
     {
-      q: "Is our data safe?",
-      a: "We work inside your environment and your permissions, with agreed data boundaries and human approval on anything sensitive. Nothing leaves your stack.",
+      q: "How do you ensure data security and privacy?",
+      a: "We work directly within your cloud infrastructure (AWS, Azure, GCP, or on-premises) and respect your existing IAM policies, VPNs, and security boundaries. Zero client data is stored on external servers or used for model training.",
     },
   ],
 };
@@ -441,21 +434,21 @@ export const finalCta = {
   title: "Are you ready to",
   titleAccent: "deploy?",
   titleAfter: "",
-  sub: "Thirty minutes. Bring one workflow that costs your team real hours. We'll tell you on the call whether it's worth building — and we say no more often than we say yes.",
+  sub: "Thirty minutes. Bring one workflow that costs your team real hours. We'll tell you on the call whether it's worth building - and we say no more often than we say yes.",
   primaryCta: { label: "Book a call", href: "#call" },
 };
 
 export const footer = {
   blurb:
-    "Forward-deployed AI engineering. One workflow, taken from scoping to production — then handed over to your team.",
+    "Forward-deployed AI engineering. One workflow, taken from scoping to production - then handed over to your team.",
   columns: [
     {
       heading: "The build",
       links: [
-        { label: "Work", href: "#work" },
-        { label: "Why", href: "#why" },
-        { label: "The build", href: "#sprint" },
-          ],
+        { label: "Work", href: "/#work" },
+        { label: "Proof", href: "/proof" },
+        { label: "The build", href: "/#sprint" },
+      ],
     },
     {
       heading: "Company",
