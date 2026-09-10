@@ -91,7 +91,7 @@ export async function generateMetadata({
 function ContentBlock({ block }: { block: ProofBlock }) {
   if (block.type === "quote") {
     return (
-      <blockquote className="my-9 border-l border-accent pl-5 font-serif text-[1.45rem] italic leading-[1.42] text-white/90 md:text-[1.7rem]">
+      <blockquote className="my-9 border-l-2 border-accent pl-5 text-[1.3rem] font-semibold leading-[1.35] tracking-[-0.02em] text-bone md:text-[1.5rem]">
         {block.text}
       </blockquote>
     );
@@ -99,13 +99,13 @@ function ContentBlock({ block }: { block: ProofBlock }) {
 
   if (block.type === "list") {
     return (
-      <ul className="my-8 space-y-3 border-y border-white/10 py-6">
+      <ul className="my-8 border-t hairline">
         {block.items.map((item) => (
           <li
             key={item}
-            className="flex gap-3 font-serif text-[18px] leading-[1.65] text-white/75"
+            className="flex gap-3.5 border-b hairline py-3.5 text-[16px] leading-[1.6] text-bone/85"
           >
-            <span className="mt-[9px] h-px w-3 shrink-0 bg-accent" />
+            <span className="mt-[11px] h-px w-3 shrink-0 bg-accent" aria-hidden />
             <span>{item}</span>
           </li>
         ))}
@@ -115,18 +115,22 @@ function ContentBlock({ block }: { block: ProofBlock }) {
 
   if (block.type === "table") {
     return (
-      <div className="my-7 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
+      <div className="relative my-8 border hairline">
+        <span className="cross -left-[6px] -top-[6px]" aria-hidden="true" />
+        <span className="cross -right-[6px] -top-[6px]" aria-hidden="true" />
+        <span className="cross -bottom-[6px] -left-[6px]" aria-hidden="true" />
+        <span className="cross -bottom-[6px] -right-[6px]" aria-hidden="true" />
         {block.rows.map((row, index) => (
           <div
             key={row.label}
-            className={`grid gap-4 px-5 py-4 text-sm sm:grid-cols-[0.8fr_1.2fr] ${
-              index > 0 ? "border-t border-white/10" : ""
+            className={`grid gap-2 px-5 py-4 text-sm sm:grid-cols-[0.7fr_1.3fr] sm:gap-4 ${
+              index > 0 ? "border-t hairline" : ""
             }`}
           >
-            <span className="font-mono text-[10px] uppercase tracking-[0.13em] text-accent">
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
               {row.label}
             </span>
-            <span className="text-white/70">{row.value}</span>
+            <span className="text-[15px] leading-[1.55] text-bone/85">{row.value}</span>
           </div>
         ))}
       </div>
@@ -134,7 +138,7 @@ function ContentBlock({ block }: { block: ProofBlock }) {
   }
 
   return (
-    <p className="my-6 font-serif text-[18px] leading-[1.72] tracking-[0.002em] text-white/78 sm:text-[19px]">
+    <p className="my-6 text-[17px] leading-[1.7] text-[#b4b8c6] sm:text-[18px]">
       {block.text}
     </p>
   );
@@ -185,28 +189,31 @@ export default async function ProofStoryPage({ params }: ProofPageProps) {
           <Reveal>
             <Link
               href="/proof"
-              className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/45 transition-colors hover:text-accent"
+              className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/45 transition-colors hover:text-accent"
             >
               ← Back to Proof
             </Link>
-            <div className="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-[0.15em] text-white/40">
-              <span className="text-accent">{story.category}</span>
+            <div className="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+              <span className="hero-eyebrow">
+                <span className="hero-eyebrow-dot" aria-hidden="true" />
+                <span>{story.category}</span>
+              </span>
               <span aria-hidden>·</span>
               <span>{story.date}</span>
               <span aria-hidden>·</span>
               <span>{story.readTime}</span>
             </div>
-            <h1 className="mt-6 max-w-[780px] text-[clamp(2.35rem,5vw,4.25rem)] font-medium leading-[1.04] tracking-[-0.038em]">
+            <h1 className="mt-7 max-w-[780px] text-[clamp(2.35rem,4.8vw,4rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-bone">
               {story.title}
             </h1>
-            <p className="mt-7 max-w-[700px] text-[clamp(1rem,1.7vw,1.2rem)] leading-[1.6] text-white/62">
+            <p className="mt-7 max-w-[680px] text-[clamp(1rem,1.6vw,1.15rem)] leading-[1.6] text-[#9a9eac]">
               {story.standfirst}
             </p>
             <div className="mt-8 flex flex-wrap gap-2">
               {story.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-white/12 bg-white/[0.03] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-white/50"
+                  className="border hairline px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-white/50"
                 >
                   {tag}
                 </span>
@@ -235,11 +242,14 @@ export default async function ProofStoryPage({ params }: ProofPageProps) {
               className="mt-16 md:mt-20"
             >
               <section>
-                <div className="mb-6 flex items-start gap-4">
-                  <span className="pt-2 font-mono text-[10px] tracking-[0.14em] text-accent">
-                    {String(index + 1).padStart(2, "0")}
+                <div className="mb-6 border-t hairline pt-6">
+                  <span className="hero-eyebrow">
+                    <span className="hero-eyebrow-dot" aria-hidden="true" />
+                    <span className="text-white/50">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                   </span>
-                  <h2 className="max-w-[600px] text-[clamp(1.45rem,2.3vw,2rem)] font-semibold leading-[1.18] tracking-[-0.018em] text-white">
+                  <h2 className="mt-4 max-w-[600px] text-[clamp(1.45rem,2.3vw,2rem)] font-semibold leading-[1.15] tracking-[-0.02em] text-bone">
                     {section.heading}
                   </h2>
                 </div>

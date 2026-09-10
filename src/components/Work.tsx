@@ -76,11 +76,11 @@ export default function Work() {
             <span className="text-white/50">04</span>
             <span>{work.eyebrow}</span>
           </span>
-          <h2 className="mt-5 text-[clamp(2rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
+          <h2 className="mt-7 text-[clamp(2rem,4.4vw,3.4rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-bone">
             {work.title}{" "}
-            <span className="serif-accent text-accent">{work.titleAccent}</span>
+            <span className="text-accent">{work.titleAccent}</span>
           </h2>
-          <p className="mt-6 max-w-[640px] text-base leading-relaxed text-white/65 md:text-lg">
+          <p className="mt-6 max-w-[560px] text-[16px] leading-[1.6] text-[#9a9eac] md:text-[17px]">
             {work.sub}
           </p>
         </Reveal>

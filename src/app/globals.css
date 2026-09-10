@@ -153,6 +153,17 @@ h6 {
   transform: none;
 }
 
+.btn-outline {
+  border: 1px solid rgba(151, 163, 201, 0.28);
+  color: var(--color-bone, #e0e2f0);
+  background: transparent;
+}
+.btn-outline:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
 .btn-glass {
   background: rgba(54, 62, 94, 0.28);
   border: 1px solid rgba(151, 163, 201, 0.22);

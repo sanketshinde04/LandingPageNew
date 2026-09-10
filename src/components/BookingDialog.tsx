@@ -108,8 +108,8 @@ const FALLBACK_HREF = `mailto:${site.contactEmail}?subject=${encodeURIComponent(
 )}`;
 
 const inputClass = (bad: boolean) =>
-  `w-full rounded-xl border bg-[#070d1a] px-3.5 py-2 text-[14px] sm:py-2.5 sm:text-[14.5px] text-white outline-none transition-colors duration-200 placeholder:text-white/25 focus:border-accent/60 ${
-    bad ? "border-red-400/55" : "border-white/12 hover:border-white/20"
+  `w-full border bg-base px-3.5 py-2 text-[14px] text-bone outline-none transition-colors duration-200 placeholder:text-white/25 focus:border-accent sm:py-2.5 sm:text-[14.5px] ${
+    bad ? "border-red-400/55" : "hairline hover:border-[rgba(151,163,201,0.35)]"
   }`;
 
 /**
@@ -278,8 +278,8 @@ export default function BookingDialog({
      rounding, no card edge - and only becomes a floating card from sm: up.
      As a dialog it stays a bottom sheet on mobile. */
   const panelClass = isPage
-    ? "relative z-10 grid h-[100svh] w-full overflow-hidden bg-surface outline-none sm:h-[84svh] sm:max-h-[590px] sm:max-w-[860px] sm:rounded-[26px] sm:border sm:border-white/12 sm:shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]"
-    : "relative z-10 grid h-[92svh] max-h-[640px] w-full max-w-[860px] overflow-hidden rounded-t-[26px] border border-white/12 bg-surface shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none sm:h-[84svh] sm:max-h-[590px] sm:rounded-[26px] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]";
+    ? "relative z-10 grid h-[100svh] w-full bg-base outline-none sm:h-[84svh] sm:max-h-[600px] sm:max-w-[880px] hairline sm:border sm:shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]"
+    : "relative z-10 grid h-[92svh] max-h-[640px] w-full max-w-[880px] rounded-t-[18px] border hairline bg-base shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none sm:h-[84svh] sm:max-h-[600px] sm:rounded-none md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]";
 
   /* The panel itself — identical in the dialog and on the shareable /audit page,
      so the two can never drift apart. */
@@ -297,40 +297,33 @@ export default function BookingDialog({
                   transition={{ duration: 0.34, ease }}
                   className={panelClass}
                 >
-                  {/* ---------- left rail: what the call actually is ---------- */}
-                  <aside className="relative hidden flex-col justify-between overflow-hidden border-r border-white/10 bg-[#0a1120] p-8 md:flex">
-                    <div
-                      className="pointer-events-none absolute -left-24 -top-24 h-[320px] w-[320px] rounded-full bg-accent/[0.14] blur-[90px]"
-                      aria-hidden
-                    />
-                    <div
-                      className="pointer-events-none absolute inset-0 opacity-[0.055]"
-                      aria-hidden
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(rgba(255,255,255,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.7) 1px, transparent 1px)",
-                        backgroundSize: "26px 26px",
-                      }}
-                    />
+                  {/* corner ticks, the same drafting frame as the page */}
+                  <span className="cross -left-[6px] -top-[6px] hidden sm:block" aria-hidden="true" />
+                  <span className="cross -right-[6px] -top-[6px] hidden sm:block" aria-hidden="true" />
+                  <span className="cross -bottom-[6px] -left-[6px] hidden sm:block" aria-hidden="true" />
+                  <span className="cross -bottom-[6px] -right-[6px] hidden sm:block" aria-hidden="true" />
 
-                    <div className="relative">
-                      <span className="eyebrow !text-accent">
-                        Scoping call
+                  {/* ---------- left rail: what the call actually is ---------- */}
+                  <aside className="relative hidden flex-col justify-between overflow-hidden border-r hairline bg-surface/40 p-8 md:flex">
+                    <div>
+                      <span className="hero-eyebrow">
+                        <span className="hero-eyebrow-dot" aria-hidden="true" />
+                        <span>Scoping call</span>
                       </span>
-                      <p className="mt-4 text-[2.6rem] font-medium leading-none tracking-[-0.03em] text-white">
+                      <p className="mt-6 text-[2.8rem] font-semibold leading-none tracking-[-0.04em] text-bone">
                         {MEETING_MINUTES}
-                        <span className="ml-1.5 text-[1.1rem] text-white/45">
+                        <span className="ml-2 font-mono text-[12px] font-normal uppercase tracking-[0.18em] text-white/40">
                           min
                         </span>
                       </p>
 
-                      <dl className="mt-8 space-y-5">
+                      <dl className="mt-8 border-t hairline">
                         {RAIL_FACTS.map((fact) => (
-                          <div key={fact.k}>
-                            <dt className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/35">
+                          <div key={fact.k} className="border-b hairline py-3.5">
+                            <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
                               {fact.k}
                             </dt>
-                            <dd className="mt-1.5 text-[13.5px] leading-snug text-white/75">
+                            <dd className="mt-1.5 text-[13.5px] leading-snug text-bone/85">
                               {fact.v}
                             </dd>
                           </div>
@@ -338,11 +331,12 @@ export default function BookingDialog({
                       </dl>
                     </div>
 
-                    <div className="relative mt-10 flex items-baseline gap-2 border-t border-white/10 pt-5">
-                      <span className="serif-accent text-lg leading-none text-white">
+                    <div className="mt-10 flex items-baseline gap-2.5">
+                      <span className="flex items-baseline text-lg font-semibold leading-none tracking-[-0.045em] text-bone">
                         deploy
+                        <span className="hero-stop" aria-hidden="true" />
                       </span>
-                      <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/35">
+                      <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/35">
                         by {site.name}
                       </span>
                     </div>
@@ -352,29 +346,29 @@ export default function BookingDialog({
                   <div className="flex h-full min-h-0 flex-col overflow-hidden">
                     {!unavailable && stage !== "done" && (
                       <div className="shrink-0 px-6 pt-6 sm:px-7" aria-hidden>
-                        <div className="flex h-[3px] gap-1.5">
-                          <span className="flex-1 rounded-full bg-accent" />
+                        <div className="flex h-[2px] gap-2">
+                          <span className="flex-1 bg-accent" />
                           <span
-                            className={`flex-1 rounded-full transition-colors duration-500 ${
-                              stage === "details" ? "bg-accent" : "bg-white/12"
+                            className={`flex-1 transition-colors duration-500 ${
+                              stage === "details" ? "bg-accent" : "bg-[rgba(151,163,201,0.16)]"
                             }`}
                           />
                         </div>
                       </div>
                     )}
 
-                    <header className="flex shrink-0 items-center justify-between gap-4 border-b border-white/10 px-6 py-5 sm:px-7">
+                    <header className="flex shrink-0 items-center justify-between gap-4 border-b hairline px-6 py-5 sm:px-7">
                       <div className="min-w-0">
-                        <h2 className="text-[1.35rem] font-medium leading-tight tracking-tight text-white">
+                        <h2 className="text-[1.35rem] font-semibold leading-tight tracking-[-0.02em] text-bone">
                           {heading}
                         </h2>
                         {!unavailable && stage !== "pick" && chosen && (
-                          <p className="mt-1.5 truncate font-mono text-[11px] uppercase tracking-[0.1em] text-accent">
+                          <p className="mt-1.5 truncate font-mono text-[11px] uppercase tracking-[0.14em] text-accent">
                             {chosen}
                           </p>
                         )}
                         {!unavailable && stage === "pick" && (
-                          <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-white/35">
+                          <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-white/35">
                             All times {ZONE_CITY}
                           </p>
                         )}
@@ -391,7 +385,7 @@ export default function BookingDialog({
                         type="button"
                         aria-label="Close"
                         onClick={() => setOpen(false)}
-                        className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/15 text-white/55 transition-colors hover:border-accent/50 hover:text-accent"
+                        className="grid h-9 w-9 shrink-0 place-items-center border hairline text-white/55 transition-colors hover:border-accent hover:text-accent"
                       >
                         <svg
                           width="11"
@@ -413,7 +407,7 @@ export default function BookingDialog({
 
                     {unavailable ? (
                       <div className="min-h-0 overflow-y-auto px-6 py-7 sm:px-7">
-                        <p className="text-[15px] leading-relaxed text-white/65">
+                        <p className="text-[15px] leading-[1.6] text-[#9a9eac]">
                           The calendar is not connected yet. Email us and we
                           will send times back the same day.
                         </p>
@@ -427,17 +421,17 @@ export default function BookingDialog({
                     ) : stage === "done" ? (
                       <div className="min-h-0 overflow-y-auto px-6 py-8 sm:px-7">
                         <div
-                          className="grid h-12 w-12 place-items-center rounded-full border border-accent/40 bg-accent/10 text-xl text-accent"
+                          className="grid h-12 w-12 place-items-center border border-accent/50 font-mono text-xl text-accent"
                           aria-hidden
                         >
                           ✓
                         </div>
-                        <p className="mt-5 text-[1.15rem] font-medium leading-snug text-white">
+                        <p className="mt-5 text-[1.15rem] font-semibold leading-snug tracking-[-0.01em] text-bone">
                           {chosen}
                         </p>
-                        <p className="mt-3 max-w-[44ch] text-[14px] leading-relaxed text-white/60">
+                        <p className="mt-3 max-w-[44ch] text-[14px] leading-[1.6] text-[#9a9eac]">
                           A calendar invite is on its way to{" "}
-                          <b className="font-medium text-white/85">
+                          <b className="font-medium text-bone">
                             {form.email}
                           </b>
                           . Reply to it if you need to move the time.
@@ -454,14 +448,14 @@ export default function BookingDialog({
                             </a>
                           )}
                           {isPage ? (
-                            <Link className="btn btn-glass" href="/">
+                            <Link className="btn btn-outline" href="/">
                               Back to the site
                             </Link>
                           ) : (
                             <button
                               type="button"
                               onClick={() => setOpen(false)}
-                              className="btn btn-glass"
+                              className="btn btn-outline"
                             >
                               Done
                             </button>
@@ -493,23 +487,23 @@ export default function BookingDialog({
                                   setDate(value);
                                   setTime("");
                                 }}
-                                className={`flex w-full min-w-0 flex-col items-center gap-1 rounded-xl border px-2 py-2.5 transition-colors duration-200 ${
+                                className={`flex w-full min-w-0 flex-col items-center gap-1 border px-2 py-2.5 transition-colors duration-200 ${
                                   on
-                                    ? "border-accent/60 bg-accent/[0.13] text-white"
-                                    : "border-white/10 bg-white/[0.02] text-white/60 hover:border-white/25 hover:text-white"
+                                    ? "border-accent bg-surface text-bone"
+                                    : "hairline text-white/60 hover:bg-surface/60 hover:text-bone"
                                 }`}
                                 >
                                   <span
-                                    className={`font-mono text-[8.5px] uppercase tracking-[0.1em] ${
+                                    className={`font-mono text-[8.5px] uppercase tracking-[0.14em] ${
                                       on ? "text-accent" : "text-white/40"
                                     }`}
                                   >
                                     {relative ?? part.weekday}
                                   </span>
-                                  <b className="text-[1.1rem] font-medium leading-none">
+                                  <b className="text-[1.1rem] font-semibold leading-none tracking-[-0.02em]">
                                     {part.day}
                                   </b>
-                                  <span className="font-mono text-[8.5px] uppercase tracking-[0.1em] text-white/40">
+                                  <span className="font-mono text-[8.5px] uppercase tracking-[0.14em] text-white/40">
                                     {part.month}
                                   </span>
                               </button>
@@ -525,7 +519,7 @@ export default function BookingDialog({
                             {Array.from({ length: 6 }, (_, i) => (
                               <div
                                 key={i}
-                                className="h-[46px] animate-pulse rounded-xl bg-white/[0.05]"
+                                className="h-[46px] animate-pulse bg-surface/60"
                               />
                             ))}
                           </div>
@@ -533,11 +527,11 @@ export default function BookingDialog({
 
                         {!loading && slots && freeCount > 0 && (
                           <>
-                            <div className="mt-7 flex items-baseline justify-between border-t border-white/10 pt-5">
-                              <span className="eyebrow !text-[10px]">
+                            <div className="mt-7 flex items-baseline justify-between border-t hairline pt-5 font-mono text-[10px] uppercase tracking-[0.18em]">
+                              <span className="text-white/40">
                                 Start time
                               </span>
-                              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-accent">
+                              <span className="text-accent">
                                 {freeCount} free
                               </span>
                             </div>
@@ -567,7 +561,7 @@ export default function BookingDialog({
                                       setTime(slot.time);
                                       setStage("details");
                                     }}
-                                    className="rounded-xl border border-white/10 bg-white/[0.02] py-3 text-[14px] tabular-nums text-white/80 transition-colors duration-200 hover:border-accent/55 hover:bg-accent/[0.1] hover:text-white disabled:cursor-not-allowed disabled:border-transparent disabled:bg-white/[0.015] disabled:text-white/18 disabled:line-through"
+                                    className="border hairline py-3 text-[14px] tabular-nums text-bone/85 transition-colors duration-200 hover:border-accent hover:bg-surface hover:text-bone disabled:cursor-not-allowed disabled:border-transparent disabled:bg-surface/30 disabled:text-white/20 disabled:line-through"
                                   >
                                     {slot.label}
                                   </button>
@@ -578,11 +572,11 @@ export default function BookingDialog({
                         )}
 
                         {!loading && slots && freeCount === 0 && (
-                          <div className="mt-7 border-t border-white/10 pt-7 text-center">
-                            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
+                          <div className="mt-7 border-t hairline pt-7 text-center">
+                            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
                               Fully booked
                             </p>
-                            <p className="mx-auto mt-2.5 max-w-[34ch] text-[14px] leading-relaxed text-white/55">
+                            <p className="mx-auto mt-2.5 max-w-[34ch] text-[14px] leading-[1.6] text-[#9a9eac]">
                               Nothing free on this day. Try another from the
                               strip above.
                             </p>
@@ -617,7 +611,7 @@ export default function BookingDialog({
                               setTime("");
                               setFormError("");
                             }}
-                            className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/40 transition-colors hover:text-accent"
+                            className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 transition-colors hover:text-accent"
                           >
                             ← Pick a different time
                           </button>
@@ -630,7 +624,7 @@ export default function BookingDialog({
                                 className={`block ${field.half ? "sm:col-span-1" : "sm:col-span-2"}`}
                                 key={field.name}
                               >
-                                <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/40">
+                                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
                                   {field.label}
                                 </span>
                                 <input
@@ -664,7 +658,7 @@ export default function BookingDialog({
                           })}
 
                           <label className="block sm:col-span-2">
-                            <span className="flex items-baseline justify-between font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/40">
+                            <span className="flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
                               What do you want to fix?
                               <i className="not-italic text-white/25">
                                 {form.requirements.length}/{REQUIREMENTS_MAX}
@@ -713,7 +707,7 @@ export default function BookingDialog({
                           )}
                         </div>
 
-                        <div className="shrink-0 border-t border-white/10 bg-[#070d1a] px-6 py-4 sm:px-7">
+                        <div className="shrink-0 border-t hairline bg-surface/40 px-6 py-4 sm:px-7">
                           <button
                             className="btn btn-solid w-full"
                             type="submit"
@@ -721,7 +715,7 @@ export default function BookingDialog({
                           >
                             {sending ? "Booking…" : "Confirm booking"}
                           </button>
-                          <p className="mt-2 text-center text-[11.5px] leading-relaxed text-white/35">
+                          <p className="mt-2.5 text-center font-mono text-[10px] uppercase tracking-[0.12em] text-white/35">
                             You get a calendar invite with a Meet link. No
                             newsletter, no follow-up sequence.
                           </p>

@@ -4,10 +4,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import type { ProofThumbnailKind } from "@/lib/proofContent";
 
+const mono = "font-mono text-[9.5px] uppercase tracking-[0.16em]";
+
 const views = {
   sql: {
     label: "Enterprise SQL RAG",
     prompt: "A question becomes a trusted answer.",
+    nodes: ["question", "context", "answer"],
     steps: [
       {
         label: "Business terms",
@@ -29,6 +32,7 @@ const views = {
   interviewer: {
     label: "Realtime AI interviewer",
     prompt: "A conversation that keeps its rhythm.",
+    nodes: ["voice", "reasoning", "evidence"],
     steps: [
       {
         label: "Listen",
@@ -50,6 +54,7 @@ const views = {
   learning: {
     label: "Agentic learning system",
     prompt: "A system that amplifies the teacher.",
+    nodes: ["identity", "teacher", "autonomy"],
     steps: [
       {
         label: "Learning identity",
@@ -68,93 +73,118 @@ const views = {
       },
     ],
   },
-} satisfies Record<ProofThumbnailKind, {
-  label: string;
-  prompt: string;
-  steps: { label: string; detail: string; stat: string }[];
-}>;
+} satisfies Record<
+  ProofThumbnailKind,
+  {
+    label: string;
+    prompt: string;
+    nodes: string[];
+    steps: { label: string; detail: string; stat: string }[];
+  }
+>;
 
-function SqlDiagram({ active }: { active: number }) {
-  return (
-    <div className="relative mx-auto flex h-[230px] max-w-[540px] items-center justify-between gap-3 px-3 sm:px-8">
-      <div className="absolute left-[18%] right-[18%] top-1/2 h-px -translate-y-1/2 bg-white/15" />
-      {["question", "context", "answer"].map((label, index) => {
-        const selected = index === active;
-        return (
-          <motion.div
-            key={label}
-            animate={{ y: selected ? -6 : 0, opacity: selected ? 1 : 0.55 }}
-            className={`relative z-10 grid h-[92px] w-[102px] place-items-center rounded-xl border text-center transition-colors duration-300 sm:h-[110px] sm:w-[132px] ${
-              selected ? "border-accent/70 bg-accent/[0.12]" : "border-white/15 bg-[#0d1727]"
+/* ------------------------------------------------------------------ *
+   The glyph inside each node: a pulse for the SQL flow, a level meter for
+   voice, a 3x3 mastery grid for learning. Kept monochrome with the accent
+   only on the selected node — blue is a signal, not atmosphere.
+ * ------------------------------------------------------------------ */
+function NodeGlyph({
+  kind,
+  index,
+  selected,
+}: {
+  kind: ProofThumbnailKind;
+  index: number;
+  selected: boolean;
+}) {
+  if (kind === "interviewer") {
+    return (
+      <div className="mb-3 flex h-5 items-end justify-center gap-1">
+        {[10, 18, 26, 14, 22].map((height, i) => (
+          <motion.span
+            key={i}
+            animate={{ height: selected ? height : 8 }}
+            transition={{ duration: 0.35 }}
+            className={`w-[3px] ${selected ? "bg-accent" : "bg-white/30"}`}
+          />
+        ))}
+      </div>
+    );
+  }
+  if (kind === "learning") {
+    return (
+      <div className="mx-auto mb-3 grid h-5 w-5 grid-cols-3 gap-[3px]">
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((dot) => (
+          <span
+            key={dot}
+            className={`h-[5px] w-[5px] rounded-[1px] ${
+              selected && dot <= index * 3 + 2 ? "bg-accent" : "bg-white/25"
             }`}
-          >
-            <div>
-              <div className={`mx-auto mb-3 h-2 w-2 rounded-full ${selected ? "bg-accent shadow-[0_0_14px_rgba(90,141,222,0.9)]" : "bg-white/35"}`} />
-              <span className="font-mono text-[9px] uppercase tracking-[0.13em] text-white/60">{label}</span>
-            </div>
-          </motion.div>
-        );
-      })}
-    </div>
+          />
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div
+      className={`mx-auto mb-3 h-[7px] w-[7px] rounded-[1.5px] ${
+        selected ? "bg-accent" : "bg-white/30"
+      }`}
+    />
   );
 }
 
-function InterviewerDiagram({ active }: { active: number }) {
+function Diagram({
+  kind,
+  nodes,
+  active,
+  onPick,
+}: {
+  kind: ProofThumbnailKind;
+  nodes: string[];
+  active: number;
+  onPick: (i: number) => void;
+}) {
   return (
-    <div className="relative mx-auto flex h-[230px] max-w-[540px] items-center justify-between gap-3 px-3 sm:px-8">
-      <div className="absolute left-[18%] right-[18%] top-1/2 h-px -translate-y-1/2 bg-white/15" />
-      {["voice", "reasoning", "evidence"].map((label, index) => {
+    <div className="relative mx-auto flex h-[220px] max-w-[540px] items-center justify-between gap-3 px-4 sm:px-8">
+      {/* the wire, dashed like a drawing */}
+      <div
+        className="absolute left-[16%] right-[16%] top-1/2 h-px -translate-y-1/2"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, rgba(151,163,201,0.4) 0 4px, transparent 4px 10px)",
+          backgroundSize: "10px 1px",
+        }}
+        aria-hidden
+      />
+      {nodes.map((label, index) => {
         const selected = index === active;
         return (
-          <motion.div
+          <motion.button
             key={label}
-            animate={{ scale: selected ? 1.05 : 1, opacity: selected ? 1 : 0.55 }}
-            className={`relative z-10 grid h-[92px] w-[102px] place-items-center rounded-full border text-center transition-colors duration-300 sm:h-[110px] sm:w-[132px] ${
-              selected ? "border-accent/70 bg-accent/[0.12]" : "border-white/15 bg-[#0d1727]"
+            type="button"
+            onClick={() => onPick(index)}
+            aria-pressed={selected}
+            animate={{ y: selected ? -6 : 0, opacity: selected ? 1 : 0.6 }}
+            className={`relative z-10 grid h-[92px] w-[102px] place-items-center border bg-base text-center transition-colors duration-300 sm:h-[108px] sm:w-[132px] ${
+              selected ? "border-accent" : "hairline hover:border-[rgba(151,163,201,0.35)]"
             }`}
           >
+            <span
+              className={`${mono} absolute left-2 top-1.5 ${
+                selected ? "text-accent" : "text-white/25"
+              }`}
+              aria-hidden
+            >
+              {String(index + 1).padStart(2, "0")}
+            </span>
             <div>
-              <div className="mb-3 flex h-5 items-end justify-center gap-1">
-                {[10, 18, 26, 14, 22].map((height, barIndex) => (
-                  <motion.span
-                    key={barIndex}
-                    animate={{ height: selected ? height : 9 }}
-                    className={`w-1 rounded-full ${selected ? "bg-accent" : "bg-white/35"}`}
-                  />
-                ))}
-              </div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.13em] text-white/60">{label}</span>
+              <NodeGlyph kind={kind} index={index} selected={selected} />
+              <span className={`${mono} ${selected ? "text-bone" : "text-white/55"}`}>
+                {label}
+              </span>
             </div>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-}
-
-function LearningDiagram({ active }: { active: number }) {
-  return (
-    <div className="relative mx-auto flex h-[230px] max-w-[540px] items-center justify-between gap-3 px-3 sm:px-8">
-      <div className="absolute left-[18%] right-[18%] top-1/2 h-px -translate-y-1/2 bg-white/15" />
-      {["identity", "teacher", "autonomy"].map((label, index) => {
-        const selected = index === active;
-        return (
-          <motion.div
-            key={label}
-            animate={{ y: selected ? -6 : 0, opacity: selected ? 1 : 0.55 }}
-            className={`relative z-10 grid h-[92px] w-[102px] place-items-center rounded-xl border text-center transition-colors duration-300 sm:h-[110px] sm:w-[132px] ${
-              selected ? "border-accent/70 bg-accent/[0.12]" : "border-white/15 bg-[#0d1727]"
-            }`}
-          >
-            <div>
-              <div className="mx-auto mb-3 grid h-5 w-5 grid-cols-3 gap-1">
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((dot) => (
-                  <span key={dot} className={`h-1.5 w-1.5 rounded-full ${selected && dot <= index * 3 + 2 ? "bg-accent" : "bg-white/30"}`} />
-                ))}
-              </div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.13em] text-white/60">{label}</span>
-            </div>
-          </motion.div>
+          </motion.button>
         );
       })}
     </div>
@@ -166,41 +196,60 @@ export default function ProofInteractive({ kind }: { kind: ProofThumbnailKind })
   const view = views[kind];
 
   return (
-    <div className="overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.025]">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4 md:px-7">
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-accent">Interactive system view</span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">Click a stage to explore</span>
+    <div className="relative border hairline">
+      <span className="cross -left-[6px] -top-[6px]" aria-hidden="true" />
+      <span className="cross -right-[6px] -top-[6px]" aria-hidden="true" />
+      <span className="cross -bottom-[6px] -left-[6px]" aria-hidden="true" />
+      <span className="cross -bottom-[6px] -right-[6px]" aria-hidden="true" />
+
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b hairline px-5 py-4 md:px-7">
+        <span className="hero-eyebrow">
+          <span className="hero-eyebrow-dot" aria-hidden="true" />
+          <span>System view</span>
+        </span>
+        <span className={`${mono} text-white/35`}>Pick a stage</span>
       </div>
 
       <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="border-b border-white/10 lg:border-b-0 lg:border-r">
+        <div className="border-b hairline lg:border-b-0 lg:border-r">
           <div className="px-5 pt-6 md:px-7">
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">{view.label}</p>
-            <h2 className="mt-3 text-[clamp(1.45rem,3vw,2.25rem)] font-medium leading-tight tracking-[-0.025em] text-white">{view.prompt}</h2>
+            <p className={`${mono} text-white/40`}>{view.label}</p>
+            <h2 className="mt-3 text-[clamp(1.45rem,3vw,2.1rem)] font-semibold leading-tight tracking-[-0.025em] text-bone">
+              {view.prompt}
+            </h2>
           </div>
-          {kind === "sql" && <SqlDiagram active={active} />}
-          {kind === "interviewer" && <InterviewerDiagram active={active} />}
-          {kind === "learning" && <LearningDiagram active={active} />}
+          <Diagram kind={kind} nodes={view.nodes} active={active} onPick={setActive} />
         </div>
 
-        <div className="flex flex-col p-5 md:p-7">
-          <div className="space-y-2">
-            {view.steps.map((step, index) => (
-              <button
-                key={step.label}
-                type="button"
-                onClick={() => setActive(index)}
-                className={`flex w-full items-center justify-between gap-4 border-b py-3 text-left transition-colors duration-300 ${
-                  active === index ? "border-accent/50 text-white" : "border-white/10 text-white/45 hover:text-white/75"
-                }`}
-              >
-                <span className="flex items-center gap-3">
-                  <span className={`font-mono text-[10px] ${active === index ? "text-accent" : "text-white/25"}`}>{String(index + 1).padStart(2, "0")}</span>
-                  <span className="text-sm">{step.label}</span>
-                </span>
-                <span className={`h-1.5 w-1.5 rounded-full ${active === index ? "bg-accent" : "bg-white/20"}`} />
-              </button>
-            ))}
+        <div className="flex flex-col bg-surface/40 p-5 md:p-7">
+          <div className="border-t hairline">
+            {view.steps.map((step, index) => {
+              const on = active === index;
+              return (
+                <button
+                  key={step.label}
+                  type="button"
+                  onClick={() => setActive(index)}
+                  aria-pressed={on}
+                  className={`flex w-full items-center justify-between gap-4 border-b hairline py-3.5 text-left transition-colors duration-300 ${
+                    on ? "text-bone" : "text-white/45 hover:text-bone/80"
+                  }`}
+                >
+                  <span className="flex items-center gap-3">
+                    <span
+                      className={`h-[7px] w-[7px] rounded-[1.5px] transition-colors duration-300 ${
+                        on ? "bg-accent" : "bg-white/20"
+                      }`}
+                      aria-hidden
+                    />
+                    <span className={`${mono} ${on ? "text-accent" : "text-white/30"}`}>
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-[14px] font-medium">{step.label}</span>
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
           <motion.div
@@ -208,10 +257,12 @@ export default function ProofInteractive({ kind }: { kind: ProofThumbnailKind })
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
-            className="mt-auto pt-8"
+            className="mt-auto pt-7"
           >
-            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-accent">{view.steps[active].stat}</span>
-            <p className="mt-3 text-[15px] leading-relaxed text-white/65">{view.steps[active].detail}</p>
+            <span className={`${mono} text-accent`}>{view.steps[active].stat}</span>
+            <p className="mt-3 text-[15px] leading-[1.6] text-[#9a9eac]">
+              {view.steps[active].detail}
+            </p>
           </motion.div>
         </div>
       </div>
