@@ -22,13 +22,13 @@ export default function Navigation() {
       }`}
     >
       <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-4 md:px-10">
-        <a href="#top" className="flex items-baseline gap-2">
-          <span className="serif-accent text-2xl leading-none text-white">
-            {site.product.split(" ").slice(-1)[0].toLowerCase()}
-          </span>
-          <span className="eyebrow hidden text-[10px] text-white/50 sm:inline">
-            by {site.name}
-          </span>
+        <a
+          href="#top"
+          aria-label={`${site.product} by ${site.name}`}
+          className="flex items-baseline text-[1.35rem] font-semibold leading-none tracking-[-0.045em] text-white"
+        >
+          {site.product.split(" ").slice(-1)[0].toLowerCase()}
+          <span className="hero-stop" aria-hidden="true" />
         </a>
 
         <nav className="glass hidden items-center gap-1 rounded-full px-2 py-1.5 md:flex">

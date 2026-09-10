@@ -2,88 +2,139 @@
 
 import { motion } from "framer-motion";
 import BookingDialog from "@/components/BookingDialog";
+import GradientWaves from "@/components/GradientWaves";
 import HeroRing from "@/components/HeroRing";
 import Magnetic from "@/components/Magnetic";
 import { hero } from "@/lib/content";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 30, filter: "blur(10px)" },
-  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  transition: { duration: 1.2, delay, ease },
+const rise = (delay: number) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.9, delay, ease },
 });
 
+/* ------------------------------------------------------------------ *
+   Set like an engineering drawing. The claim and the orbit sit inside
+   a hairline frame: two vertical rules, crosshair ticks at the corners,
+   and a ruled rail along the foot.
+   The ring breaks the frame on the right on purpose. The ground sits a
+   step above the page, with the wave field as its only light.
+   Blue is kept for the accent line, the eyebrow tick and the button.
+ * ------------------------------------------------------------------ */
 export default function Hero() {
+  const words = hero.titleLine2.replace(/\.$/, "").split(" ");
+  const last = words.pop() ?? "";
+  const lead = words.length ? `${words.join(" ")} ` : "";
+
   return (
     <section
       id="top"
-      className="relative flex min-h-svh items-center overflow-hidden"
+      className="hero-ground relative flex min-h-svh flex-col overflow-hidden"
     >
-      {/* ---------- backdrop ---------- */}
-      <div className="absolute inset-0 bg-base" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_58%_54%_at_72%_46%,rgba(40,86,180,0.34),transparent_70%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_48%_58%_at_10%_30%,rgba(26,44,86,0.46),transparent_72%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-[55%] bg-[linear-gradient(to_top,rgba(14,26,56,0.5),transparent)]" />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.75) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.75) 1px, transparent 1px)",
-          backgroundSize: "88px 88px",
-          maskImage:
-            "radial-gradient(ellipse 66% 60% at 50% 46%, black 18%, transparent 82%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 66% 60% at 50% 46%, black 18%, transparent 82%)",
-        }}
-      />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-base" />
-      <div className="pointer-events-none absolute inset-[-18%] overflow-hidden" aria-hidden="true">
-        <div className="aurora-field aurora-field-primary" />
-        <div className="aurora-field aurora-field-secondary" />
-        <div className="aurora-field aurora-field-wash" />
-        <div className="aurora-field aurora-field-ribbon" />
+      {/* ---------- ground ---------- */}
+      {/* a slow sea of waves in the site's blues, held to the lower half so
+          the claim sits on clear ground; the far waves dissolve into the
+          hero's own colour rather than a haze of their own */}
+      <div className="hero-waves pointer-events-none absolute inset-0" aria-hidden="true">
+        <GradientWaves
+          horizonColor="#111419"
+          waveColor="#363e5e"
+          crestColor="#5a8dde"
+          speed={0.22}
+          amplitude={2.4}
+          waveScale={0.6}
+          waveRatio={0.9}
+          swell={32}
+          turbulence={18}
+          tilt={1.11}
+          zoom={1}
+          height={5.5}
+          fogDepth={15}
+          detail="medium"
+          brightness={1}
+          opacity={0.9}
+          mouseInteraction
+          parallaxStrength={0.35}
+          grain
+          grainIntensity={0.04}
+        />
       </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-[1500px] grid-cols-1 items-center gap-8 px-6 pb-16 pt-28 sm:gap-10 sm:pt-32 md:px-10 lg:grid-cols-[1.08fr_1fr] lg:gap-6 lg:pb-24">
-        {/* ---------- left: the claim ---------- */}
-        <div>
-          <motion.h1
-            {...fadeUp(0.1)}
-            className="text-[clamp(2.15rem,5.4vw,4.7rem)] font-medium leading-[1.02] tracking-[-0.03em] text-white"
-          >
-            {/* each line holds together — the headline never breaks mid-phrase */}
-            <span className="sm:whitespace-nowrap">{hero.titleLine1}</span>
-            <br />
-            <span className="serif-accent text-accent">{hero.titleLine2}</span>
-          </motion.h1>
+      <div className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-1 flex-col px-6 pt-20 sm:pt-28 md:px-10 lg:pt-32">
+        {/* ---------- the frame ---------- */}
+        <div className="relative flex flex-1 flex-col">
+          <span className="hero-rule-v left-0" aria-hidden="true" />
+          <span className="hero-rule-v right-0" aria-hidden="true" />
+          <span className="hero-cross hero-cross-tl" aria-hidden="true" />
+          <span className="hero-cross hero-cross-tr" aria-hidden="true" />
 
-          <motion.p
-            {...fadeUp(0.26)}
-            className="mt-6 max-w-[34ch] text-[1.05rem] leading-relaxed text-white/70 sm:mt-8 sm:text-xl md:max-w-[30ch] md:text-[1.35rem]"
-          >
-            {hero.sub}
-          </motion.p>
+          {/* ---------- claim + ring ---------- */}
+          <div className="grid flex-1 grid-cols-1 items-center gap-6 py-4 sm:gap-10 sm:py-6 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:gap-6 lg:py-4 lg:pl-8">
+            {/* below lg the copy comes first and sits centred, the ring follows */}
+            <div className="mx-auto max-w-[640px] text-center lg:mx-0 lg:text-left">
+              <motion.div {...rise(0.05)} className="hero-eyebrow">
+                <span className="hero-eyebrow-dot" aria-hidden="true" />
+                <span className="text-white/50">01</span>
+                <span>{hero.eyebrow}</span>
+              </motion.div>
 
-          <motion.div {...fadeUp(0.4)} className="mt-8 sm:mt-10">
-            <Magnetic>
-              <BookingDialog
-                triggerClassName="btn btn-solid"
-                label={hero.primaryCta.label}
-              />
-            </Magnetic>
+              <motion.h1
+                {...rise(0.14)}
+                className="mt-8 text-[clamp(2.6rem,5.9vw,4.9rem)] font-semibold leading-[0.96] tracking-[-0.035em] text-[#e0e2f0] sm:mt-9"
+              >
+                <span className="block sm:whitespace-nowrap">{hero.titleLine1}</span>
+                <span className="block text-accent">
+                  {lead}
+                  {/* the last word and its stop travel together */}
+                  <span className="whitespace-nowrap">
+                    {last}
+                    <span className="hero-stop" aria-hidden="true" />
+                  </span>
+                </span>
+              </motion.h1>
+
+              <motion.p
+                {...rise(0.24)}
+                className="mx-auto mt-7 max-w-[44ch] text-[1.0625rem] leading-[1.6] text-[#9a9eac] sm:mt-8 md:text-[1.2rem] lg:mx-0"
+              >
+                {hero.sub}
+              </motion.p>
+
+              <motion.div {...rise(0.34)} className="mt-9 sm:mt-11">
+                <Magnetic>
+                  <BookingDialog
+                    triggerClassName="btn btn-solid"
+                    label={hero.primaryCta.label}
+                  />
+                </Magnetic>
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.4, delay: 0.2, ease }}
+              /* on desktop the ring is stretched past its column on both sides,
+                 so it crosses the gap and breaks the right rule of the frame */
+              className="aspect-square w-full max-w-[340px] justify-self-center sm:max-w-[520px] lg:-ml-6 lg:-mr-10 lg:aspect-[6/5] lg:w-auto lg:max-w-none lg:justify-self-stretch xl:-mr-20"
+            >
+              <HeroRing className="h-full w-full" />
+            </motion.div>
+          </div>
+
+          {/* ---------- the rail ---------- */}
+          <motion.div
+            {...rise(0.5)}
+            className="hero-rail relative mt-6 h-12 lg:mt-2 lg:h-14"
+            aria-hidden="true"
+          >
+            <span className="hero-cross hero-cross-bl" />
+            <span className="hero-cross hero-cross-br" />
+            <div className="hero-ruler" />
           </motion.div>
         </div>
-
-        {/* ---------- right: the mark, orbiting ---------- */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.6, delay: 0.25, ease }}
-          className="order-first aspect-square w-full max-w-[560px] justify-self-center lg:order-last lg:aspect-[7/5] lg:max-w-none"
-        >
-          <HeroRing className="h-full w-full" />
-        </motion.div>
       </div>
     </section>
   );

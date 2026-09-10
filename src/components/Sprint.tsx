@@ -170,17 +170,19 @@ export default function Sprint() {
   }, []);
 
   return (
-    <section id="sprint" className="relative py-32 md:py-40">
+    <section id="sprint" className="relative py-24 md:py-32">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[760px]">
-          <span className="eyebrow !text-accent">{sprint.eyebrow}</span>
-          <h2 className="mt-5 text-[clamp(2rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
+          <span className="hero-eyebrow">
+            <span className="hero-eyebrow-dot" aria-hidden="true" />
+            <span className="text-white/50">06</span>
+            <span>{sprint.eyebrow}</span>
+          </span>
+          <h2 className="mt-7 text-[clamp(2rem,4.4vw,3.4rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-bone">
             {sprint.title}{" "}
-            <span className="serif-accent text-accent">
-              {sprint.titleAccent}
-            </span>
+            <span className="text-accent">{sprint.titleAccent}</span>
           </h2>
-          <p className="mt-6 max-w-[600px] text-base leading-relaxed text-white/65 md:text-lg">
+          <p className="mt-6 max-w-[520px] text-[16px] leading-[1.6] text-[#9a9eac] md:text-[17px]">
             {sprint.sub}
           </p>
         </Reveal>
@@ -192,13 +194,17 @@ export default function Sprint() {
           {/* ---------- left: the rail ---------- */}
           <div className="hidden md:block">
             <div ref={railRef} className="sticky" style={{ top: MIN_STICKY_TOP }}>
-              <div className="glass rounded-[24px] p-7">
-                <div className="flex items-baseline justify-between">
-                  <span className="eyebrow !text-[10px]">Progress</span>
-                  <span
-                    ref={readoutRef}
-                    className="font-mono text-sm tabular-nums text-accent"
-                  >
+              {/* the rail is a ruled panel like the model section: hairline
+                  box, corner ticks, no glass */}
+              <div className="relative border hairline bg-surface/40 p-7">
+                <span className="cross -left-[6px] -top-[6px]" aria-hidden="true" />
+                <span className="cross -right-[6px] -top-[6px]" aria-hidden="true" />
+                <span className="cross -bottom-[6px] -left-[6px]" aria-hidden="true" />
+                <span className="cross -bottom-[6px] -right-[6px]" aria-hidden="true" />
+
+                <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-[0.18em]">
+                  <span className="text-white/40">Progress</span>
+                  <span ref={readoutRef} className="tabular-nums text-accent">
                     0%
                   </span>
                 </div>
@@ -210,16 +216,35 @@ export default function Sprint() {
                     className="w-full"
                     fill="none"
                   >
+                    {/* ruled ground behind the curve */}
+                    {[60, 120, 180, 240].map((y) => (
+                      <line
+                        key={y}
+                        x1="0"
+                        x2={VIEW_W}
+                        y1={y}
+                        y2={y}
+                        stroke="rgba(151,163,201,0.12)"
+                        strokeDasharray="2 6"
+                      />
+                    ))}
+                    <line
+                      x1="0"
+                      x2={VIEW_W}
+                      y1={VIEW_H - 1}
+                      y2={VIEW_H - 1}
+                      stroke="rgba(151,163,201,0.28)"
+                    />
                     <path
                       d="M12 268 C 92 264, 122 238, 162 208 S 252 158, 292 118 S 390 58, 448 26"
-                      stroke="rgba(255,255,255,0.1)"
+                      stroke="rgba(151,163,201,0.18)"
                       strokeWidth="2"
                       strokeLinecap="round"
                     />
                     <path
                       ref={pathRef}
                       d="M12 268 C 92 264, 122 238, 162 208 S 252 158, 292 118 S 390 58, 448 26"
-                      stroke="#4f8cff"
+                      stroke="#5a8dde"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                       style={{ willChange: "stroke-dashoffset" }}
@@ -228,21 +253,24 @@ export default function Sprint() {
                   <span
                     ref={dotRef}
                     style={{ willChange: "transform" }}
-                    className="pointer-events-none absolute left-0 top-0 h-3 w-3 rounded-full bg-accent shadow-[0_0_0_5px_rgba(79,140,255,0.18),0_0_22px_rgba(79,140,255,0.7)]"
+                    className="pointer-events-none absolute left-0 top-0 h-2.5 w-2.5 rounded-[2px] bg-accent shadow-[0_0_0_4px_rgba(90,141,222,0.18)]"
                   />
                 </div>
 
-                <div className="mt-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">
+                <div className="mt-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
                   <span>{sprint.railStart}</span>
-                  <span className="text-accent/70">{sprint.railEnd}</span>
+                  <span className="text-accent">{sprint.railEnd}</span>
                 </div>
 
-                <div ref={linesRef} className="mt-7 flex h-7 items-end gap-1.5">
+                <div
+                  ref={linesRef}
+                  className="mt-7 flex h-6 items-end gap-1.5 border-t hairline pt-3"
+                >
                   {Array.from({ length: LINE_COUNT }, (_, i) => (
                     <span
                       key={i}
                       data-line
-                      className="h-full flex-1 origin-bottom rounded-sm bg-accent opacity-[0.13] transition-[opacity,transform] duration-500 ease-out"
+                      className="h-full flex-1 origin-bottom bg-accent opacity-[0.13] transition-[opacity,transform] duration-500 ease-out"
                       style={{ transform: "scaleY(0.32)" }}
                     />
                   ))}
@@ -258,32 +286,36 @@ export default function Sprint() {
                 key={stage.no}
                 data-step
                 data-active="false"
-                className="group border-t border-white/10 py-11 transition-[opacity,transform] duration-700 first:border-t-0 first:pt-0 data-[active=false]:translate-x-1 data-[active=false]:opacity-70 data-[active=true]:translate-x-0 data-[active=true]:opacity-100"
+                className="group border-t hairline py-10 transition-[opacity,transform] duration-700 first:border-t-0 first:pt-0 data-[active=false]:translate-x-1 data-[active=false]:opacity-55 data-[active=true]:translate-x-0 data-[active=true]:opacity-100 md:py-12"
               >
-                <div className="flex items-center gap-4">
-                  <span className="font-mono text-sm text-white/35 transition-colors duration-700 group-data-[active=true]:text-accent">
+                <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.18em]">
+                  <span className="flex items-center gap-3 text-white/40 transition-colors duration-700 group-data-[active=true]:text-accent">
+                    <span
+                      className="h-[7px] w-[7px] rounded-[1.5px] bg-white/20 transition-colors duration-700 group-data-[active=true]:bg-accent"
+                      aria-hidden="true"
+                    />
                     {stage.no}
                   </span>
-                  <span className="h-px flex-1 bg-white/10 transition-colors duration-700 group-data-[active=true]:bg-accent/40" />
-                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
-                    {stage.days}
-                  </span>
+                  <span className="h-px flex-1 bg-[rgba(151,163,201,0.16)] transition-colors duration-700 group-data-[active=true]:bg-accent/40" />
+                  <span className="text-white/40">{stage.days}</span>
                 </div>
 
-                <h3 className="mt-5 text-[clamp(1.5rem,2.4vw,1.95rem)] font-medium leading-tight tracking-[-0.02em] text-white">
+                <h3 className="mt-6 text-[clamp(1.5rem,2.4vw,1.95rem)] font-semibold leading-tight tracking-[-0.02em] text-bone">
                   {stage.title}
                 </h3>
-                <p className="mt-2.5 max-w-[46ch] text-[16px] leading-relaxed text-white/60">
+                <p className="mt-3 max-w-[46ch] text-[16px] leading-[1.6] text-[#9a9eac]">
                   {stage.line}
                 </p>
 
-                <ul className="mt-6 space-y-2.5">
+                <ul className="mt-6 border-t hairline">
                   {stage.marks.map((mark) => (
                     <li
                       key={mark}
-                      className="flex items-center gap-3 text-[15px] text-white/80"
+                      className="flex items-center gap-3.5 border-b hairline py-3 text-[15px] text-bone/85"
                     >
-                      <span className="font-mono text-xs text-accent/70">✓</span>
+                      <span className="font-mono text-xs text-accent" aria-hidden="true">
+                        ✓
+                      </span>
                       {mark}
                     </li>
                   ))}

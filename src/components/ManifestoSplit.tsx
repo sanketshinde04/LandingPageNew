@@ -1,158 +1,87 @@
-"use client";
-
-import { useCallback, useEffect, useRef, useState } from "react";
 import { manifesto } from "@/lib/content";
 
-/** how far the handle may travel, as a percentage of the row's width */
-const MIN = 3;
-const MAX = 97;
-const STEP = 4;
+/* ------------------------------------------------------------------ *
+   A paired ledger. Every row puts the usual way and our way on the same
+   line, so nothing is hidden behind a handle or an animation: the reader
+   sees both at once and the contrast does the work.
 
-function Column({
-  heading,
-  items,
-  tone,
-}: {
-  heading: string;
-  items: readonly string[];
-  tone: "old" | "ship";
-}) {
-  const ship = tone === "ship";
+   Wide screens: index | usual way | how we work, with the right column on
+   a faint surface and a hairline between the two. Small screens: one
+   legend line at the top, then each row stacks the pair with the marks
+   telling them apart — no index column and no repeated labels, so the
+   narrow width goes to the words.
+ * ------------------------------------------------------------------ */
+
+const pairs = manifesto.oldWay.items.map((old, i) => ({
+  old,
+  ship: manifesto.shipWay.items[i] ?? "",
+}));
+
+const mono = "font-mono text-[11px] uppercase tracking-[0.18em]";
+
+export default function ManifestoSplit() {
   return (
-    <div>
-      <h3 className={`eyebrow ${ship ? "!text-accent" : "!text-white/40"}`}>
-        {heading}
-      </h3>
-      <ul className="mt-4">
-        {items.map((item) => (
+    <div className="-mx-5 mt-12 text-left sm:-mx-8 md:mx-auto md:mt-14 md:max-w-[960px]">
+      {/* ---------- small screens: a legend ---------- */}
+      <div className={`${mono} flex flex-wrap gap-x-6 gap-y-2 px-5 pb-4 sm:px-8 md:hidden`}>
+        <span className="flex items-center gap-2.5 text-white/40">
+          <span className="text-[13px] text-white/30" aria-hidden="true">
+            ✗
+          </span>
+          {manifesto.oldWay.heading}
+        </span>
+        <span className="flex items-center gap-2.5 text-accent">
+          <span className="text-[13px]" aria-hidden="true">
+            →
+          </span>
+          {manifesto.shipWay.heading}
+        </span>
+      </div>
+
+      {/* ---------- wide screens: column heads ---------- */}
+      <div className="hidden md:grid md:grid-cols-[56px_1fr_1fr]">
+        <span aria-hidden="true" />
+        <p className={`${mono} px-5 pb-4 text-white/40`}>
+          {manifesto.oldWay.heading}
+        </p>
+        <p className={`${mono} px-5 pb-4 text-accent`}>
+          {manifesto.shipWay.heading}
+        </p>
+      </div>
+
+      <ol className="border-y hairline">
+        {pairs.map((row, i) => (
           <li
-            key={item}
-            className={`flex gap-3.5 border-t border-white/10 py-3.5 text-[15px] leading-relaxed ${
-              ship ? "text-white/85" : "text-white/40"
-            }`}
+            key={i}
+            className="group border-t hairline first:border-t-0 md:grid md:grid-cols-[56px_1fr_1fr]"
           >
-            <span className={`font-mono ${ship ? "text-accent" : "text-white/30"}`}>
-              {ship ? "→" : "✗"}
+            <span
+              className={`${mono} hidden items-center pl-1 text-white/30 md:flex`}
+              aria-hidden="true"
+            >
+              {String(i + 1).padStart(2, "0")}
             </span>
-            {item}
+
+            <div className="flex items-start gap-3.5 px-5 pt-5 pb-3 text-[15px] leading-snug text-white/45 sm:px-8 md:min-h-[72px] md:items-center md:px-5 md:py-5 md:text-[16px]">
+              <span className="w-4 shrink-0 font-mono text-[13px] text-white/30" aria-hidden="true">
+                ✗
+              </span>
+              <span className="decoration-white/25 decoration-[1px] underline-offset-[3px] group-hover:line-through">
+                {row.old}
+              </span>
+            </div>
+
+            <div className="hairline md:border-l md:bg-surface/60 md:transition-colors md:duration-300 md:group-hover:bg-surface">
+              <div className="flex items-start gap-3.5 px-5 pb-5 text-[15px] leading-snug text-bone sm:px-8 md:min-h-[72px] md:items-center md:px-5 md:py-5 md:text-[16px]">
+                <span className="w-4 shrink-0 font-mono text-[13px] text-accent" aria-hidden="true">
+                  →
+                </span>
+                <span className="font-medium">{row.ship}</span>
+              </div>
+            </div>
           </li>
         ))}
-      </ul>
-    </div>
-  );
-}
-
-/**
- * The two lists sit either side of a handle you can actually drag. The columns
- * never move: the handle just travels across them, riding over the text. It is
- * a real control — pointer or arrow keys — rather than a static rule.
- */
-export default function ManifestoSplit() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const [pct, setPct] = useState(50);
-  const [dragging, setDragging] = useState(false);
-
-  const setFromClientX = useCallback((clientX: number) => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    if (rect.width === 0) return;
-    const next = ((clientX - rect.left) / rect.width) * 100;
-    setPct(Math.min(MAX, Math.max(MIN, next)));
-  }, []);
-
-  useEffect(() => {
-    if (!dragging) return;
-
-    const move = (e: PointerEvent) => {
-      e.preventDefault();
-      setFromClientX(e.clientX);
-    };
-    const stop = () => setDragging(false);
-
-    window.addEventListener("pointermove", move, { passive: false });
-    window.addEventListener("pointerup", stop);
-    window.addEventListener("pointercancel", stop);
-
-    // the cursor has to survive leaving the handle, so it is set on the page
-    const { cursor, userSelect } = document.body.style;
-    document.body.style.cursor = "col-resize";
-    document.body.style.userSelect = "none";
-
-    return () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", stop);
-      window.removeEventListener("pointercancel", stop);
-      document.body.style.cursor = cursor;
-      document.body.style.userSelect = userSelect;
-    };
-  }, [dragging, setFromClientX]);
-
-  return (
-    <div
-      ref={wrapRef}
-      className="relative mx-auto mt-12 max-w-[900px] text-left"
-      style={{ ["--split" as string]: `${pct}%` }}
-    >
-      <div className="flex flex-col gap-10 md:flex-row md:gap-0">
-        <div className="w-full md:w-1/2 md:pr-14">
-          <Column
-            heading={manifesto.oldWay.heading}
-            items={manifesto.oldWay.items}
-            tone="old"
-          />
-        </div>
-        <div className="w-full md:w-1/2 md:pl-14">
-          <Column
-            heading={manifesto.shipWay.heading}
-            items={manifesto.shipWay.items}
-            tone="ship"
-          />
-        </div>
-      </div>
-
-      {/* the handle — rides over both columns; the lists never resize */}
-      <div className="pointer-events-none absolute inset-y-0 left-[var(--split)] z-10 hidden w-12 -translate-x-1/2 md:block">
-        <div
-          className={`absolute inset-y-0 left-1/2 w-px -translate-x-1/2 transition-colors duration-300 ${
-            dragging ? "bg-accent/70" : "bg-white/20"
-          }`}
-        />
-        <button
-          type="button"
-          role="separator"
-          aria-orientation="vertical"
-          aria-label="Drag to compare the two ways of working"
-          aria-valuenow={Math.round(pct)}
-          aria-valuemin={MIN}
-          aria-valuemax={MAX}
-          onPointerDown={(e) => {
-            e.preventDefault();
-            setDragging(true);
-            setFromClientX(e.clientX);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-              e.preventDefault();
-              const d = e.key === "ArrowLeft" ? -STEP : STEP;
-              setPct((p) => Math.min(MAX, Math.max(MIN, p + d)));
-            }
-          }}
-          className={`pointer-events-auto absolute left-1/2 top-1/2 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-col-resize touch-none place-items-center rounded-full border bg-base text-white/70 outline-none transition-colors duration-300 hover:border-accent/50 hover:text-accent focus-visible:border-accent focus-visible:text-accent ${
-            dragging ? "border-accent text-accent" : "border-white/20"
-          }`}
-        >
-          <svg width="17" height="10" viewBox="0 0 17 10" fill="none" aria-hidden>
-            <path
-              d="M5 1 1 5l4 4M12 1l4 4-4 4"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      </div>
+      </ol>
     </div>
   );
 }

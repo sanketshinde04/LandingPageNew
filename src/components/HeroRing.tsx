@@ -46,6 +46,10 @@ const REACH_Y =
 /** seconds for one full revolution at full speed */
 const DUR = 26;
 const TS = 448; // plate texture resolution
+/** samples along the drafted orbit line */
+const ORBIT_STEPS = 128;
+/** plate thickness in design units — extruded radially, away from the ring's centre */
+const PLATE_DEPTH = 30;
 
 /** the word is fitted to this width, so it always clears the plates */
 const WORD_WIDTH = 1470;
@@ -55,17 +59,17 @@ const WORD_TRACKING = 0.035;
 const IDLE_RATE = 0.16;
 const EASE = 0.5;
 
-/* eight flat plates in the site's own palette — deep navies, blue, cyan
-   and ice, in the order they read best going round */
+/* eight flat plates from the bfwai-main dark palette: muted, primary,
+   foreground, card, secondary, accent-foreground, background, sidebar-ring */
 const PLATES = [
-  "#0c1424",
-  "#4f8cff",
-  "#eef3ff",
-  "#16233d",
-  "#2b4a86",
-  "#c3d6f5",
-  "#070c16",
-  "#22d3ee",
+  "#181b2a",
+  "#5a8dde",
+  "#e0e2f0",
+  "#212536",
+  "#363e5e",
+  "#bac1f2",
+  "#0a0c0f",
+  "#97adc9",
 ];
 
 /* ---------------------------- helpers ---------------------------- */
@@ -154,6 +158,26 @@ function luma(c: [number, number, number]) {
   return (c[0] * 0.299 + c[1] * 0.587 + c[2] * 0.114) / 255;
 }
 
+function rgbStr(c: [number, number, number], a = 1) {
+  return `rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${a})`;
+}
+
+/* the colour of a plate's edge: light plates shade towards navy, mid plates
+   darken, and the near-black plates lift so their edge still reads on the
+   page ground */
+function sideOf(hex: string) {
+  const b = rgbOf(hex);
+  const l = luma(b);
+  const c =
+    l > 0.55
+      ? mixRGB(b, [32, 31, 55], 0.4)
+      : l > 0.2
+        ? mixRGB(b, [0, 0, 0], 0.42)
+        : mixRGB(b, [151, 163, 201], 0.42);
+  return { far: rgbStr(mixRGB(c, [0, 0, 0], 0.35)), near: rgbStr(c) };
+}
+const SIDES = PLATES.map(sideOf);
+
 /* ------------------------------------------------------------------ *
    One capability per plate. These are deliberately simple technical
    symbols rather than vendor marks: the orbit now explains what the
@@ -216,7 +240,12 @@ function drawMark(x: CanvasRenderingContext2D, i: number, ink: string) {
   x.restore();
 }
 
-function drawMarkLabel(x: CanvasRenderingContext2D, i: number, ink: string) {
+function drawMarkLabel(
+  x: CanvasRenderingContext2D,
+  i: number,
+  ink: string,
+  family: string
+) {
   const mark = CAPABILITIES[i % CAPABILITIES.length];
   if (!mark) return;
   x.save();
@@ -224,11 +253,11 @@ function drawMarkLabel(x: CanvasRenderingContext2D, i: number, ink: string) {
   x.globalAlpha = 0.96;
   x.textAlign = "center";
   x.textBaseline = "middle";
-  x.font = '700 40px "Segoe UI", sans-serif';
+  x.font = `700 40px ${family}`;
   const label = mark.label.toUpperCase();
   const measured = x.measureText(label).width;
   if (measured > TS * 0.74) {
-    x.font = `700 ${Math.max(30, (40 * TS * 0.74) / measured)}px "Segoe UI", sans-serif`;
+    x.font = `700 ${Math.max(30, (40 * TS * 0.74) / measured)}px ${family}`;
   }
   x.fillText(label, TS / 2, TS * 0.77);
   x.restore();
@@ -267,6 +296,15 @@ export default function HeroRing({ className }: { className?: string }) {
     if (!ctx) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* the face is read off the DOM, so the canvas uses the same heading
+       webfont the rest of the page does rather than a lookalike */
+    const probe = document.createElement("span");
+    probe.style.cssText =
+      "position:absolute;visibility:hidden;font-family:var(--font-bricolage),'Avenir Next','Segoe UI Variable','Helvetica Neue',system-ui,sans-serif";
+    document.body.appendChild(probe);
+    const sansFamily = getComputedStyle(probe).fontFamily || "Inter, sans-serif";
+    probe.remove();
 
     /* ---------- one grain tile, shared by every plate ---------- */
     const grainTile = (() => {
@@ -321,7 +359,8 @@ export default function HeroRing({ className }: { className?: string }) {
       drawMarkLabel(
         x,
         i,
-        luma(base) > 0.55 ? "rgba(10,16,12,0.72)" : "rgba(236,244,239,0.72)"
+        luma(base) > 0.55 ? "rgba(10,16,12,0.72)" : "rgba(236,244,239,0.72)",
+        sansFamily
       );
 
       /* the same film grain the rest of the page carries */
@@ -335,23 +374,28 @@ export default function HeroRing({ className }: { className?: string }) {
 
     const front: HTMLCanvasElement[] = [];
     const back: HTMLCanvasElement[] = [];
-    for (let i = 0; i < PLATES.length; i++) {
-      const c = mkc(TS, TS);
-      paintPlate(c.getContext("2d")!, PLATES[i], i);
-      front.push(c);
+    const buildPlates = () => {
+      front.length = 0;
+      back.length = 0;
+      for (let i = 0; i < PLATES.length; i++) {
+        const c = mkc(TS, TS);
+        paintPlate(c.getContext("2d")!, PLATES[i], i);
+        front.push(c);
 
-      /* the far side of the ring: drained and sunk towards the page ground */
-      const d = mkc(TS, TS);
-      const y = d.getContext("2d")!;
-      y.drawImage(c, 0, 0);
-      y.globalCompositeOperation = "saturation";
-      y.fillStyle = "rgba(128,128,128,0.35)";
-      y.fillRect(0, 0, TS, TS);
-      y.globalCompositeOperation = "multiply";
-      y.fillStyle = "rgba(8,12,10,0.55)";
-      y.fillRect(0, 0, TS, TS);
-      back.push(d);
-    }
+        /* the far side of the ring: drained and sunk towards the page ground */
+        const d = mkc(TS, TS);
+        const y = d.getContext("2d")!;
+        y.drawImage(c, 0, 0);
+        y.globalCompositeOperation = "saturation";
+        y.fillStyle = "rgba(128,128,128,0.35)";
+        y.fillRect(0, 0, TS, TS);
+        y.globalCompositeOperation = "multiply";
+        y.fillStyle = "rgba(8,12,10,0.55)";
+        y.fillRect(0, 0, TS, TS);
+        back.push(d);
+      }
+    };
+    buildPlates();
 
     /* ---------- ring basis: u/v span the plane, z points at the viewer ---------- */
     const ax = (RING.axis * Math.PI) / 180;
@@ -377,15 +421,6 @@ export default function HeroRing({ className }: { className?: string }) {
 
     const d2sx = (x: number) => OX + x * K;
     const d2sy = (y: number) => OY + y * K;
-
-    /* the face is read off the DOM, so the canvas uses the same webfont the
-       rest of the page does rather than a lookalike */
-    const probe = document.createElement("span");
-    probe.style.cssText =
-      "position:absolute;visibility:hidden;font-family:var(--font-instrument),'Avenir Next','Segoe UI Variable','Helvetica Neue',system-ui,sans-serif";
-    document.body.appendChild(probe);
-    const sansFamily = getComputedStyle(probe).fontFamily || "Inter, sans-serif";
-    probe.remove();
 
     /** set the word to a target width, centred on the ring */
     const buildWord = () => {
@@ -415,7 +450,7 @@ export default function HeroRing({ className }: { className?: string }) {
       x.save();
       x.textAlign = "center";
       x.textBaseline = "alphabetic";
-      x.fillStyle = "#ffffff";
+      x.fillStyle = "#e0e2f0";
       /* the trailing letter-space would push the word off centre, so half of
          it is taken back */
       x.fillText(
@@ -482,32 +517,93 @@ export default function HeroRing({ className }: { className?: string }) {
       }
       if (Math.abs(ex * fy - ey * fx) < 0.4) return; // edge on
 
-      const img = (C[2] > 0 ? front : back)[i % front.length];
+      const near = C[2] > 0;
+      const slot = i % front.length;
+      const img = (near ? front : back)[slot];
+      const W2 = TS;
+      const H2 = TS * RING.aspect;
+      const R2 = H2 * RING.radius;
+      const a = (ex * 2) / TS;
+      const b = (ey * 2) / TS;
+      const c2 = (fx * 2) / TS;
+      const d2 = (fy * 2) / TS;
+
+      /* ---- the body: the face pushed outward along the radius, and the
+         gap between the two positions filled with slabs of edge colour ---- */
+      const eps = PLATE_DEPTH / RING.a;
+      const pN = project([C[0] * (1 + eps), C[1] * (1 + eps), C[2] * (1 + eps)]);
+      /* whichever end sits closer to the camera carries the face */
+      const fxp = near ? pN[0] : p0[0];
+      const fyp = near ? pN[1] : p0[1];
+      const bxp = near ? p0[0] : pN[0];
+      const byp = near ? p0[1] : pN[1];
+      const depth = Math.hypot(fxp - bxp, fyp - byp);
+      const steps = Math.min(16, Math.max(2, Math.ceil(depth / 1.25)));
+      const side = SIDES[slot];
+      const dim = near ? 1 : 0.55;
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        ctx.setTransform(a, b, c2, d2, bxp + (fxp - bxp) * t, byp + (fyp - byp) * t);
+        roundRectPath(ctx, W2, H2, R2);
+        ctx.globalAlpha = dim;
+        ctx.fillStyle = t < 0.5 ? side.far : side.near;
+        ctx.fill();
+      }
+
+      /* ---- the face ---- */
       ctx.save();
-      ctx.setTransform(
-        (ex * 2) / TS,
-        (ey * 2) / TS,
-        (fx * 2) / TS,
-        (fy * 2) / TS,
-        p0[0],
-        p0[1]
-      );
-      roundRectPath(ctx, TS, TS * RING.aspect, TS * RING.aspect * RING.radius);
+      ctx.setTransform(a, b, c2, d2, fxp, fyp);
+      roundRectPath(ctx, W2, H2, R2);
       ctx.clip();
+      ctx.globalAlpha = 1;
       ctx.drawImage(img, -TS / 2, -TS / 2, TS, TS);
-      ctx.globalAlpha = C[2] > 0 ? 0.78 : 0.38;
-      ctx.strokeStyle = C[2] > 0 ? "rgba(238,243,255,0.52)" : "rgba(160,184,224,0.3)";
-      ctx.lineWidth = 7;
-      roundRectPath(ctx, TS, TS * RING.aspect, TS * RING.aspect * RING.radius);
+
+      /* one light, high and to the left: a sheen that fades across the face */
+      const sheen = ctx.createLinearGradient(-W2 / 2, -H2 / 2, W2 * 0.3, H2 / 2);
+      sheen.addColorStop(0, `rgba(255,255,255,${near ? 0.2 : 0.08})`);
+      sheen.addColorStop(0.45, "rgba(255,255,255,0)");
+      ctx.fillStyle = sheen;
+      ctx.fillRect(-W2 / 2, -H2 / 2, W2, H2);
+
+      /* the rim: bright where it faces the light, near-dark on the far side */
+      const rim = ctx.createLinearGradient(-W2 / 2, -H2 / 2, W2 / 2, H2 / 2);
+      rim.addColorStop(0, `rgba(255,255,255,${near ? 0.85 : 0.35})`);
+      rim.addColorStop(0.5, `rgba(224,226,240,${near ? 0.3 : 0.14})`);
+      rim.addColorStop(1, `rgba(151,163,201,${near ? 0.22 : 0.1})`);
+      ctx.strokeStyle = rim;
+      ctx.lineWidth = 9;
+      roundRectPath(ctx, W2, H2, R2);
       ctx.stroke();
       ctx.restore();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.globalAlpha = 1;
     };
 
     const render = (t: number) => {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, W, H);
       ctx.imageSmoothingQuality = "high";
+
+      /* the construction line under the plates: the orbit itself, drawn as
+         a dashed drafting ellipse */
+      ctx.beginPath();
+      for (let k = 0; k <= ORBIT_STEPS; k++) {
+        const psi = (k / ORBIT_STEPS) * Math.PI * 2;
+        const c = Math.cos(psi);
+        const s = Math.sin(psi);
+        const p = project([
+          c * U[0] + s * V[0],
+          c * U[1] + s * V[1],
+          c * U[2] + s * V[2],
+        ]);
+        if (k === 0) ctx.moveTo(p[0], p[1]);
+        else ctx.lineTo(p[0], p[1]);
+      }
+      ctx.setLineDash([10 * K, 14 * K]);
+      ctx.lineWidth = Math.max(1, 2 * K);
+      ctx.strokeStyle = "rgba(151,163,201,0.24)";
+      ctx.stroke();
+      ctx.setLineDash([]);
 
       const spin = (t / DUR) * Math.PI * 2;
       const list: { i: number; psi: number; z: number }[] = [];
@@ -549,6 +645,12 @@ export default function HeroRing({ className }: { className?: string }) {
     let last = performance.now();
     let raf = 0;
 
+    /* the whole orbit leans a few degrees towards the pointer */
+    let tx = 0;
+    let ty = 0;
+    let tgx = 0;
+    let tgy = 0;
+
     /* the first frame is painted synchronously, so the hero is never blank
        while the first animation frame is still pending */
     render(now);
@@ -560,6 +662,10 @@ export default function HeroRing({ className }: { className?: string }) {
       rate += (target - rate) * (1 - Math.exp(-dt / EASE));
       now = (now + dt * rate) % DUR;
       render(now);
+      const k = 1 - Math.exp(-dt / 0.35);
+      tx += (tgx - tx) * k;
+      ty += (tgy - ty) * k;
+      canvas.style.transform = `perspective(1400px) rotateX(${(-ty * 4).toFixed(2)}deg) rotateY(${(tx * 6).toFixed(2)}deg)`;
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
@@ -567,11 +673,20 @@ export default function HeroRing({ className }: { className?: string }) {
     const enter = () => {
       hovering = true;
     };
+    const move = (e: PointerEvent) => {
+      hovering = true;
+      const r = host.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      tgx = ((e.clientX - r.left) / r.width) * 2 - 1;
+      tgy = ((e.clientY - r.top) / r.height) * 2 - 1;
+    };
     const leave = () => {
       hovering = false;
+      tgx = 0;
+      tgy = 0;
     };
     host.addEventListener("pointerenter", enter);
-    host.addEventListener("pointermove", enter);
+    host.addEventListener("pointermove", move);
     host.addEventListener("pointerleave", leave);
     window.addEventListener("blur", leave);
 
@@ -581,11 +696,22 @@ export default function HeroRing({ className }: { className?: string }) {
     });
     observer.observe(host);
 
+    /* the word is rasterised once; if the webfont lands after that first
+       pass, draw it again in the right face */
+    let live = true;
+    document.fonts?.ready.then(() => {
+      if (!live) return;
+      buildPlates();
+      resize();
+      render(now);
+    });
+
     return () => {
+      live = false;
       cancelAnimationFrame(raf);
       observer.disconnect();
       host.removeEventListener("pointerenter", enter);
-      host.removeEventListener("pointermove", enter);
+      host.removeEventListener("pointermove", move);
       host.removeEventListener("pointerleave", leave);
       window.removeEventListener("blur", leave);
     };
@@ -593,7 +719,6 @@ export default function HeroRing({ className }: { className?: string }) {
 
   return (
     <div ref={hostRef} className={`relative ${className ?? ""}`}>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(79,140,255,0.15),transparent_62%)]" />
       <canvas
         ref={canvasRef}
         className="absolute inset-0 block h-full w-full"

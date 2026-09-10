@@ -89,7 +89,7 @@ function SqlDiagram({ active }: { active: number }) {
             }`}
           >
             <div>
-              <div className={`mx-auto mb-3 h-2 w-2 rounded-full ${selected ? "bg-accent shadow-[0_0_14px_rgba(79,140,255,0.9)]" : "bg-white/35"}`} />
+              <div className={`mx-auto mb-3 h-2 w-2 rounded-full ${selected ? "bg-accent shadow-[0_0_14px_rgba(90,141,222,0.9)]" : "bg-white/35"}`} />
               <span className="font-mono text-[9px] uppercase tracking-[0.13em] text-white/60">{label}</span>
             </div>
           </motion.div>

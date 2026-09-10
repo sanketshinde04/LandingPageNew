@@ -44,17 +44,18 @@ export const proof = {
   title: "We have already built AI",
   titleAccent: "inside these teams.",
   sub: "Every name here is an engagement we delivered — the same engineers who did that work are the ones who show up for your build.",
-  /* ordered largest first; `file` maps to /public/logos/<file>.png */
+  /* ordered largest first; `file` maps to /public/logos/<file>.png and
+     `sector` is the second ledger line under the name */
   companies: [
-    { name: "Google", file: "google" },
-    { name: "HPE", file: "hpe" },
-    { name: "Schneider Electric", file: "schneider" },
-    { name: "BCG", file: "bcg" },
-    { name: "Accel", file: "accel" },
-    { name: "Wispr Flow", file: "wisprflow" },
-    { name: "mem0", file: "mem0" },
-    { name: "FloCareer", file: "flocareer" },
-    { name: "CodeYoung", file: "codeyoung" },
+    { name: "Google", file: "google", sector: "Technology" },
+    { name: "HPE", file: "hpe", sector: "Enterprise IT" },
+    { name: "Schneider Electric", file: "schneider", sector: "Energy management" },
+    { name: "BCG", file: "bcg", sector: "Consulting" },
+    { name: "Accel", file: "accel", sector: "Venture capital" },
+    { name: "Wispr Flow", file: "wisprflow", sector: "Voice AI" },
+    { name: "mem0", file: "mem0", sector: "AI memory" },
+    { name: "FloCareer", file: "flocareer", sector: "Hiring" },
+    { name: "CodeYoung", file: "codeyoung", sector: "Education" },
   ],
 };
 
@@ -432,6 +433,7 @@ export const faq = {
 };
 
 export const finalCta = {
+  eyebrow: "Book a call",
   title: "Are you ready to",
   titleAccent: "deploy?",
   titleAfter: "",
@@ -455,7 +457,6 @@ export const footer = {
       heading: "Company",
       links: [
         { label: "buildfastwithai.com", href: "https://www.buildfastwithai.com" },
-        { label: "talk@buildfastwithai.com", href: "mailto:talk@buildfastwithai.com" },
         { label: "LinkedIn", href: "https://www.linkedin.com/company/build-fast-with-ai/" },
         { label: "X", href: "https://x.com/BuildFastWithAI" },
         { label: "GitHub", href: "https://github.com/buildfastwithai/gen-ai-experiments" },
