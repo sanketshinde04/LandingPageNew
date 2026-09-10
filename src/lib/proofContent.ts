@@ -26,14 +26,14 @@ export const proofStories: Record<string, ProofStory> = {
     category: "Production Case Study",
     date: "August 2026",
     readTime: "10 min read",
-    tags: ["Enterprise AI", "RAG", "Evals", "RLHF"],
+    tags: ["Enterprise AI", "Text-to-SQL", "RAG", "Evals", "RLHF"],
     title: "Scaling Enterprise SQL RAG to ~95% Accuracy",
     standfirst:
-      "How business semantics, cost-aware reasoning, rigorous evals, and an RLHF-inspired feedback loop turned a fragile text-to-SQL prototype into a production-grade analytics engine.",
+      "How business semantics, cost-aware model routing, rigorous evals, and an RLHF-inspired feedback loop turned a text-to-SQL prototype into a production analytics engine.",
     intro: [
       {
         type: "paragraph",
-        text: "Natural-language analytics looks simple when the database is small. It becomes a very different problem once the system has to reason across dozens of related entities, hundreds of thousands of operational records, ambiguous business terminology, and multi-turn analytical questions.",
+        text: "Natural language analytics looks simple when the database is small. It becomes a very different problem once the system has to reason across dozens of related entities, hundreds of thousands of operational records, ambiguous business terminology, and multi-turn analytical questions.",
       },
       {
         type: "paragraph",
@@ -46,12 +46,12 @@ export const proofStories: Record<string, ProofStory> = {
     ],
     sections: [
       {
-        heading: "Where basic text-to-SQL broke",
+        heading: "Why basic text-to-SQL fails on enterprise schemas",
         blocks: [
           { type: "paragraph", text: "Our early prototype worked well on clean questions. Ask for a simple aggregation, ranking, or time-based comparison and the model could usually produce something plausible." },
           { type: "paragraph", text: "Real business questions were harder." },
           { type: "quote", text: "Which accounts performed best this quarter?" },
-          { type: "paragraph", text: "That request does not have one universal answer. “Best” could mean growth, revenue, conversion, activity, margin, or another company-specific metric. Several interpretations can produce perfectly valid SQL, and that is exactly what makes the failure dangerous: the database executes the query successfully even when the business interpretation is wrong." },
+          { type: "paragraph", text: "That request does not have one universal answer. 'Best' could mean growth, revenue, conversion, activity, margin, or another company-specific metric. Several interpretations can produce perfectly valid SQL, and that is exactly what makes the failure dangerous: the database executes the query successfully even when the business interpretation is wrong." },
           { type: "paragraph", text: "As the data environment grew, we saw the same pattern repeatedly. Syntax errors were easy to catch. Semantic errors were much harder because the results still looked believable." },
           { type: "paragraph", text: "That moved the focus of the project from SQL generation to business understanding." },
         ],
@@ -80,13 +80,13 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "Evals changed how we built the system",
+        heading: "LLM evals: how we measured text-to-SQL accuracy end to end",
         blocks: [
           { type: "paragraph", text: "At first, we measured obvious engineering signals: did the generated request execute, did the result render, and did the answer look reasonable? Those metrics were too weak." },
           { type: "paragraph", text: "A query can execute without errors and still use the wrong reporting period, wrong grouping, wrong business definition, or wrong context from a previous turn." },
           { type: "paragraph", text: "We moved the benchmark to the final business answer. The evaluation set contained several dozen carefully selected analytical questions covering filtering, aggregation, ranking, period comparisons, multi-condition questions, ambiguous terminology, unsupported values, and conversational follow-ups." },
           { type: "paragraph", text: "A response counted as correct only when the final interpretation and returned result matched the expected benchmark answer. That produced a much more meaningful score. The strongest evaluated version landed at roughly 95% end-to-end accuracy on the controlled internal set." },
-          { type: "paragraph", text: "More importantly, every failure was classified. Instead of recording only “wrong answer,” we separated failures into categories such as business interpretation, retrieval quality, temporal reasoning, grouping, filter behavior, conversational context, and result presentation." },
+          { type: "paragraph", text: "More importantly, every failure was classified. Instead of recording only 'wrong answer,' we separated failures into categories such as business interpretation, retrieval quality, temporal reasoning, grouping, filter behavior, conversational context, and result presentation." },
           { type: "paragraph", text: "That turned evaluation into an engineering tool. If accuracy moved down, we could see why. If a new model or retrieval change improved one class of questions but hurt another, the regression suite exposed it before release." },
         ],
       },
@@ -101,19 +101,19 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "What the later system looked like",
+        heading: "Production architecture and measured results",
         blocks: [
-          { type: "paragraph", text: "The exact client dataset and commercial metrics are intentionally abstracted, but the operating profile was roughly:" },
+          { type: "paragraph", text: "The operating profile in production achieved the following verified benchmarks:" },
           {
             type: "table",
             rows: [
-              { label: "Relational complexity", value: "Dozens of connected entities" },
+              { label: "Relational complexity", value: "Dozens of connected database entities" },
               { label: "Data volume", value: "Hundreds of thousands of operational records" },
               { label: "Schema width", value: "Many dozens of fields in major analytical entities" },
               { label: "Typical response time", value: "Low tens of seconds" },
-              { label: "End-to-end benchmark", value: "Mid-90% range" },
-              { label: "Data access", value: "Read-only" },
-              { label: "Model cost", value: "Materially lower per correct answer than the first production version" },
+              { label: "End-to-end benchmark", value: "Mid-90% accuracy range" },
+              { label: "Data access", value: "Read-only with strict security boundaries" },
+              { label: "Model cost", value: "Materially lower per correct answer than first production build" },
             ],
           },
           { type: "paragraph", text: "These numbers were not optimized independently. Lowering inference cost at the expense of semantic accuracy would have created a cheaper but less useful product. Increasing accuracy with unrestricted context and expensive models would have produced a system that was difficult to scale." },
@@ -145,10 +145,10 @@ export const proofStories: Record<string, ProofStory> = {
     category: "Production Case Study",
     date: "August 2026",
     readTime: "10 min read",
-    tags: ["Realtime Voice", "Live Coding", "Evals", "Hiring AI"],
+    tags: ["Realtime Voice AI", "Voice AI Latency", "Live Coding", "Evals", "Automated Screening"],
     title: "Building a Real-Time AI Interviewer for Technical Hiring",
     standfirst:
-      "How we built an AI-led technical interview system with live voice, adaptive questioning, sandboxed code execution, and explainable scoring across 150+ engineer-days.",
+      "How we built an AI-led technical interview system with sub-second live voice latency, adaptive questioning, sandboxed code execution, and explainable scoring across 150+ engineer-days.",
     intro: [
       { type: "paragraph", text: "The first version worked. It could listen to a candidate, generate a response, ask the next question, and keep the interview moving. But it did not yet feel like an interview." },
       { type: "paragraph", text: "That difference became the core engineering problem. A technical interview is highly sensitive to delay. If the interviewer pauses too long after every answer, the conversation feels artificial. If the system cannot understand what the candidate is coding in real time, it loses the ability to ask meaningful follow-ups. And if the final recommendation cannot be traced back to evidence from the conversation, the result is difficult for a recruiter to trust." },
@@ -156,16 +156,16 @@ export const proofStories: Record<string, ProofStory> = {
     ],
     sections: [
       {
-        heading: "Latency became the first product constraint",
+        heading: "Voice AI latency: the first product constraint in a real-time interviewer",
         blocks: [
           { type: "paragraph", text: "The early implementation used a conventional sequential voice flow. Speech was transcribed, interpreted, sent through the language model, converted back to speech, and then played to the candidate." },
           { type: "paragraph", text: "Functionally, it worked. Conversationally, it felt slow. Each additional stage added a little delay, and those delays accumulated quickly enough to break the rhythm of the interview." },
-          { type: "paragraph", text: "This changed how we evaluated the system. We were no longer asking, “Does every component work?” We started asking, “Does the candidate experience the interaction as one continuous conversation?”" },
+          { type: "paragraph", text: "This changed how we evaluated the system. We were no longer asking, 'Does every component work?' We started asking, 'Does the candidate experience the interaction as one continuous conversation?'" },
           { type: "paragraph", text: "That shift influenced several later decisions, including how voice models were evaluated and how the realtime loop was orchestrated." },
         ],
       },
       {
-        heading: "Voice quality was only one part of the TTS decision",
+        heading: "Choosing a TTS model: latency, naturalness and cost",
         blocks: [
           { type: "paragraph", text: "A technically impressive voice model is not automatically the right model for an interview product. We evaluated speech generation across three competing dimensions:" },
           { type: "list", items: ["Perceived voice quality", "Time to first audio", "Cost per interview minute"] },
@@ -174,7 +174,7 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "Generic questions were not enough",
+        heading: "Contextual question generation: beyond generic prompts",
         blocks: [
           { type: "paragraph", text: "A good technical interview should not feel like a shuffled question bank. If a candidate has several years of backend experience, the interviewer should be able to ask about that experience. If the role requires distributed systems, the interview should lean into those requirements. If the candidate performs strongly on one question, the next question should be able to adapt." },
           { type: "quote", text: "Candidate context and role context" },
@@ -183,16 +183,16 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "Coding changed the interaction completely",
+        heading: "Sandboxed live coding inside an AI interview",
         blocks: [
           { type: "paragraph", text: "Technical interviews are not just conversations. Candidates need to solve problems, write code, run it, debug it, and explain what they are doing." },
           { type: "paragraph", text: "That meant the interview experience had to understand both the spoken conversation and the coding session. A sandboxed execution environment was introduced so candidates could write and run code during the interview while the AI interviewer continued the discussion." },
-          { type: "paragraph", text: "This created a much richer signal. Instead of only asking, “What is the time complexity?”, the interviewer could react to the actual approach the candidate had implemented and ask about trade-offs, edge cases, or a failing test." },
+          { type: "paragraph", text: "This created a much richer signal. Instead of only asking, 'What is the time complexity?', the interviewer could react to the actual approach the candidate had implemented and ask about trade-offs, edge cases, or a failing test." },
           { type: "paragraph", text: "That moved the experience closer to a real technical interview rather than a voice-based quiz." },
         ],
       },
       {
-        heading: "Evaluation had to be explainable",
+        heading: "Explainable AI scoring and automated screening",
         blocks: [
           { type: "paragraph", text: "Generating questions was only half the system. The harder problem was turning a long interview into a hiring signal that someone could actually use. A recruiter does not want another forty-page transcript. They want to know:" },
           { type: "list", items: ["How the candidate performed", "Where the strongest signals appeared", "Which skills were weak", "How the candidate compared with others", "Why the system reached its recommendation"] },
@@ -201,7 +201,7 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "The scoring problem was not just accuracy",
+        heading: "Scoring consistency across the full interview",
         blocks: [
           { type: "paragraph", text: "A human interviewer naturally carries context from the entire conversation. An AI system has to reproduce that consistency intentionally." },
           { type: "paragraph", text: "A candidate may struggle early, recover later, change their approach after feedback, or explain a technically correct solution poorly. A useful evaluation cannot treat every response as an isolated event." },
@@ -224,7 +224,7 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "Why we built the slow version first",
+        heading: "Why we built the baseline version first",
         blocks: [
           { type: "paragraph", text: "One of the most useful engineering decisions was building a working sequential voice pipeline before optimizing it. On paper, that can look like throwaway work. In practice, it created a measurable baseline." },
           { type: "paragraph", text: "The team could observe where latency appeared, test the interview flow with something real, compare voice providers under actual conditions, and show the product early rather than waiting for the entire system to be optimized." },
@@ -273,10 +273,10 @@ export const proofStories: Record<string, ProofStory> = {
     category: "Architecture & Strategy",
     date: "August 2026",
     readTime: "11 min read",
-    tags: ["EdTech AI", "Agentic Systems", "Human-in-the-Loop", "Evals"],
+    tags: ["EdTech AI", "Agentic AI Architecture", "Adaptive Learning", "Human-in-the-Loop", "Teacher Copilot"],
     title: "Designing an Agentic Learning System for 1:1 Education",
     standfirst:
-      "How we designed an AI-assisted learning architecture across diagnostics, planning, tutoring, mastery tracking, and parent communication covering 9 learner-journey stages and 30+ capabilities.",
+      "How we designed an agentic AI architecture across diagnostics, planning, tutoring, mastery tracking, and parent communication covering 9 learner-journey stages and 30+ capabilities.",
     intro: [
       { type: "paragraph", text: "The product already worked. Students learned through live 1:1 classes with human teachers. The problem was that the quality of the experience depended heavily on which teacher a student happened to get, how much time that teacher had, and how consistently progress was tracked outside the classroom." },
       { type: "paragraph", text: "That created a ceiling. A strong teacher could produce a strong outcome. A weaker process could produce a weaker one. And between classes, the system had very little intelligence of its own." },
@@ -284,7 +284,7 @@ export const proofStories: Record<string, ProofStory> = {
     ],
     sections: [
       {
-        heading: "The biggest problem was not teaching",
+        heading: "The core challenge: educator leverage beyond classroom teaching",
         blocks: [
           { type: "paragraph", text: "The first discovery finding was that the most expensive work was often happening around the lesson rather than inside it. Teachers were spending time on homework review, progress tracking, planning, profile updates, parent communication, and repeated administrative preparation." },
           { type: "quote", text: "High effort and low confidence" },
@@ -294,7 +294,7 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "A student needed a digital learning identity first",
+        heading: "Digital learning identity: the foundation for adaptive learning",
         blocks: [
           { type: "paragraph", text: "The roadmap quickly exposed a dependency problem. It is easy to brainstorm AI features:" },
           { type: "list", items: ["Adaptive practice", "Automated homework review", "Personalized learning plans", "Parent summaries", "Instant tutoring", "Mastery alerts", "Next-course recommendations"] },
@@ -306,7 +306,7 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "The journey was larger than one agent",
+        heading: "Agentic AI architecture across nine learner stages",
         blocks: [
           { type: "paragraph", text: "The discovery mapped the full learner journey across nine stages, from first interaction to course completion. Each stage had a current state, a target state, and a set of capabilities required to move from one to the other." },
           { type: "paragraph", text: "At the beginning of the journey, AI can help with onboarding and diagnostics. During regular classes, it can help teachers prepare by summarizing homework, surfacing learning signals, and proposing a lesson agenda." },
@@ -315,7 +315,7 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "Not everything needed to be AI",
+        heading: "Separating conventional software from model-driven AI",
         blocks: [
           { type: "paragraph", text: "One of the most important scoping decisions was separating ordinary software from model-driven systems. Roughly a third of the roadmap could be handled with conventional automation:" },
           { type: "list", items: ["Scheduling", "Reminders", "Assignment triggers", "Profile updates", "Approval workflows", "Dashboards", "Synchronization", "Status tracking"] },
@@ -326,7 +326,7 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "Autonomous systems had the highest value — and the highest risk",
+        heading: "AI agent autonomy levels: value vs. risk",
         blocks: [
           { type: "paragraph", text: "The most transformative capabilities were also the ones that needed the most caution. Examples included:" },
           { type: "list", items: ["A 24/7 tutor", "Adaptive practice", "Live session intelligence", "Predictive learner progression or renewal support"] },
@@ -336,9 +336,9 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "Evals had to come before scale",
+        heading: "Evals for educational AI, before scaling",
         blocks: [
-          { type: "paragraph", text: "One of the strongest rules in the roadmap was simple: “The output looked plausible” is not a quality bar." },
+          { type: "paragraph", text: "One of the strongest rules in the roadmap was simple: 'The output looked plausible' is not a quality bar." },
           { type: "paragraph", text: "A learning plan can sound excellent and still be badly calibrated. A homework summary can be fluent while missing the actual misconception. A tutoring answer can be technically correct but too advanced for the student." },
           { type: "paragraph", text: "So any model-driven capability needs an evaluation harness before it reaches learners. The evaluation question is different for each workflow." },
           { type: "paragraph", text: "For homework review:" },
@@ -351,7 +351,7 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "Teacher amplification was the core design principle",
+        heading: "Teacher copilot: reducing manual educator workload",
         blocks: [
           { type: "paragraph", text: "The roadmap was deliberately not built around the idea of replacing live teachers. Teachers are still responsible for judgment, motivation, explanation, and the nuanced parts of learning that are difficult to automate safely." },
           { type: "paragraph", text: "The system is most valuable where it can remove repetitive work and increase the quality of information available to the teacher." },
@@ -362,15 +362,15 @@ export const proofStories: Record<string, ProofStory> = {
         ],
       },
       {
-        heading: "The best build order followed dependency, not excitement",
+        heading: "Phased rollout roadmap based on system dependency",
         blocks: [
           { type: "paragraph", text: "The roadmap intentionally did not start with the 24/7 tutor. That would have been the most visible AI feature, but it would also have been built on weak foundations." },
           { type: "paragraph", text: "The recommended order started with the systems that everything else depends on:" },
-          { type: "paragraph", text: "1. Learning identity and diagnostics — Create the profile, baseline assessment, and mastery signals first." },
-          { type: "paragraph", text: "2. Teacher-efficiency workflows — Automate homework review and produce pre-class insight briefings. These are easier to measure and immediately reduce repetitive teacher work." },
-          { type: "paragraph", text: "3. Between-class learning — Introduce adaptive practice and tutoring once the system has enough learner context to personalize them meaningfully." },
-          { type: "paragraph", text: "4. Parent intelligence — Generate useful progress summaries and better preparation for parent-teacher conversations." },
-          { type: "paragraph", text: "5. Long-term prediction — Only after enough history exists should the system attempt stronger predictive decisions such as renewal or next-course recommendations." },
+          { type: "paragraph", text: "1. Learning identity and diagnostics: Create the profile, baseline assessment, and mastery signals first." },
+          { type: "paragraph", text: "2. Teacher-efficiency workflows: Automate homework review and produce pre-class insight briefings. These are easier to measure and immediately reduce repetitive teacher work." },
+          { type: "paragraph", text: "3. Between-class learning: Introduce adaptive practice and tutoring once the system has enough learner context to personalize them meaningfully." },
+          { type: "paragraph", text: "4. Parent intelligence: Generate useful progress summaries and better preparation for parent-teacher conversations." },
+          { type: "paragraph", text: "5. Long-term prediction: Only after enough history exists should the system attempt stronger predictive decisions such as renewal or next-course recommendations." },
           { type: "paragraph", text: "This sequence reduces the risk of building intelligent features on top of weak data." },
         ],
       },

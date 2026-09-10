@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BOOKING_TIMEZONE,
@@ -11,6 +12,7 @@ import {
   MEETING_MINUTES,
   REQUIREMENTS_MAX,
   type Slot,
+  WINDOW_LABEL,
   bookableDates,
   dateParts,
   fieldErrors,
@@ -26,12 +28,24 @@ type Props = {
   /** the trigger takes the caller's own button classes, so this drops into any section */
   triggerClassName?: string;
   label?: string;
+  /** "page" drops the trigger and the overlay and renders the panel inline - /audit */
+  variant?: "dialog" | "page";
 };
 
 type Stage = "pick" | "details" | "done";
-type Form = Pick<BookingInput, "name" | "email" | "phone" | "requirements">;
+type Form = Pick<
+  BookingInput,
+  "name" | "email" | "company" | "jobTitle" | "phone" | "requirements"
+>;
 
-const EMPTY: Form = { name: "", email: "", phone: "", requirements: "" };
+const EMPTY: Form = {
+  name: "",
+  email: "",
+  company: "",
+  jobTitle: "",
+  phone: "",
+  requirements: "",
+};
 
 const FIELDS = [
   {
@@ -40,6 +54,7 @@ const FIELDS = [
     type: "text",
     autoComplete: "name",
     placeholder: "Priya Sharma",
+    half: true,
   },
   {
     name: "email",
@@ -47,6 +62,23 @@ const FIELDS = [
     type: "email",
     autoComplete: "email",
     placeholder: "priya@company.com",
+    half: true,
+  },
+  {
+    name: "company",
+    label: "Company",
+    type: "text",
+    autoComplete: "organization",
+    placeholder: "Acme Corp",
+    half: true,
+  },
+  {
+    name: "jobTitle",
+    label: "Job title",
+    type: "text",
+    autoComplete: "organization-title",
+    placeholder: "Head of Engineering",
+    half: true,
   },
   {
     name: "phone",
@@ -54,6 +86,7 @@ const FIELDS = [
     type: "tel",
     autoComplete: "tel",
     placeholder: "+91 98765 43210",
+    half: false,
   },
 ] as const;
 
@@ -63,19 +96,19 @@ const ZONE_CITY = BOOKING_TIMEZONE.split("/").pop()!.replace(/_/g, " ");
 /** what the left rail promises — the reason the call is worth thirty minutes */
 const RAIL_FACTS = [
   { k: "Format", v: "Google Meet, link in the invite" },
-  { k: "When", v: `Weekdays, 2–5pm ${ZONE_CITY} time` },
+  { k: "When", v: `Weekdays, ${WINDOW_LABEL} ${ZONE_CITY} time` },
   { k: "Bring", v: "One workflow that costs you hours" },
 ];
 
 /** what the CTA falls back to when the calendar credentials are not set */
 const FALLBACK_HREF = `mailto:${site.contactEmail}?subject=${encodeURIComponent(
-  "Scoping call — DEPLOY"
+  "Scoping call: DEPLOY"
 )}&body=${encodeURIComponent(
   "Company:\nRole:\nThe workflow we want to fix:\n\nTwo or three times that work for you:"
 )}`;
 
 const inputClass = (bad: boolean) =>
-  `w-full rounded-xl border bg-[#070d1a] px-4 py-3 text-[15px] text-white outline-none transition-colors duration-200 placeholder:text-white/25 focus:border-accent/60 ${
+  `w-full rounded-xl border bg-[#070d1a] px-3.5 py-2 text-[14px] sm:py-2.5 sm:text-[14.5px] text-white outline-none transition-colors duration-200 placeholder:text-white/25 focus:border-accent/60 ${
     bad ? "border-red-400/55" : "border-white/12 hover:border-white/20"
   }`;
 
@@ -92,8 +125,11 @@ const inputClass = (bad: boolean) =>
 export default function BookingDialog({
   triggerClassName,
   label = "Book a call",
+  variant = "dialog",
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const isPage = variant === "page";
+  // on the page the panel *is* the page, so it starts open and never closes
+  const [open, setOpen] = useState(isPage);
   const [dates] = useState(() => bookableDates());
   const [date, setDate] = useState(() => bookableDates()[0] ?? "");
   const [slots, setSlots] = useState<Slot[] | null>(null);
@@ -150,9 +186,9 @@ export default function BookingDialog({
     void loadSlots(date);
   }, [open, date, loadSlots]);
 
-  // an open dialog owns the screen
+  // an open dialog owns the screen - the page variant owns nothing
   useEffect(() => {
-    if (!open) return;
+    if (!open || isPage) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     panelRef.current?.focus();
@@ -162,7 +198,7 @@ export default function BookingDialog({
       document.body.style.overflow = previous;
       window.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [open, isPage]);
 
   const start = () => {
     setStage("pick");
@@ -179,9 +215,16 @@ export default function BookingDialog({
 
     // show every message at once rather than one at a time, then jump to the first
     if (Object.keys(errors).length) {
-      setTouched({ name: true, email: true, phone: true, requirements: true });
+      setTouched({
+        name: true,
+        email: true,
+        company: true,
+        jobTitle: true,
+        phone: true,
+        requirements: true,
+      });
       const first = (
-        ["name", "email", "phone", "requirements"] as FieldName[]
+        ["name", "email", "company", "jobTitle", "phone", "requirements"] as FieldName[]
       ).find((f) => errors[f]);
       formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
       return;
@@ -231,35 +274,19 @@ export default function BookingDialog({
         ? "Pick a time"
         : "Your details";
 
-  return (
-    <>
-      <button className={`booking-trigger ${triggerClassName ?? ""}`} type="button" onClick={start}>
-        <span className="inline-flex items-center gap-2">
-          {label}
-        </span>
-        <span aria-hidden>→</span>
-      </button>
+  /* On the page the panel is the whole screen on a phone - full-bleed, no
+     rounding, no card edge - and only becomes a floating card from sm: up.
+     As a dialog it stays a bottom sheet on mobile. */
+  const panelClass = isPage
+    ? "relative z-10 grid h-[100svh] w-full overflow-hidden bg-surface outline-none sm:h-[84svh] sm:max-h-[590px] sm:max-w-[860px] sm:rounded-[26px] sm:border sm:border-white/12 sm:shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]"
+    : "relative z-10 grid h-[92svh] max-h-[640px] w-full max-w-[860px] overflow-hidden rounded-t-[26px] border border-white/12 bg-surface shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none sm:h-[84svh] sm:max-h-[590px] sm:rounded-[26px] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]";
 
-      {mounted &&
-        createPortal(
-          <AnimatePresence>
-            {open && (
-              <motion.div
-                className="fixed inset-0 z-[200] flex items-end justify-center sm:items-center sm:p-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.22 }}
-              >
-                <button
-                  type="button"
-                  aria-label="Close"
-                  onClick={() => setOpen(false)}
-                  className="absolute inset-0 bg-[#03060d]/80 backdrop-blur-md"
-                />
-
+  /* The panel itself — identical in the dialog and on the shareable /audit page,
+     so the two can never drift apart. */
+  const panel = (
                 <motion.div
                   ref={panelRef}
+                  data-lenis-prevent
                   role="dialog"
                   aria-modal="true"
                   aria-label="Book a scoping call"
@@ -268,7 +295,7 @@ export default function BookingDialog({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 14, scale: 0.985 }}
                   transition={{ duration: 0.34, ease }}
-                  className="relative z-10 grid max-h-[94svh] w-full max-w-[880px] overflow-hidden rounded-t-[26px] border border-white/12 bg-surface shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none sm:max-h-[86svh] sm:rounded-[26px] md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]"
+                  className={panelClass}
                 >
                   {/* ---------- left rail: what the call actually is ---------- */}
                   <aside className="relative hidden flex-col justify-between overflow-hidden border-r border-white/10 bg-[#0a1120] p-8 md:flex">
@@ -322,7 +349,7 @@ export default function BookingDialog({
                   </aside>
 
                   {/* ---------- right pane: the step ---------- */}
-                  <div className="flex min-h-0 flex-col">
+                  <div className="flex h-full min-h-0 flex-col overflow-hidden">
                     {!unavailable && stage !== "done" && (
                       <div className="shrink-0 px-6 pt-6 sm:px-7" aria-hidden>
                         <div className="flex h-[3px] gap-1.5">
@@ -351,8 +378,15 @@ export default function BookingDialog({
                             All times {ZONE_CITY}
                           </p>
                         )}
+                        {isPage && !unavailable && stage === "pick" && (
+                          <p className="mt-1.5 text-[12.5px] leading-snug text-white/45 md:hidden">
+                            {MEETING_MINUTES} min on Google Meet · weekdays,{" "}
+                            {WINDOW_LABEL}
+                          </p>
+                        )}
                       </div>
 
+                      {!isPage && (
                       <button
                         type="button"
                         aria-label="Close"
@@ -374,6 +408,7 @@ export default function BookingDialog({
                           />
                         </svg>
                       </button>
+                      )}
                     </header>
 
                     {unavailable ? (
@@ -418,17 +453,26 @@ export default function BookingDialog({
                               Open the Meet link
                             </a>
                           )}
-                          <button
-                            type="button"
-                            onClick={() => setOpen(false)}
-                            className="btn btn-glass"
-                          >
-                            Done
-                          </button>
+                          {isPage ? (
+                            <Link className="btn btn-glass" href="/">
+                              Back to the site
+                            </Link>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setOpen(false)}
+                              className="btn btn-glass"
+                            >
+                              Done
+                            </button>
+                          )}
                         </div>
                       </div>
                     ) : stage === "pick" ? (
-                      <div className="min-h-0 overflow-y-auto px-6 py-6 sm:px-7">
+                      <div
+                        data-lenis-prevent
+                        className="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-7 overscroll-contain"
+                      >
                         {/* Keep the full weekday range balanced instead of
                             letting the browser create an uneven final row. */}
                         <div
@@ -556,28 +600,36 @@ export default function BookingDialog({
                       </div>
                     ) : (
                       <form
-                        className="min-h-0 overflow-y-auto px-6 py-6 sm:px-7"
+                        data-lenis-prevent
+                        className="flex h-full min-h-0 flex-col overflow-hidden"
                         onSubmit={submit}
                         ref={formRef}
                         noValidate
                       >
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setStage("pick");
-                            setTime("");
-                            setFormError("");
-                          }}
-                          className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/40 transition-colors hover:text-accent"
+                        <div
+                          data-lenis-prevent
+                          className="min-h-0 flex-1 overflow-y-auto px-6 py-5 sm:px-7 overscroll-contain"
                         >
-                          ← Pick a different time
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setStage("pick");
+                              setTime("");
+                              setFormError("");
+                            }}
+                            className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/40 transition-colors hover:text-accent"
+                          >
+                            ← Pick a different time
+                          </button>
 
-                        <div className="mt-5 space-y-4">
+                          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                           {FIELDS.map((field) => {
                             const message = showError(field.name);
                             return (
-                              <label className="block" key={field.name}>
+                              <label
+                                className={`block ${field.half ? "sm:col-span-1" : "sm:col-span-2"}`}
+                                key={field.name}
+                              >
                                 <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/40">
                                   {field.label}
                                 </span>
@@ -611,7 +663,7 @@ export default function BookingDialog({
                             );
                           })}
 
-                          <label className="block">
+                          <label className="block sm:col-span-2">
                             <span className="flex items-baseline justify-between font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/40">
                               What do you want to fix?
                               <i className="not-italic text-white/25">
@@ -620,7 +672,7 @@ export default function BookingDialog({
                             </span>
                             <textarea
                               name="requirements"
-                              rows={3}
+                              rows={2}
                               maxLength={REQUIREMENTS_MAX}
                               placeholder="One workflow, in a sentence or two. What happens today, and what should happen instead."
                               value={form.requirements}
@@ -651,16 +703,17 @@ export default function BookingDialog({
                           </label>
                         </div>
 
-                        {formError && (
-                          <p
-                            className="mt-5 text-[13px] text-red-300"
-                            role="alert"
-                          >
-                            {formError}
-                          </p>
-                        )}
+                          {formError && (
+                            <p
+                              className="mt-4 text-[13px] text-red-300"
+                              role="alert"
+                            >
+                              {formError}
+                            </p>
+                          )}
+                        </div>
 
-                        <div className="mt-6 border-t border-white/10 pt-5">
+                        <div className="shrink-0 border-t border-white/10 bg-[#070d1a] px-6 py-4 sm:px-7">
                           <button
                             className="btn btn-solid w-full"
                             type="submit"
@@ -668,7 +721,7 @@ export default function BookingDialog({
                           >
                             {sending ? "Booking…" : "Confirm booking"}
                           </button>
-                          <p className="mt-3 text-center text-[11.5px] leading-relaxed text-white/35">
+                          <p className="mt-2 text-center text-[11.5px] leading-relaxed text-white/35">
                             You get a calendar invite with a Meet link. No
                             newsletter, no follow-up sequence.
                           </p>
@@ -677,6 +730,44 @@ export default function BookingDialog({
                     )}
                   </div>
                 </motion.div>
+  );
+
+  if (isPage) {
+    return (
+      <div className="grid min-h-svh w-full place-items-center sm:px-6 sm:py-10">
+        {panel}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <button className={`booking-trigger ${triggerClassName ?? ""}`} type="button" onClick={start}>
+        <span className="inline-flex items-center gap-2">
+          {label}
+        </span>
+        <span aria-hidden>→</span>
+      </button>
+
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                className="fixed inset-0 z-[200] flex items-end justify-center sm:items-center sm:p-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22 }}
+              >
+                <button
+                  type="button"
+                  aria-label="Close"
+                  onClick={() => setOpen(false)}
+                  className="absolute inset-0 bg-[#03060d]/80 backdrop-blur-md"
+                />
+
+                {panel}
               </motion.div>
             )}
           </AnimatePresence>,

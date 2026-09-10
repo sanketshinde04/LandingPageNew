@@ -5,14 +5,32 @@
  * No secrets here — this file is imported by the browser.
  */
 
-/** The business timezone. Slots are always 2-5pm *here*, whatever the visitor's clock says. */
+/** The business timezone. Slots are always in these hours *here*, whatever the visitor's clock says. */
 export const BOOKING_TIMEZONE = "Asia/Kolkata";
 
-/** 14:00-17:00, in 30-minute steps, meetings 30 minutes long. */
-export const WINDOW_START_HOUR = 14;
-export const WINDOW_END_HOUR = 17;
+/**
+ * The bookable windows of the day, as [startHour, endHour) local to
+ * BOOKING_TIMEZONE: an afternoon block and an evening one.
+ */
+export const BOOKING_WINDOWS: ReadonlyArray<readonly [number, number]> = [
+  [14, 17],
+  [19, 21],
+];
+
+/** Kept for the first window, which is still the one the copy leads with. */
+export const WINDOW_START_HOUR = BOOKING_WINDOWS[0][0];
+export const WINDOW_END_HOUR = BOOKING_WINDOWS[0][1];
 export const SLOT_MINUTES = 30;
 export const MEETING_MINUTES = 30;
+
+/** "2–5pm & 7–9pm" — the windows written the way the rail says them. */
+export const WINDOW_LABEL = BOOKING_WINDOWS.map(([start, end]) => {
+  const h12 = (h: number) => (h % 12 === 0 ? 12 : h % 12);
+  const suffix = (h: number) => (h >= 12 ? "pm" : "am");
+  return suffix(start) === suffix(end)
+    ? `${h12(start)}–${h12(end)}${suffix(end)}`
+    : `${h12(start)}${suffix(start)}–${h12(end)}${suffix(end)}`;
+}).join(" & ");
 
 /** How many working days ahead the picker offers. */
 export const BOOKABLE_DAYS = 10;
@@ -41,24 +59,26 @@ export function zoneOffset(instant: Date, timeZone: string = BOOKING_TIMEZONE): 
  *
  * The offset is looked up from midday on the same date: near enough for any
  * zone, and exact for fixed-offset ones like IST. A DST transition landing
- * inside the 2-5pm window would be the one case worth revisiting.
+ * inside a booking window would be the one case worth revisiting.
  */
 export function toInstant(dateISO: string, time: string, timeZone: string = BOOKING_TIMEZONE): Date {
   const offset = zoneOffset(new Date(`${dateISO}T12:00:00Z`), timeZone);
   return new Date(`${dateISO}T${time}:00${offset}`);
 }
 
-/** ["14:00", "14:30", "15:00", "15:30", "16:00", "16:30"] */
+/** ["14:00", "14:30", ... "16:30", "19:00", "19:30", "20:00", "20:30"] — every window, in order. */
 export function slotTimes(): string[] {
   const out: string[] = [];
-  for (
-    let minutes = WINDOW_START_HOUR * 60;
-    minutes + MEETING_MINUTES <= WINDOW_END_HOUR * 60;
-    minutes += SLOT_MINUTES
-  ) {
-    const h = String(Math.floor(minutes / 60)).padStart(2, "0");
-    const m = String(minutes % 60).padStart(2, "0");
-    out.push(`${h}:${m}`);
+  for (const [startHour, endHour] of BOOKING_WINDOWS) {
+    for (
+      let minutes = startHour * 60;
+      minutes + MEETING_MINUTES <= endHour * 60;
+      minutes += SLOT_MINUTES
+    ) {
+      const h = String(Math.floor(minutes / 60)).padStart(2, "0");
+      const m = String(minutes % 60).padStart(2, "0");
+      out.push(`${h}:${m}`);
+    }
   }
   return out;
 }
@@ -134,6 +154,8 @@ export type BookingInput = {
   time: string;
   name: string;
   email: string;
+  company: string;
+  jobTitle: string;
   phone: string;
   requirements: string;
 };
@@ -145,7 +167,7 @@ const phoneDigits = (value: string) => value.replace(/\D/g, "").length;
 export const REQUIREMENTS_MIN = 12;
 export const REQUIREMENTS_MAX = 600;
 
-export type FieldName = "name" | "email" | "phone" | "requirements";
+export type FieldName = "name" | "email" | "company" | "jobTitle" | "phone" | "requirements";
 export type FieldErrors = Partial<Record<FieldName, string>>;
 
 export function normalise(body: unknown): BookingInput {
@@ -156,6 +178,8 @@ export function normalise(body: unknown): BookingInput {
     time: str(b.time, 5),
     name: str(b.name, 120),
     email: str(b.email, 200),
+    company: str(b.company, 120),
+    jobTitle: str(b.jobTitle, 120),
     phone: str(b.phone, 32),
     requirements: str(b.requirements, REQUIREMENTS_MAX),
   };
@@ -169,6 +193,8 @@ export function fieldErrors(input: Partial<BookingInput>): FieldErrors {
   const errors: FieldErrors = {};
   const name = (input.name ?? "").trim();
   const email = (input.email ?? "").trim();
+  const company = (input.company ?? "").trim();
+  const jobTitle = (input.jobTitle ?? "").trim();
   const phone = (input.phone ?? "").trim();
   const requirements = (input.requirements ?? "").trim();
 
@@ -177,6 +203,12 @@ export function fieldErrors(input: Partial<BookingInput>): FieldErrors {
 
   if (!email) errors.email = "The invite goes here.";
   else if (!EMAIL.test(email)) errors.email = "Check the spelling - that is not a valid address.";
+
+  if (!company) errors.company = "Tell us which company you're building for.";
+  else if (company.length < 2) errors.company = "That looks too short.";
+
+  if (!jobTitle) errors.jobTitle = "Your role or job title.";
+  else if (jobTitle.length < 2) errors.jobTitle = "That looks too short.";
 
   if (!phone) errors.phone = "In case the call drops.";
   else if (phoneDigits(phone) < 7) errors.phone = "That is too short for a phone number.";
@@ -199,7 +231,7 @@ export function validateBooking(body: unknown):
   if (!slotTimes().includes(value.time)) return { ok: false, error: "Pick a time from the list." };
 
   const errors = fieldErrors(value);
-  const first = (["name", "email", "phone", "requirements"] as FieldName[]).find((f) => errors[f]);
+  const first = (["name", "email", "company", "jobTitle", "phone", "requirements"] as FieldName[]).find((f) => errors[f]);
   if (first) return { ok: false, error: errors[first] as string };
 
   if (toInstant(value.date, value.time).getTime() < Date.now()) {

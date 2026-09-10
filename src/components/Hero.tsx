@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import BookingDialog from "@/components/BookingDialog";
 import GradientWaves from "@/components/GradientWaves";
 import HeroRing from "@/components/HeroRing";
@@ -23,10 +24,39 @@ const rise = (delay: number) => ({
    step above the page, with the wave field as its only light.
    Blue is kept for the accent line, the eyebrow tick and the button.
  * ------------------------------------------------------------------ */
-export default function Hero() {
-  const words = hero.titleLine2.replace(/\.$/, "").split(" ");
+/* the accent line cycles through what a build ships; the first entry is the
+   plain claim so the page reads correctly before the cycle starts */
+const SHIPPING_ITEMS = [
+  hero.titleLine2,
+  "Multi-Agent Swarms.",
+  "Browser Agents.",
+  "Decision Engines.",
+  "Ops Agents.",
+  "Voice Agents.",
+  "Document AI.",
+  "Data Agents.",
+  "RAG Pipelines.",
+] as const;
+
+function splitLine(line: string) {
+  const words = line.replace(/\.$/, "").split(" ");
   const last = words.pop() ?? "";
   const lead = words.length ? `${words.join(" ")} ` : "";
+  return { lead, last };
+}
+
+export default function Hero() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % SHIPPING_ITEMS.length);
+    }, 5800);
+    return () => clearInterval(timer);
+  }, []);
+
+  const { lead, last } = splitLine(SHIPPING_ITEMS[index]);
 
   return (
     <section
@@ -86,12 +116,23 @@ export default function Hero() {
               >
                 <span className="block sm:whitespace-nowrap">{hero.titleLine1}</span>
                 <span className="block text-accent">
-                  {lead}
-                  {/* the last word and its stop travel together */}
-                  <span className="whitespace-nowrap">
-                    {last}
-                    <span className="hero-stop" aria-hidden="true" />
-                  </span>
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                      className="inline-block"
+                    >
+                      {lead}
+                      {/* the last word and its stop travel together */}
+                      <span className="whitespace-nowrap">
+                        {last}
+                        <span className="hero-stop" aria-hidden="true" />
+                      </span>
+                    </motion.span>
+                  </AnimatePresence>
                 </span>
               </motion.h1>
 

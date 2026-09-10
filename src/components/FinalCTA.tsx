@@ -24,7 +24,7 @@ export default function FinalCTA() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={images.finalCta}
-                alt=""
+                alt="Ready to deploy forward-deployed AI engineering"
                 className="absolute inset-0 h-full w-full object-cover opacity-80"
                 loading="lazy"
               />

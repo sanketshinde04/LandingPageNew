@@ -47,12 +47,13 @@ export const proof = {
   /* ordered largest first; `file` maps to /public/logos/<file>.png and
      `sector` is the second ledger line under the name */
   companies: [
-    { name: "Google", file: "google", sector: "Technology" },
+    { name: "BCG", file: "bcg", sector: "Consulting" },
     { name: "HPE", file: "hpe", sector: "Enterprise IT" },
     { name: "Schneider Electric", file: "schneider", sector: "Energy management" },
-    { name: "BCG", file: "bcg", sector: "Consulting" },
-    { name: "Accel", file: "accel", sector: "Venture capital" },
     { name: "Wispr Flow", file: "wisprflow", sector: "Voice AI" },
+    { name: "Freshworks", file: "freshworks", sector: "SaaS" },
+    { name: "Accel", file: "accel", sector: "Venture capital" },
+    { name: "Shell", file: "shell", sector: "Energy" },
     { name: "mem0", file: "mem0", sector: "AI memory" },
     { name: "FloCareer", file: "flocareer", sector: "Hiring" },
     { name: "CodeYoung", file: "codeyoung", sector: "Education" },

@@ -50,7 +50,7 @@ export default function Problem() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={images.metrics}
-          alt=""
+          alt="Enterprise AI deployment metrics and benchmark data"
           className="h-full w-full object-cover opacity-[0.3]"
           loading="lazy"
         />
