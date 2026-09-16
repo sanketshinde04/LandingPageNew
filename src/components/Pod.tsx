@@ -1,67 +1,80 @@
 import Reveal from "@/components/Reveal";
 import { pod } from "@/lib/content";
 
-function RoleCard({
+/** The three roles as one ruled panel: a hairline box with corner ticks,
+    divided into three columns by hairlines. No rounded cards, no pills —
+    the same drafting language as the rest of the page. On small screens
+    the columns stack with a hairline between each. */
+function RoleCell({
   role,
   index,
-  featured = false,
 }: {
   role: (typeof pod.roles)[number];
   index: number;
-  featured?: boolean;
 }) {
   return (
-    <div
-      className={`relative flex h-full flex-col overflow-hidden rounded-[26px] border border-white/10 bg-white/[0.035] ${
-        featured ? "p-7 sm:p-8" : "p-5 sm:p-6"
-      }`}
-    >
-      <div className="relative flex items-center justify-between">
-        <span className="inline-flex w-fit rounded-full border border-accent/30 bg-accent/[0.09] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
+    <div className="group flex h-full flex-col px-6 py-8 transition-colors duration-300 hover:bg-surface/60 sm:px-8 sm:py-10">
+      <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.18em]">
+        <span className="flex items-center gap-3 text-accent">
+          <span
+            className="h-[7px] w-[7px] rounded-[1.5px] bg-accent"
+            aria-hidden="true"
+          />
           {role.tag}
         </span>
-        <span className="font-mono text-[11px] tracking-[0.12em] text-white/30">
-          0{index + 1}
+        <span className="text-white/35" aria-hidden="true">
+          {String(index + 1).padStart(2, "0")}
         </span>
       </div>
 
-      <div className="relative mt-10 border-t border-white/10 pt-6">
-        <h3 className="max-w-[16ch] text-[clamp(1.3rem,2vw,1.85rem)] font-medium leading-[1.08] tracking-[-0.025em] text-white">
-          {role.title}
-        </h3>
-        <p className="mt-2.5 max-w-[48ch] text-[14px] leading-[1.6] text-white/62">
-          {role.body}
-        </p>
-      </div>
+      <h3 className="mt-10 max-w-[14ch] text-[clamp(1.4rem,2.1vw,1.85rem)] font-semibold leading-[1.1] tracking-[-0.025em] text-bone sm:mt-14">
+        {role.title}
+      </h3>
+      <p className="mt-3 max-w-[40ch] border-t hairline pt-4 text-[15px] leading-[1.6] text-[#9a9eac]">
+        {role.body}
+      </p>
     </div>
   );
 }
 
 export default function Pod() {
   return (
-    <section className="py-20 md:py-28">
+    <section id="team" className="py-24 md:py-32">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
-        <Reveal className="max-w-[820px]">
-          <span className="eyebrow !text-accent">{pod.eyebrow}</span>
-          <h2 className="mt-4 max-w-[17ch] text-[clamp(2.1rem,5vw,4rem)] font-medium leading-[1.02] tracking-[-0.035em]">
+        <Reveal className="max-w-[760px]">
+          <span className="hero-eyebrow">
+            <span className="hero-eyebrow-dot" aria-hidden="true" />
+            <span className="text-white/50">07</span>
+            <span>{pod.eyebrow}</span>
+          </span>
+          <h2 className="mt-7 max-w-[17ch] text-[clamp(2rem,4.4vw,3.4rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-bone">
             {pod.title}{" "}
-            <span className="serif-accent text-accent">{pod.titleAccent}</span>
+            <span className="text-accent">{pod.titleAccent}</span>
           </h2>
-          <p className="mt-5 max-w-[620px] text-[15px] leading-[1.65] text-white/65 md:text-[16px]">
+          <p className="mt-6 max-w-[560px] text-[16px] leading-[1.6] text-[#9a9eac] md:text-[17px]">
             {pod.sub}
           </p>
         </Reveal>
 
-        <div className="mt-9 grid grid-cols-1 gap-4 md:mt-12 lg:grid-cols-[1.15fr_1fr_1fr] lg:gap-5">
-          <Reveal className="h-full">
-            <RoleCard role={pod.roles[0]} index={0} featured />
-          </Reveal>
-          {pod.roles.slice(1).map((role, i) => (
-            <Reveal key={role.tag} delay={(i + 1) * 0.1} className="h-full">
-              <RoleCard role={role} index={i + 1} />
-            </Reveal>
-          ))}
-        </div>
+        <Reveal delay={0.1} className="mt-12 md:mt-16">
+          <div className="relative border hairline">
+            <span className="cross -left-[6px] -top-[6px]" aria-hidden="true" />
+            <span className="cross -right-[6px] -top-[6px]" aria-hidden="true" />
+            <span className="cross -bottom-[6px] -left-[6px]" aria-hidden="true" />
+            <span className="cross -bottom-[6px] -right-[6px]" aria-hidden="true" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-3">
+              {pod.roles.map((role, i) => (
+                <div
+                  key={role.tag}
+                  className={`hairline ${i > 0 ? "border-t lg:border-l lg:border-t-0" : ""}`}
+                >
+                  <RoleCell role={role} index={i} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

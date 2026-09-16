@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import BookingDialog from "@/components/BookingDialog";
 import Magnetic from "@/components/Magnetic";
 import { nav, site } from "@/lib/content";
@@ -22,24 +23,24 @@ export default function Navigation() {
       }`}
     >
       <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-4 md:px-10">
-        <a href="#top" className="flex items-baseline gap-2">
-          <span className="serif-accent text-2xl leading-none text-white">
-            {site.product.split(" ").slice(-1)[0].toLowerCase()}
-          </span>
-          <span className="eyebrow hidden text-[10px] text-white/50 sm:inline">
-            by {site.name}
-          </span>
-        </a>
+        <Link
+          href="/"
+          aria-label={`${site.product} by ${site.name}`}
+          className="flex items-baseline text-[1.35rem] font-semibold leading-none tracking-[-0.045em] text-white"
+        >
+          {site.product.split(" ").slice(-1)[0].toLowerCase()}
+          <span className="hero-stop" aria-hidden="true" />
+        </Link>
 
-        <nav className="glass hidden items-center gap-1 rounded-full px-2 py-1.5 md:flex">
+        <nav className="glass hidden items-center gap-1 rounded-full px-2 py-1.5 md:flex" aria-label="Main Navigation">
           {nav.links.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="rounded-full px-4 py-1.5 text-sm text-white/70 transition-colors duration-300 hover:bg-white/10 hover:text-white"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 

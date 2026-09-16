@@ -1,0 +1,83 @@
+# DEPLOY by Build Fast with AI - Complete Technical Documentation & Case Studies
+
+> Forward-deployed AI engineers embed directly with your team to take one high-impact business workflow from POC to a deployed production AI system in 4-6 weeks with full code ownership.
+
+DEPLOY is the forward-deployed AI engineering service from Build Fast with AI (Intellify Edventures Pvt. Ltd.).
+
+---
+
+## 1. Company & Service Overview
+
+- **Service Model**: Forward-Deployed AI Engineering Pod (Product & Process Lead, Forward-Deployed AI Engineer, Evals & Operations Engineer).
+- **Engagement Duration**: 4-6 weeks fixed-scope sprint.
+- **Deliverables**: Production-grade AI system deployed in client cloud infrastructure, comprehensive documentation, golden eval test suites, and 100% code ownership transfer.
+- **Security & Privacy**: Zero client data stored on external servers or used for foundation model training; all integrations run inside client IAM/VPC boundaries.
+
+---
+
+## 2. Production Case Studies
+
+### Case Study 1: Scaling Enterprise SQL RAG to ~95% Accuracy
+- **URL**: https://deploy.buildfastwithai.com/proof/sql-rag
+- **Focus**: Text-to-SQL, Enterprise Semantic Layers, Model Routing, Evaluation-Driven Development, RLHF Feedback Loops.
+- **Problem**: Basic text-to-SQL prototypes produce valid syntax but fail semantically on complex schemas with ambiguous business terms (e.g. definitions of "active account", "revenue recognition").
+- **Architecture & Solution**:
+  1. *Business Context Layer*: Business glossary mapping everyday terminology to tables/columns as a first-class retrieval layer.
+  2. *Cost-Aware Model Routing*: Cheaper, fast models handle normalization and simple queries; expensive models handle multi-join relational reasoning.
+  3. *End-to-End Evals*: Accuracy measured on final business answers against golden evaluation sets rather than raw SQL syntax validity.
+  4. *RLHF-Style Feedback Loop*: User feedback curated as regression test cases to continuously improve semantic accuracy.
+- **Results**: ~95% end-to-end benchmark accuracy, response times in low tens of seconds, and substantially reduced cost per correct answer.
+
+### Case Study 2: Building a Real-Time AI Interviewer for Technical Hiring
+- **URL**: https://deploy.buildfastwithai.com/proof/ai-interviewer
+- **Focus**: Real-time Voice AI, Sub-Second Latency Budgets, Live Coding Sandbox, Contextual Question Generation, Explainable Scoring.
+- **Problem**: Sequential STT-LLM-TTS voice pipelines create awkward conversation pauses, while generic question generation fails to test candidate-specific experience.
+- **Architecture & Solution**:
+  1. *Sub-Second Latency Architecture*: Optimized streaming voice pipeline balancing naturalness, time-to-first-audio, and cost.
+  2. *Candidate & Role Context*: Retrieval over candidate resume and job requirements to generate grounded, adaptive technical questions.
+  3. *Sandboxed Live Coding*: Real-time code execution environment allowing the AI interviewer to analyze candidate code, test cases, and problem-solving trade-offs live.
+  4. *Explainable AI Evaluation*: Structured scoring backed by verifiable audio and coding evidence rather than opaque ratings.
+- **Effort**: 150+ engineer-days across voice orchestration, eval pipelines, and reporting.
+
+### Case Study 3: Designing an Agentic Learning System for 1:1 Education
+- **URL**: https://deploy.buildfastwithai.com/proof/agentic-learning
+- **Focus**: EdTech AI Architecture, Digital Learning Identity, Teacher Copilots, Human-in-the-Loop AI, Safe Autonomy Levels.
+- **Problem**: Quality ceiling in 1:1 tutoring created by heavy educator administrative burden (homework review, lesson prep, progress logging).
+- **Architecture & Solution**:
+  1. *Digital Learning Identity*: Dynamic profile tracking diagnostic baselines, recent misconceptions, mastery signals, and pace.
+  2. *Nine-Stage Learner Journey*: Over 30 modular capabilities spanning onboarding, in-class prep, between-class adaptive practice, and parent intelligence.
+  3. *Human-in-the-Loop & Autonomy Tiers*: Model assistance with teacher sign-off for briefings/reports, and high-safety evals for autonomous doubt-solving.
+  4. *Core Philosophy*: The AI system sets the quality floor while human educators set the quality ceiling.
+
+---
+
+## 3. The 4-Stage Build Sprint
+
+1. **Stage 01 (Week 1) - Scoping & Baseline Metrics**:
+   - Scope a single workflow with measurable ROI.
+   - Establish baseline metrics to beat before engineering starts.
+   - Provision access to existing APIs, databases, and repositories.
+2. **Stage 02 (Weeks 2-3) - Build Against Live Production Data**:
+   - Implement agents, tool integrations, and RAG pipelines.
+   - Build against actual edge cases and failure modes.
+   - Deploy automated evaluation harnesses.
+3. **Stage 03 (Weeks 4-5) - Run in Production**:
+   - Deploy in client cloud environment (AWS, GCP, Azure, or on-premises).
+   - Run in parallel/shadow or live mode with human-in-the-loop oversight.
+   - Validate performance against agreed accuracy targets.
+4. **Stage 04 (Week 6) - Handover & Knowledge Transfer**:
+   - Complete architectural documentation, runbooks, and test suites.
+   - Conduct walkthroughs with internal engineering teams.
+   - 100% intellectual property and code ownership transfer.
+
+---
+
+## 4. Key Links
+
+- Home: https://deploy.buildfastwithai.com/
+- Proof: https://deploy.buildfastwithai.com/proof
+- Enterprise SQL RAG: https://deploy.buildfastwithai.com/proof/sql-rag
+- Real-Time AI Interviewer: https://deploy.buildfastwithai.com/proof/ai-interviewer
+- Agentic Learning: https://deploy.buildfastwithai.com/proof/agentic-learning
+- Book Scoping Call: https://deploy.buildfastwithai.com/audit
+- Contact: talk@buildfastwithai.com

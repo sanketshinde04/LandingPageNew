@@ -71,12 +71,16 @@ export default function Work() {
     <section id="work" className="relative py-24 md:py-40">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10">
         <Reveal className="max-w-[760px]">
-          <span className="eyebrow !text-accent">{work.eyebrow}</span>
-          <h2 className="mt-5 text-[clamp(2rem,5vw,4rem)] font-medium leading-[1.05] tracking-[-0.02em]">
+          <span className="hero-eyebrow">
+            <span className="hero-eyebrow-dot" aria-hidden="true" />
+            <span className="text-white/50">04</span>
+            <span>{work.eyebrow}</span>
+          </span>
+          <h2 className="mt-7 text-[clamp(2rem,4.4vw,3.4rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-bone">
             {work.title}{" "}
-            <span className="serif-accent text-accent">{work.titleAccent}</span>
+            <span className="text-accent">{work.titleAccent}</span>
           </h2>
-          <p className="mt-6 max-w-[640px] text-base leading-relaxed text-white/65 md:text-lg">
+          <p className="mt-6 max-w-[560px] text-[16px] leading-[1.6] text-[#9a9eac] md:text-[17px]">
             {work.sub}
           </p>
         </Reveal>
@@ -104,27 +108,27 @@ export default function Work() {
                 }}
                 aria-label={`Read the full story: ${project.title}`}
                 data-work-card
-                className="group flex h-[470px] w-[300px] shrink-0 cursor-pointer flex-col rounded-2xl border border-white/10 bg-white/[0.02] outline-none transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.04] focus-visible:border-accent/60 sm:w-[380px]"
+                className="group flex min-h-[392px] w-[264px] shrink-0 cursor-pointer flex-col rounded-2xl border border-white/10 bg-white/[0.02] outline-none transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.04] focus-visible:border-accent/60 sm:min-h-[470px] sm:w-[380px]"
               >
                 {/* the drawing, sitting on the card rather than in a frame */}
-                <div className="relative flex h-[190px] shrink-0 items-center justify-center overflow-hidden px-6 pt-6">
+                <div className="relative flex h-[136px] shrink-0 items-center justify-center overflow-hidden px-5 pt-5 sm:h-[190px] sm:px-6 sm:pt-6">
                   <ProjectVisual
                     name={project.visual}
                     className="h-auto w-full opacity-75 transition-opacity duration-300 group-hover:opacity-100"
                   />
                 </div>
 
-                <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
+                <div className="flex flex-1 flex-col px-5 pb-5 pt-4 sm:px-6 sm:pb-6 sm:pt-5">
                   <SectorBadge sector={project.sector} />
-                  <h3 className="mt-2.5 text-[1.25rem] font-medium leading-tight tracking-tight text-white">
+                  <h3 className="mt-2.5 text-[1.1rem] font-medium leading-tight tracking-tight text-white sm:text-[1.25rem]">
                     {project.title}
                   </h3>
 
-                  <ul className="mt-4 space-y-2 border-t border-white/10 pt-4">
+                  <ul className="mt-3 space-y-1.5 border-t border-white/10 pt-3 sm:mt-4 sm:space-y-2 sm:pt-4">
                     {project.points.slice(0, 3).map((point) => (
                       <li
                         key={point}
-                        className="flex gap-2.5 text-[13px] leading-relaxed text-white/60"
+                        className="flex gap-2.5 text-[12.5px] leading-relaxed text-white/60 sm:text-[13px]"
                       >
                         <span className="mt-[7px] h-px w-2.5 shrink-0 bg-accent/70" />
                         {point}
@@ -132,7 +136,7 @@ export default function Work() {
                     ))}
                   </ul>
 
-                  <span className="mt-auto flex items-center gap-2 pt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/40 transition-colors duration-300 group-hover:text-accent">
+                  <span className="mt-auto flex items-center gap-2 pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-white/40 transition-colors duration-300 group-hover:text-accent">
                     Full story
                     <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
                       →

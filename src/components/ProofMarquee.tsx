@@ -1,54 +1,46 @@
 import Reveal from "@/components/Reveal";
-import { AI_MARKS } from "@/lib/aiMarks";
 import { proof } from "@/lib/content";
 
-type CompanyItem = {
-  name: string;
-  file?: string;
-  iconKey?: string;
-};
-
-/* 12 companies split into two fixed columns (6 companies each).
-   Column 1 moves upward, and Column 2 moves downward.
-   With 6 unique companies per column in a 400px window,
-   every logo is completely distinct in view at any given moment. */
-const half = Math.ceil(proof.companies.length / 2);
-const COLUMNS: CompanyItem[][] = [
-  proof.companies.slice(0, half) as CompanyItem[],
-  proof.companies.slice(half) as CompanyItem[],
+/* Ten logos split into two fixed columns of five, so a logo can never sit in
+   two columns at once. Each row is fixed-height and the window is a few
+   pixels shorter than one column, so the same logo also never shows twice in
+   one column. The left column rises and the right one falls, each at its own
+   speed. Two copies of a column make the looping half, which is all the
+   -50% keyframe needs. */
+const PER_COLUMN = Math.ceil(proof.companies.length / 2);
+const COLUMNS = [
+  proof.companies.slice(0, PER_COLUMN),
+  proof.companies.slice(PER_COLUMN),
 ];
+const DURATIONS = ["40s", "52s"];
 
-function LogoTile({ company }: { company: CompanyItem }) {
-  const mark = company.iconKey
-    ? AI_MARKS.find((m) => m.key === company.iconKey)
-    : null;
+type Company = (typeof proof.companies)[number];
 
+function LogoRow({ company, index }: { company: Company; index: number }) {
   return (
-    <div className="glass group flex w-full shrink-0 items-center gap-3.5 rounded-2xl border border-white/10 bg-white/[0.025] px-4 py-3 transition-colors duration-200 hover:border-accent/40 hover:bg-white/[0.06]">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] p-1.5 transition-colors group-hover:border-accent/30 group-hover:bg-white/[0.08]">
-        {mark ? (
-          <svg
-            viewBox="0 0 24 24"
-            className="h-5 w-5 fill-white transition-transform duration-200 group-hover:scale-105"
-            aria-hidden="true"
-          >
-            <path d={mark.path} />
-          </svg>
-        ) : (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            src={`/logos/${company.file}.png`}
-            alt=""
-            width={32}
-            height={32}
-            loading="lazy"
-            aria-hidden="true"
-            className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-105"
-          />
-        )}
-      </div>
-      <span className="min-w-0 truncate text-[14.5px] font-medium tracking-tight text-white/85 transition-colors group-hover:text-white sm:text-[15px]">
-        {company.name}
+    <div className="proof-row flex h-[88px] w-full shrink-0 items-center gap-4 border-b hairline px-4 sm:h-[96px] sm:px-5">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`/logos/${company.file}.png`}
+        alt={`${company.name} logo`}
+        width={40}
+        height={40}
+        loading="lazy"
+        className="h-10 w-10 shrink-0 rounded-lg object-contain"
+      />
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[15px] font-medium leading-tight tracking-tight text-bone">
+          {company.name}
+        </span>
+        <span className="mt-1 block truncate text-[12px] leading-tight text-[#9a9eac]">
+          {company.sector}
+        </span>
+      </span>
+      <span
+        className="hidden shrink-0 text-[11px] tracking-[0.14em] text-white/35 sm:block"
+        style={{ fontFamily: "var(--font-plex), monospace" }}
+      >
+        {String(index + 1).padStart(2, "0")}
       </span>
     </div>
   );
@@ -56,45 +48,61 @@ function LogoTile({ company }: { company: CompanyItem }) {
 
 export default function ProofMarquee() {
   return (
-    <section className="relative overflow-hidden py-20 md:py-32">
-      {/* soft fading ambient dividers so sections blend smoothly without harsh cutout lines */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-10 px-6 md:gap-12 md:px-10 lg:grid-cols-[0.9fr_1.1fr]">
+    <section
+      id="proof"
+      className="relative overflow-hidden border-y hairline bg-surface py-24 md:py-32"
+    >
+      <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-start gap-12 px-6 md:px-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <Reveal>
-          <span className="eyebrow !text-accent">{proof.eyebrow}</span>
-          <h2 className="mt-5 text-[clamp(2rem,4vw,3.1rem)] font-medium leading-[1.08] tracking-[-0.02em]">
+          <span className="hero-eyebrow">
+            <span className="hero-eyebrow-dot" aria-hidden="true" />
+            <span className="text-white/50">02</span>
+            <span>{proof.eyebrow}</span>
+          </span>
+          <h2 className="mt-7 text-[clamp(2rem,4vw,3.1rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-bone">
             {proof.title}{" "}
-            <span className="serif-accent text-accent">{proof.titleAccent}</span>
+            <span className="text-accent">{proof.titleAccent}</span>
           </h2>
-          <p className="mt-5 max-w-[480px] text-[16px] leading-relaxed text-white/60 md:text-[17px]">
+          <p className="mt-6 max-w-[440px] text-[16px] leading-[1.6] text-[#9a9eac] md:text-[17px]">
             {proof.sub}
           </p>
         </Reveal>
 
         <Reveal delay={0.1}>
-          <div className="marquee-vertical-mask grid h-[360px] grid-cols-2 gap-3.5 sm:h-[400px] sm:gap-5">
-            {COLUMNS.map((column, ci) => (
-              <div
-                key={ci}
-                className="relative h-full overflow-hidden"
-              >
+          {/* the ledger frame: hairline box with corner ticks, same drafting
+              language as the hero and the model panel */}
+          <div className="relative border hairline">
+            <span className="cross -left-[6px] -top-[6px]" aria-hidden="true" />
+            <span className="cross -right-[6px] -top-[6px]" aria-hidden="true" />
+            <span className="cross -bottom-[6px] -left-[6px]" aria-hidden="true" />
+            <span className="cross -bottom-[6px] -right-[6px]" aria-hidden="true" />
+
+            <div className="marquee-vertical-mask grid h-[430px] grid-cols-2 sm:h-[470px]">
+              {COLUMNS.map((column, ci) => (
                 <div
-                  className="marquee-vertical-track flex flex-col gap-3.5 sm:gap-4"
-                  style={{
-                    animationDirection: ci === 1 ? "reverse" : "normal",
-                    animationDuration: ci === 1 ? "28s" : "24s",
-                  }}
+                  key={ci}
+                  className={`relative h-full overflow-hidden ${
+                    ci === 0 ? "border-r hairline" : ""
+                  }`}
                 >
-                  {[...column, ...column].map((company, i) => (
-                    <LogoTile
-                      key={`${company.name}-${i}`}
-                      company={company}
-                    />
-                  ))}
+                  <div
+                    className="marquee-vertical-track flex flex-col"
+                    style={{
+                      animationDirection: ci === 1 ? "reverse" : "normal",
+                      ["--marquee-duration" as string]: DURATIONS[ci],
+                    }}
+                  >
+                    {[...column, ...column].map((company, i) => (
+                      <LogoRow
+                        key={`${company.file}-${i}`}
+                        company={company}
+                        index={ci * PER_COLUMN + (i % PER_COLUMN)}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </Reveal>
       </div>

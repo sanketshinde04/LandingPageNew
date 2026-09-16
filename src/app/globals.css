@@ -1,34 +1,36 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Blue theme, taken from the reference build. The grounds are lifted a few
-     steps off pure black so the page reads as deep navy rather than a void. */
-  --color-base: #080e1a;
-  --color-ink: #05070d;
-  --color-surface: #0e1728;
-  --color-accent: #4f8cff;
-  --color-accent-2: #22d3ee;
-  --color-bone: #eef3ff;
+  /* The dark palette from the bfwai-main project (its shadcn oklch tokens,
+     converted to hex): background, muted, primary, accent-foreground and
+     foreground, in that order. */
+  --color-base: #0a0c0f;
+  --color-ink: #050608;
+  --color-surface: #181b2a;
+  --color-accent: #5a8dde;
+  --color-accent-2: #bac1f2;
+  --color-bone: #e0e2f0;
   --font-sans: var(--font-instrument);
   --font-serif: var(--font-cormorant);
   --font-mono: var(--font-plex);
 }
 
 html {
-  background: #080e1a;
+  background: #0a0c0f;
 }
 
 :root {
-  --font-bricolage: "Avenir Next", "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
-  --font-instrument: "Avenir Next", "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
-  --font-cormorant: "Iowan Old Style", Baskerville, Georgia, serif;
-  --font-plex: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  /* Geist ships inside the `geist` package, so nothing is fetched at build time */
+  --font-bricolage: var(--font-heading), var(--font-geist-sans), "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
+  --font-instrument: var(--font-geist-sans), "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
+  --font-cormorant: var(--font-geist-sans), "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
+  --font-plex: var(--font-geist-mono), "Cascadia Code", "SFMono-Regular", Consolas, monospace;
 }
 
 body {
-  background: #080e1a;
+  background: #0a0c0f;
   color: #fff;
-  font-family: var(--font-instrument), "Avenir Next", "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
+  font-family: var(--font-instrument), "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -39,57 +41,52 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-bricolage), "Avenir Next", "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
-  font-weight: 500;
+  font-family: var(--font-bricolage), "Segoe UI Variable", "Helvetica Neue", system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 ::selection {
-  background: #4f8cff;
-  color: #f5f9ff;
+  background: #5a8dde;
+  color: #201f37;
 }
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #080e1a;
+  background: #0a0c0f;
 }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(
     180deg,
-    rgba(79, 140, 255, 0.4),
-    rgba(34, 211, 238, 0.3)
+    rgba(90, 141, 222, 0.55),
+    rgba(90, 141, 222, 0.25)
   );
-  border: 2px solid #080e1a;
+  border: 2px solid #0a0c0f;
   border-radius: 8px;
 }
 
 /* ---------- shared surfaces ---------- */
 .glass {
-  background: rgba(120, 160, 255, 0.055);
-  border: 1px solid rgba(140, 175, 255, 0.12);
+  background: rgba(54, 62, 94, 0.2);
+  border: 1px solid rgba(151, 163, 201, 0.16);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
 }
 
 .hairline {
-  border-color: rgba(140, 175, 255, 0.12);
+  border-color: rgba(151, 163, 201, 0.16);
 }
 
 /* ---------- type helpers ---------- */
+/* the accent line of a heading: same face, solid brand blue, nothing italic */
 .serif-accent {
-  font-family: var(--font-cormorant), "Iowan Old Style", Baskerville, Georgia, serif;
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: 0.005em;
-  background: linear-gradient(
-    100deg,
-    var(--color-accent) 0%,
-    var(--color-accent-2) 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: inherit;
+  font-style: normal;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: var(--color-accent);
 }
 
 .eyebrow {
@@ -144,10 +141,10 @@ h6 {
 
 .btn-solid {
   background: var(--color-accent);
-  color: #04070f;
+  color: #201f37;
 }
 .btn-solid:hover {
-  background: #6ea3ff;
+  background: #6c9fef;
   transform: translateY(-2px);
 }
 
@@ -156,16 +153,27 @@ h6 {
   transform: none;
 }
 
+.btn-outline {
+  border: 1px solid rgba(151, 163, 201, 0.28);
+  color: var(--color-bone, #e0e2f0);
+  background: transparent;
+}
+.btn-outline:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
 .btn-glass {
-  background: rgba(120, 160, 255, 0.08);
-  border: 1px solid rgba(140, 175, 255, 0.18);
+  background: rgba(54, 62, 94, 0.28);
+  border: 1px solid rgba(151, 163, 201, 0.22);
   color: #fff;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 .btn-glass:hover {
-  background: rgba(140, 175, 255, 0.14);
-  border-color: rgba(79, 140, 255, 0.45);
+  background: rgba(54, 62, 94, 0.42);
+  border-color: rgba(90, 141, 222, 0.6);
   transform: translateY(-2px);
 }
 
@@ -193,102 +201,210 @@ h6 {
   transform: translateX(20%) translateY(20%);
 }
 
-/* ---------- restrained live aurora ---------- */
-@keyframes aurora-drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-    opacity: 0.82;
-  }
-  50% {
-    transform: translate3d(3%, -4%, 0) scale(1.1) rotate(3deg);
-    opacity: 1;
-  }
+/* ---------- hero ---------- */
+/* the hero stands one step above the page ground, and falls back to it at
+   the edges and along the foot so the next section joins without a seam */
+.hero-ground {
+  background:
+    radial-gradient(
+      ellipse 120% 90% at 50% 40%,
+      transparent 40%,
+      rgba(10, 12, 15, 0.85) 100%
+    ),
+    linear-gradient(180deg, #111419 0%, #111419 78%, #0a0c0f 100%);
 }
 
-.aurora-field {
+/* the wave field is faded in from the middle of the hero and back out at
+   the foot, so the copy sits on clear ground and the next section joins clean */
+.hero-waves {
+  mask-image: linear-gradient(
+    180deg,
+    transparent 18%,
+    rgba(0, 0, 0, 0.85) 52%,
+    black 70%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 18%,
+    rgba(0, 0, 0, 0.85) 52%,
+    black 70%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+/* the one word in blue gets a full stop that is drawn, not typed */
+.hero-stop {
+  display: inline-block;
+  width: 0.16em;
+  height: 0.16em;
+  margin-left: 0.06em;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transform: translateY(-0.02em);
+}
+
+/* the label above the claim: a square blue tick, an index, no pill */
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-plex), monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+.hero-eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 1.5px;
+  background: var(--color-accent);
+  box-shadow: 0 0 14px rgba(90, 141, 222, 0.6);
+}
+
+/* the drafting frame: two vertical rules on wide screens, crosshair ticks
+   where they meet the rail, and a ruler hung from the rail's top edge */
+.hero-rule-v {
+  display: none;
   position: absolute;
-  border-radius: 999px;
-  filter: blur(58px);
-  mix-blend-mode: screen;
-  will-change: transform, opacity;
-}
-
-.aurora-field-primary {
-  top: 2%;
-  right: 4%;
-  width: min(64vw, 900px);
-  height: min(42vw, 560px);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(79, 140, 255, 0.62) 0%,
-    rgba(46, 102, 220, 0.26) 42%,
-    transparent 72%
-  );
-  animation: aurora-drift 10s ease-in-out infinite;
-}
-
-.aurora-field-secondary {
-  bottom: -8%;
-  left: -8%;
-  width: min(58vw, 760px);
-  height: min(36vw, 460px);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(34, 211, 238, 0.4) 0%,
-    rgba(79, 140, 255, 0.18) 44%,
-    transparent 74%
-  );
-  animation: aurora-drift 13s ease-in-out -4s infinite reverse;
-}
-
-.aurora-field-wash {
-  inset: 18% 18% 10%;
-  border-radius: 45%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
   background: linear-gradient(
-    118deg,
-    transparent 24%,
-    rgba(79, 140, 255, 0.14) 45%,
-    rgba(34, 211, 238, 0.18) 54%,
-    transparent 76%
+    180deg,
+    transparent,
+    rgba(255, 255, 255, 0.2) 8%,
+    rgba(255, 255, 255, 0.2)
   );
-  filter: blur(56px);
-  opacity: 0.9;
-  animation: aurora-wash 16s ease-in-out infinite;
+}
+.hero-cross {
+  display: none;
+  position: absolute;
+  z-index: 2;
+  width: 13px;
+  height: 13px;
+  top: -6px;
+}
+.hero-cross::before,
+.hero-cross::after {
+  content: "";
+  position: absolute;
+  background: rgba(255, 255, 255, 0.68);
+}
+.hero-cross::before {
+  left: 0;
+  right: 0;
+  top: 6px;
+  height: 1px;
+}
+.hero-cross::after {
+  top: 0;
+  bottom: 0;
+  left: 6px;
+  width: 1px;
+}
+.hero-cross-tl,
+.hero-cross-bl {
+  left: -6px;
+}
+.hero-cross-tr,
+.hero-cross-br {
+  right: -6px;
+}
+@media (min-width: 1024px) {
+  .hero-rule-v,
+  .hero-cross {
+    display: block;
+  }
 }
 
-.aurora-field-ribbon {
-  inset: 8% -20% 22%;
-  border-radius: 42%;
-  background: linear-gradient(
-    108deg,
-    transparent 25%,
-    rgba(79, 140, 255, 0.18) 43%,
-    rgba(34, 211, 238, 0.2) 52%,
-    transparent 71%
+.hero-rail {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+.hero-ruler {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 10px;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.42) 0 1px,
+        transparent 1px 120px
+      )
+      0 0 / 100% 10px no-repeat,
+    repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.22) 0 1px,
+        transparent 1px 12px
+      )
+      0 0 / 100% 5px no-repeat;
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+/* ---------- crosshair tick, shared by every ruled frame ---------- */
+.cross {
+  position: absolute;
+  z-index: 2;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+}
+.cross::before,
+.cross::after {
+  content: "";
+  position: absolute;
+  background: rgba(224, 226, 240, 0.6);
+}
+.cross::before {
+  left: 0;
+  right: 0;
+  top: 6px;
+  height: 1px;
+}
+.cross::after {
+  top: 0;
+  bottom: 0;
+  left: 6px;
+  width: 1px;
+}
+
+/* ---------- proof marquee ---------- */
+/* Each column runs at its own speed so the stagger between them keeps
+   drifting instead of sitting in lockstep. Hovering the ledger pauses all
+   three so a name can be read. */
+@keyframes marquee-vertical {
+  to {
+    transform: translateY(-50%);
+  }
+}
+.marquee-vertical-track {
+  animation: marquee-vertical var(--marquee-duration, 36s) linear infinite;
+  will-change: transform;
+}
+.marquee-vertical-mask:hover .marquee-vertical-track {
+  animation-play-state: paused;
+}
+.marquee-vertical-mask {
+  mask-image: linear-gradient(
+    180deg,
+    transparent,
+    black 16%,
+    black 84%,
+    transparent
   );
-  filter: blur(30px);
-  opacity: 0.9;
-  animation: aurora-ribbon 14s ease-in-out -3s infinite;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent,
+    black 16%,
+    black 84%,
+    transparent
+  );
 }
-
-@keyframes aurora-wash {
-  0%,
-  100% {
-    transform: translate3d(-2%, 2%, 0) rotate(-4deg) scale(0.98);
-  }
-  50% {
-    transform: translate3d(4%, -3%, 0) rotate(4deg) scale(1.06);
-  }
-}
-
-@keyframes aurora-ribbon {
-  0%,
-  100% {
-    transform: translate3d(-6%, 3%, 0) rotate(-5deg) scale(0.96);
-  }
-  50% {
-    transform: translate3d(7%, -4%, 0) rotate(5deg) scale(1.04);
+@media (prefers-reduced-motion: reduce) {
+  .marquee-vertical-track {
+    animation: none;
   }
 }
 
@@ -339,30 +455,6 @@ h6 {
 }
 
 /* ---------- vertical marquee (logo columns) ---------- */
-@keyframes marquee-vertical {
-  to {
-    transform: translateY(-50%);
-  }
-}
-.marquee-vertical-track {
-  animation: marquee-vertical 24s linear infinite;
-}
-.marquee-vertical-mask {
-  mask-image: linear-gradient(
-    180deg,
-    transparent,
-    black 14%,
-    black 86%,
-    transparent
-  );
-  -webkit-mask-image: linear-gradient(
-    180deg,
-    transparent,
-    black 14%,
-    black 86%,
-    transparent
-  );
-}
 
 /* ---------- film grain + vignette ---------- */
 .grain::before {
@@ -402,7 +494,7 @@ h6 {
   background: radial-gradient(
     ellipse 120% 100% at 50% 40%,
     transparent 60%,
-    rgba(0, 4, 12, 0.4) 100%
+    rgba(0, 2, 6, 0.32) 100%
   );
 }
 

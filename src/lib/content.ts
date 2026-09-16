@@ -23,7 +23,6 @@ export const nav = {
   links: [
     { label: "Work", href: "/#work" },
     { label: "Proof", href: "/proof" },
-    { label: "Agents", href: "/agent-catalog" },
     { label: "The build", href: "/#sprint" },
   ],
   cta: { label: "Book a call", href: "#call" },
@@ -45,21 +44,19 @@ export const proof = {
   title: "We have already built AI",
   titleAccent: "inside these teams.",
   sub: "Every name here is an engagement we delivered — the same engineers who did that work are the ones who show up for your build.",
-  /* 12 verified companies (6 per column for 2 columns) excluding Google, McKinsey, Amazon, IIT Bombay, OpenAI, Mistral, Meta AI, LangChain, Hugging Face, Anthropic, n8n, and Ollama */
+  /* ordered largest first; `file` maps to /public/logos/<file>.png and
+     `sector` is the second ledger line under the name */
   companies: [
-    // Column 1 (5 companies)
-    { name: "BCG", file: "bcg" },
-    { name: "HPE", file: "hpe" },
-    { name: "Schneider Electric", file: "schneider" },
-    { name: "Wispr Flow", file: "wisprflow" },
-    { name: "Freshworks", file: "freshworks" },
-
-    // Column 2 (5 companies)
-    { name: "Accel", file: "accel" },
-    { name: "Shell", file: "shell" },
-    { name: "mem0", file: "mem0" },
-    { name: "FloCareer", file: "flocareer" },
-    { name: "CodeYoung", file: "codeyoung" },
+    { name: "BCG", file: "bcg", sector: "Consulting" },
+    { name: "HPE", file: "hpe", sector: "Enterprise IT" },
+    { name: "Schneider Electric", file: "schneider", sector: "Energy management" },
+    { name: "Wispr Flow", file: "wisprflow", sector: "Voice AI" },
+    { name: "Freshworks", file: "freshworks", sector: "SaaS" },
+    { name: "Accel", file: "accel", sector: "Venture capital" },
+    { name: "Shell", file: "shell", sector: "Energy" },
+    { name: "mem0", file: "mem0", sector: "AI memory" },
+    { name: "FloCareer", file: "flocareer", sector: "Hiring" },
+    { name: "CodeYoung", file: "codeyoung", sector: "Education" },
   ],
 };
 
@@ -437,6 +434,7 @@ export const faq = {
 };
 
 export const finalCta = {
+  eyebrow: "Book a call",
   title: "Are you ready to",
   titleAccent: "deploy?",
   titleAfter: "",
@@ -460,7 +458,6 @@ export const footer = {
       heading: "Company",
       links: [
         { label: "buildfastwithai.com", href: "https://www.buildfastwithai.com" },
-        { label: "talk@buildfastwithai.com", href: "mailto:talk@buildfastwithai.com" },
         { label: "LinkedIn", href: "https://www.linkedin.com/company/build-fast-with-ai/" },
         { label: "X", href: "https://x.com/BuildFastWithAI" },
         { label: "GitHub", href: "https://github.com/buildfastwithai/gen-ai-experiments" },
