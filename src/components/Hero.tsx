@@ -17,14 +17,10 @@ const fadeUp = (delay: number) => ({
 
 const SHIPPING_ITEMS = [
   "that actually ship.",
-  "Multi-Agent Swarms.",
-  "Browser Agents.",
-  "Decision Engines.",
-  "Ops Agents.",
-  "Voice Agents.",
-  "Document AI.",
-  "Data Agents.",
-  "RAG Pipelines.",
+  "you actually own.",
+  "on your own infra.",
+  "with rigorous evals.",
+  "ready for scale.",
 ] as const;
 
 export default function Hero() {
@@ -33,7 +29,7 @@ export default function Hero() {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % SHIPPING_ITEMS.length);
-    }, 5800);
+    }, 7200);
     return () => clearInterval(timer);
   }, []);
 
@@ -67,9 +63,9 @@ export default function Hero() {
         <div className="aurora-field aurora-field-ribbon" />
       </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-[1500px] grid-cols-1 items-center gap-8 px-6 pb-16 pt-28 sm:gap-10 sm:pt-32 md:px-10 lg:grid-cols-[1.08fr_1fr] lg:gap-6 lg:pb-24">
+      <div className="relative z-10 mx-auto grid w-full max-w-[1500px] grid-cols-1 items-center gap-8 px-6 pb-16 pt-28 sm:gap-10 sm:pt-32 md:px-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12 lg:pb-24 xl:gap-16">
         {/* ---------- left: the claim ---------- */}
-        <div>
+        <div className="min-w-0 max-w-xl xl:max-w-2xl">
           <motion.h1
             {...fadeUp(0.1)}
             className="text-[clamp(2.15rem,5.4vw,4.7rem)] font-medium leading-[1.02] tracking-[-0.03em] text-white"
@@ -81,11 +77,11 @@ export default function Hero() {
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
                   key={index}
-                  initial={{ opacity: 0, scale: 0.94 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.97 }}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -14 }}
                   transition={{
-                    duration: 0.5,
+                    duration: 0.65,
                     ease: [0.16, 1, 0.3, 1],
                   }}
                   className="serif-accent inline-block origin-left pb-1 pr-4 text-accent sm:whitespace-nowrap"
@@ -118,7 +114,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.6, delay: 0.25, ease }}
-          className="order-first aspect-square w-full max-w-[560px] justify-self-center lg:order-last lg:aspect-[7/5] lg:max-w-none"
+          className="order-first aspect-square w-full max-w-[500px] justify-self-center lg:order-last lg:aspect-[7/5] lg:max-w-[580px] lg:justify-self-end"
         >
           <HeroRing className="h-full w-full" />
         </motion.div>

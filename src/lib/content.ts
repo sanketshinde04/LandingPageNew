@@ -23,6 +23,7 @@ export const nav = {
   links: [
     { label: "Work", href: "/#work" },
     { label: "Proof", href: "/proof" },
+    { label: "Agents", href: "/agent-catalog" },
     { label: "The build", href: "/#sprint" },
   ],
   cta: { label: "Book a call", href: "#call" },

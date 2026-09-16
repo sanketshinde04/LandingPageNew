@@ -40,3 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated docs, reports and scratch files
+*.pdf
+*.html
+build_*.py
+generate_*.py
+page*.png
+proof_card_*.png
+scratch_*
+

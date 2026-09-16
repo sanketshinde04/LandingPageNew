@@ -1,133 +1,92 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Link from "next/link";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
 import Reveal from "@/components/Reveal";
+import ProofCatalog from "@/components/proof/ProofCatalog";
 
 export const metadata: Metadata = {
-  title: "Proof — DEPLOY",
+  title: "Proof — 15 Enterprise AI Systems in Production — DEPLOY",
   description:
-    "Deployed systems and measured results — the AI work shipped into real operational use with client teams.",
+    "Deployed systems, measurable SLAs, and real architectures — 15 production AI case studies shipped into operational use with enterprise engineering teams.",
 };
-
-type ThumbnailKind = "sql" | "interviewer" | "learning";
-
-const stories: {
-  id: string;
-  kind: ThumbnailKind;
-  type: string;
-  readTime: string;
-  title: string;
-  excerpt: string;
-  thumbnail: string;
-}[] = [
-  {
-    id: "sql-rag",
-    kind: "sql",
-    type: "Case Study",
-    readTime: "10 min read",
-    title: "Scaling Enterprise SQL RAG to ~95% Accuracy",
-    thumbnail: "/case-studies/sql-rag-thumbnail.webp",
-    excerpt:
-      "How business semantics, cost-aware model routing, evals, and human feedback turned a text-to-SQL prototype into a production analytics engine.",
-  },
-  {
-    id: "ai-interviewer",
-    kind: "interviewer",
-    type: "Case Study",
-    readTime: "10 min read",
-    title: "Building a Real-Time AI Interviewer for Technical Hiring",
-    thumbnail: "/case-studies/ai-interviewer-thumbnail.webp",
-    excerpt:
-      "Production-grade live voice interaction, contextual candidate retrieval, sandboxed live coding, and explainable scoring across 150+ engineer-days.",
-  },
-  {
-    id: "agentic-learning",
-    kind: "learning",
-    type: "Architecture",
-    readTime: "11 min read",
-    title: "Designing an Agentic Learning System for 1:1 Education",
-    thumbnail: "/case-studies/agentic-learning-thumbnail.webp",
-    excerpt:
-      "Architectural blueprint for AI-assisted 1:1 education across 9 learner stages and 30+ capabilities: teacher copilots, mastery tracking, and safe autonomy.",
-  },
-];
 
 export default function ProofPage() {
   return (
-    <main id="top">
+    <main id="top" className="min-h-screen bg-[#080e1a] text-white">
       <Navigation />
 
+      {/* Hero Header */}
       <header className="relative border-b hairline px-6 pb-16 pt-36 md:px-10 md:pb-24 md:pt-48">
-        <div className="mx-auto max-w-[1200px]">
-          <Reveal className="max-w-[760px]">
-            <span className="eyebrow !text-accent">Proof</span>
-            <h1 className="mt-5 text-[clamp(2.6rem,6vw,5.5rem)] font-medium leading-[0.98] tracking-[-0.045em]">
-              The work, and what it <span className="serif-accent">moved.</span>
+        <div className="mx-auto max-w-[1240px]">
+          <Reveal className="max-w-[840px]">
+            <span className="eyebrow !text-accent">Production Proof</span>
+            <h1 className="mt-5 text-[clamp(2.5rem,5.5vw,5rem)] font-medium leading-[1.0] tracking-[-0.04em]">
+              15 Production Systems. <br />
+              <span className="serif-accent text-accent">Zero Hallucinations.</span>
             </h1>
-            <p className="mt-7 max-w-[700px] text-base leading-relaxed text-white/65 md:text-lg">
-              Every one of these ran against real data inside a real team&apos;s workflow — the only kind of proof that predicts whether the next build ships.
+            <p className="mt-6 max-w-[760px] text-lg leading-relaxed text-zinc-200 md:text-xl font-normal">
+              Every system documented here runs against real operational data inside client infrastructure.
+              Explore our architectural topologies, latency SLAs, evaluation harnesses, and security boundaries.
             </p>
           </Reveal>
         </div>
       </header>
 
-      <section id="case-studies" className="relative py-24 md:py-36">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-10">
+      {/* Case Studies Catalog Section */}
+      <section id="case-studies" className="relative py-16 md:py-24">
+        <div className="mx-auto max-w-[1240px] px-6 md:px-10">
           <Reveal>
-            <span className="eyebrow !text-accent">Engineering breakdowns</span>
-            <h2 className="mt-5 max-w-[760px] text-[clamp(2rem,4.5vw,4rem)] font-medium leading-[1.05] tracking-[-0.03em]">
-              How these systems were actually built.
-            </h2>
-          </Reveal>
-
-          <Reveal delay={0.1} className="mt-12 md:mt-14">
-            <div className="grid gap-5 lg:grid-cols-3">
-              {stories.map((story) => (
-                <article
-                  key={story.id}
-                  id={story.id}
-                  className="group overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.025] transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.045]"
-                >
-                  <a
-                    href={`/proof/${story.id}`}
-                    aria-label={`Read ${story.title}`}
-                    className="relative block aspect-[16/9] overflow-hidden border-b border-white/10 bg-white/[0.03]"
-                  >
-                    <Image
-                      src={story.thumbnail}
-                      alt=""
-                      fill
-                      sizes="(min-width: 1024px) 33vw, 100vw"
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-                    />
-                    <span className="absolute inset-0 bg-gradient-to-t from-[#080e1a]/20 to-transparent" />
-                  </a>
-                  <div className="flex min-h-[330px] flex-col p-6 md:p-7">
-                    <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
-                      <span className="text-accent">{story.type}</span>
-                      <span>{story.readTime}</span>
-                    </div>
-                    <h3 className="mt-6 text-[1.35rem] font-medium leading-tight tracking-tight text-white">
-                      {story.title}
-                    </h3>
-                    <p className="mt-4 text-[14px] leading-relaxed text-white/60">
-                      {story.excerpt}
-                    </p>
-                    <a
-                      href={`/proof/${story.id}`}
-                      className="mt-auto flex items-center gap-2 pt-8 font-mono text-[10px] uppercase tracking-[0.15em] text-white/45 transition-colors duration-300 group-hover:text-accent"
-                    >
-                      Read the breakdown
-                      <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
-                        →
-                      </span>
-                    </a>
-                  </div>
-                </article>
-              ))}
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <div>
+                <span className="eyebrow !text-accent">Verified Topologies</span>
+                <h2 className="mt-2 text-[clamp(1.8rem,3.2vw,3rem)] font-medium leading-[1.1] tracking-[-0.03em]">
+                  System Architecture Directory
+                </h2>
+              </div>
+              <p className="text-xs sm:text-[13.5px] font-mono text-zinc-300 max-w-[340px] font-medium leading-relaxed">
+                Filter by domain or search by specific latency requirements, frameworks, and compliance standards.
+              </p>
             </div>
           </Reveal>
+
+          {/* Squirro-Inspired Ready-to-Deploy Agent Showcase Callout */}
+          <div className="mt-8 rounded-2xl border border-white/15 bg-gradient-to-r from-[#0b1426] via-[#091020] to-[#070b16] p-6 sm:p-7 shadow-xl">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+              <div className="flex items-start sm:items-center gap-4">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/15 border border-accent/30 text-accent font-bold">
+                  ⚡
+                </span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs uppercase tracking-wider text-accent font-bold">
+                      Interactive Live Showcase
+                    </span>
+                    <span className="text-zinc-500 font-mono text-xs">·</span>
+                    <span className="font-mono text-xs text-zinc-300">Inspired by Squirro</span>
+                  </div>
+                  <h3 className="mt-1 text-base sm:text-lg font-semibold text-white">
+                    Looking for Modular, Ready-to-Deploy Agents with Live Sandboxes?
+                  </h3>
+                  <p className="mt-1 text-xs sm:text-sm text-zinc-300">
+                    Explore our 14 ready-to-deploy agents mapped by Department and Industry with instant execution testing.
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href="/agent-catalog"
+                className="inline-flex shrink-0 items-center justify-center rounded-xl bg-white px-5 py-3 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider text-zinc-950 transition-all hover:bg-accent hover:shadow-lg"
+              >
+                <span>Try Agent Catalog</span>
+                <span className="ml-2">&rarr;</span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <ProofCatalog />
+          </div>
         </div>
       </section>
 
